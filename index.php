@@ -350,7 +350,7 @@ if(isset($_GET['wish'])){
     }
     echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','New Folder')\">New Folder</font>";
 echo "<form id='biupform' style='display: inline-block;' action='.data/upload.php?folder=".$folder."' method='POST' enctype='multipart/form-data'>
-                        <input id='biup' name='fileselect[]' type='file'>
+                        <input id='biup' name='fileselect[]' multiple='multiple' type='file'>
                         <input name='fb' type='hidden'>
 			<input class='".$color."' type=submit>
                         </form>";

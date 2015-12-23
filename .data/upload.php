@@ -10,6 +10,7 @@ if(isset($_POST['bintro'])) {
         $bintro = false;
 }
 $folder = "../" . $_GET['folder'] . "/";
+$realfolder = $_GET['folder'];
 @$text = $db->real_escape_string($_POST['impeditor']);
 if ($settings->points == 'true' && $bintro == false && $fb == false) {
 	$points = $_POST['points'];
@@ -30,38 +31,31 @@ if ($settings->points == 'true' && $bintro == false && $fb == false) {
 		$eintragen = $db->query("UPDATE user SET premium = '$userpremium' WHERE id = '$userid'");
 	}
 }
-if ($fn) {
-
-	// AJAX call
-	file_put_contents(
-		$folder . $fn,
-		file_get_contents('php://input')
-	);
-	echo "$fn uploaded";
-	exit();
-	
-} else {
-
-	// form submit
-	$files = $_FILES['fileselect'];
-
-	foreach ($files['error'] as $id => $err) {
-		if ($err == UPLOAD_ERR_OK) {
-			$fn = $files['name'][$id];
-			if ($bintro == true) $fn = $rn;
-			move_uploaded_file(
-				$files['tmp_name'][$id],
-				$folder . $fn
-			);	
-			$folder = $_GET['folder'];
-			if ($bintro == true | $fb==true) echo "<script>self.location.href='..?f=".$folder."'</script>";
-			@$mysqltime = date("Y-m-d G:i:s");
-			$eintragen = $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$folder', '$mysqltime', '$fn', 1, '$text')");
-			$row = $db->query("SELECT id FROM tags WHERE tagname='$fn'")->fetch_assoc();
-			$id = $row['id'];
-			$eintragen = $db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
-			echo "<script>self.location.href='../'</script>";
-		}
+if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
+	foreach ($_FILES['fileselect']['name'] as $f => $name) {     
+	    if ($_FILES['fileselect']['error'][$f] == 4) {
+	        continue; // Skip file if any error found
+	    }	       
+	    if ($_FILES['fileselect']['error'][$f] == 0) {	           
+	        #if ($_FILES['fileselect']['size'][$f] > $max_file_size) {
+	        #    $message[] = "$name is too large!.";
+	        #    continue; // Skip large files
+	        #}
+		#	elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $valid_formats) ){
+		#		$message[] = "$name is not a valid format";
+		#		continue; // Skip invalid file formats
+		#	}
+	        #else{ // No error found! Move uploaded files 
+	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name))
+	            $count++; // Number of successfully uploaded file
+                       @$mysqltime = date("Y-m-d G:i:s");
+                       $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$realfolder', '$mysqltime', '$name', 1, '$text')");
+                       $row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
+                       $id = $row['id'];
+                       $db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
+	        #}
+	    }
 	}
-
+	if ($bintro == true | $fb==true) echo "<script>self.location.href='..?f=".$realfolder."'</script>";
+	echo "<script>self.location.href='../'</script>";
 }
