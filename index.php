@@ -348,12 +348,14 @@ if(isset($_GET['wish'])){
 	$fourdiv = $fourpack / 4;
 	}
     }
+if($isad>=3 && $edit==1 && $mode=='fmyma'){
     echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','New Folder')\">New Folder</font>";
 echo "<form id='biupform' style='display: inline-block;' action='.data/upload.php?folder=".$folder."' method='POST' enctype='multipart/form-data'>
                         <input id='biup' name='fileselect[]' multiple='multiple' type='file'>
                         <input name='fb' type='hidden'>
 			<input class='".$color."' type=submit>
                         </form>";
+}
     echo "<script>
 	newload = true;
 	if(window.location.hash) {

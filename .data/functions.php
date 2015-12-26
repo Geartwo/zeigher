@@ -360,6 +360,7 @@ function NF (cc, name) {
 xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+			location.reload();
                 }
         }
         xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&newfolder="+ name,true);
@@ -394,8 +395,9 @@ function SND (kk, cc, newcc, id, nodir) {
 	xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                        z.innerHTML = str.value;
-			SN (kk, cc);
+			location.reload();
+                        //z.innerHTML = str.value;
+			//SN (kk, cc);
                 }
         }
         xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&newf="+ newcc +"&renold="+ kk +"&rennew="+ str.value,true);
