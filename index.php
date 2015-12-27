@@ -256,9 +256,10 @@ if(isset($_GET['wish'])){
 			$simply = $row['value'];
 			if($simply =="true")$onr = true;
 			if(isset($onr))echo"<script>res = 1;</script>";
+			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
-			echo "<a class='buo ord' id='num".$fourpack."' draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$file."', '".$folder."'); ";
-			//File
+			echo "<a class='buo ord' id='num".$fourpack."' draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."'); ";
+			//Fil
 			if(ereg(".href", $file)){
 				$docfile=fopen($yeslop .".href","r+");
 				$lfile = htmlentities(fgets($docfile));
@@ -269,7 +270,7 @@ if(isset($_GET['wish'])){
 				$sign = 'ico-film';
 			}elseif (ereg(".mp3", $file) || ereg(".aac", $file)){
                	echo "hearit('".$folder."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res);\">
-		<script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$file."');</script>";
+		<script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$rawfile."');</script>";
 		$sign = 'ico-music';
         	} elseif (ereg(".yt", $file)){
                 $rawfile = implode(array_slice(explode('?v=',fgets(fopen($yeslop.".yt","r+"))), 1));
@@ -305,17 +306,19 @@ if(isset($_GET['wish'])){
 		$sign = "ico-no";
 	    }
 	    $lastfolder = $folder;
-            echo "<div class='bigfolder bigfile' id='".$file."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$file."','".$folder."','')\" draggable='false'>
-	    <form style='display: inline-block' id='".$file."z' onsubmit=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\"><font class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font></form>";
+            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\" draggable='false'>
+	    <form style='display: inline-block;' id='".$rawfile."z' onsubmit=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\">
+
+<font class='bigback bigfileback'><font class='".$sign."'></font>" . $htmlescfile . "</font></form>";
 	    if ($orfile == 5) {
                 echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
             }
 	    if ($isad >=3 && $edit == 1) {
 	    $extension = substr(strrchr($file, "."), 1);
 	    echo "</a>
-            <input type='hidden' id='".$file."r' value='".$file."' draggable='false'><br>
-            <a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."');\"></a>
-            <a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
+            <input type='hidden' id='".$rawfile."r' value='".$htmlescfile."' draggable='false'><br>
+            <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
+            <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
             ";
 	    }
 			echo "</div></a>";
