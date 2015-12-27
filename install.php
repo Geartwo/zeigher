@@ -130,6 +130,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	} else {
 	    $db = new SQLite3($sqlitefolder . 'mysqlitedb.db');
 	}
+    $db->query("ALTER DATABASE '$dbank' CHARACTER SET utf8 COLLATE utf8_unicode_ci;");
     $db->query("CREATE TABLE settings (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
     setting VARCHAR(50) NOT NULL,

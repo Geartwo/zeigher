@@ -69,12 +69,12 @@ if(isset($_GET['wish'])){
 		$oph = opendir($folder);
 		while(($file = readdir($oph)) !== false){
 			if($file[0] == '.') continue;
-			$sufile = $db->real_escape_string($file);
-			$row = $db->query("SELECT id FROM files WHERE name = '$sufile'")->fetch_assoc();
+			if(!is_dir($folder . "/" . $file)) continue;
+			$dbfile = $db->real_escape_string($file);
+			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
 			$fileid = $row['id'];
 			if(!isset($fileid)){
 				$mysqltime = date("Y-m-d H:i:s");
-				$dbfile = $db->real_escape_string($file);
 				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 1)");
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
@@ -156,12 +156,6 @@ if(isset($_GET['wish'])){
 			$rawfile = rawurlencode($file);
 			$utf8file = utf8_encode($file);
 			$utf8folder = utf8_encode($folder);
-			if(!isset($fileid)){
-				$mysqltime = date("Y-m-d H:i:s");
-				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 2)");
-				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile' AND folder = '$ufolder'")->fetch_assoc();
-				$fileid = $row['id'];
-			}
 		}
 		echo "<div style=\"clear: left;\"></div>";
 	}
@@ -176,20 +170,21 @@ if(isset($_GET['wish'])){
 	}
 	//File listing
 	$thereAreFiles = false;
+	$file = "";
 	if($mode != 'dmyma'){
-		$oph = opendir($folder);
-		while(($file = readdir($oph)) !== false){
-			if(is_dir($folder."/".$file) | $file[0] == "." | ereg(".php", $file) | ereg(".md", $file) | ereg(".html", $file)) continue;
+		$opf = opendir($folder);
+		while(($file = readdir($opf)) !== false){
+			if(is_dir($folder."/".$file) | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
 			$datn_array[] = $file;
 		}
 		if(!isset($notsort)) natsort($datn_array);
 		foreach($datn_array as $file){
-			$sufile = $db->real_escape_string($file);
-			$row = $db->query("SELECT id FROM files WHERE name = '$sufile'")->fetch_assoc();
+			$dbfile = $db->real_escape_string($file);
+			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
 			$fileid = $row['id'];
 			if(!isset($fileid)){
 				$mysqltime = date("Y-m-d H:i:s");
-				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 1)");
+				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 0)");
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
 			}
@@ -201,7 +196,6 @@ if(isset($_GET['wish'])){
 			echo"<b>".$lang->empty."</b>";
 		}
 	}else{
-		//if(!isset($notsort)) natsort($dat_array);
 		$four = 0;
 		$fourpack = 1;
 		$idnum = 1;
@@ -229,11 +223,11 @@ if(isset($_GET['wish'])){
 			#Thumbnail Generate
 			$singlbackground = "";
 			if(!file_exists($folder."/.pic_".$file.".jpg")){
-				if(ereg('.mp4', $file) || ereg('.webm', $file) || ereg('.mkv', $file)){
+				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)){
 					exec('/opt/ffmpeg/ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');
-				}elseif(ereg('.jpg', $file) || ereg('.png', $file) || ereg('.gif', $file)){
+				}elseif(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)){
 					pic_thumb($folder.'/'.$file, $folder.'/.pic_'.$file.'.jpg', '238', '150');
-				}elseif(ereg('.mp3', $file) || ereg('.aac', $file) || ereg('.rdio', $file)){
+				}elseif(preg_match('/\.mp3\z/i', $file) || preg_match('/\.aac\z/i', $file) || preg_match('/\.rdio\z/i', $file)){
 					if(file_exists($folder."/.art_".$file.".jpg")) pic_thumb($folder.'/.art_'.$file.'.jpg', $folder.'/.pic_'.$file.'.jpg', '238', '150');
 				}
 				if(!file_exists($folder."/.pic_".$file.".jpg")){
@@ -259,46 +253,46 @@ if(isset($_GET['wish'])){
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			echo "<a class='buo ord' id='num".$fourpack."' draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."'); ";
-			//Fil
-			if(ereg(".href", $file)){
+			//File
+			if(preg_match("/\.href\z/i", $file)){
 				$docfile=fopen($yeslop .".href","r+");
 				$lfile = htmlentities(fgets($docfile));
 				fclose($docfile);
 				echo"onclick=\"self.location.href='".$lfile."'\">";
-			}elseif(preg_match("/\.mp4/", $file) || preg_match("/\.webm/", $file)){
+			}elseif(preg_match("/\.mp4\z/i", $file) || preg_match("/\.webm\z/i", $file)){
 				echo "streamit('".$folder."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res);\"><script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$file."');</script>";
 				$sign = 'ico-film';
-			}elseif (ereg(".mp3", $file) || ereg(".aac", $file)){
+			}elseif (preg_match("/\.mp3\z/i", $file) || preg_match("/\.aac\z/i", $file)){
                	echo "hearit('".$folder."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res);\">
 		<script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$rawfile."');</script>";
 		$sign = 'ico-music';
-        	} elseif (ereg(".yt", $file)){
+        	} elseif (preg_match("/\.yt\z/i", $file)){
                 $rawfile = implode(array_slice(explode('?v=',fgets(fopen($yeslop.".yt","r+"))), 1));
                 echo "ytit('".$rawfile."', Math.ceil(".$fourpack." / res) * res);\">";
 		$singlbackground = "https://img.youtube.com/vi/".$rawfile."/sddefault.jpg";
 		$sign = 'ico-yt';
-            }elseif (ereg(".mkv", $file)){
+            }elseif (preg_match("/\.mkv\z/i", $file)){
                 $yeskv = $https ."://". $_SERVER["HTTP_HOST"]."/".$yeslop.".mkv";
                 echo "streamkv('".$yeskv."');\">";
 		$sign = 'ico-vlc';
-			}elseif (ereg('.jpg', $file) || ereg('.png', $file) || ereg('.gif', $file)) {
+	    }elseif (preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)) {
             	echo "pikern('".$yeslo."', Math.ceil(".$fourpack." / res) * res);\">";
 		$sign = 'ico-pic';
-            } elseif (ereg(".zip", $file) || ereg('.rar', $file) || ereg('.iso', $file) || ereg('.exe', $file) || ereg('.apk', $file)){
+            } elseif (preg_match("/\.zip\z/i", $file) || preg_match('/\.rar\z/i', $file) || preg_match('/\.iso\z/i', $file) || preg_match('/\.exe\z/i', $file) || preg_match('/\.apk\z/i', $file)){
             	echo "\">";
 		$sign = 'ico-down';
-            } elseif (ereg(".rdio", $file)){
+            } elseif (preg_match("/\.rdio\z/i", $file)){
                 $file = trim(fgets(fopen($yeslop .".rdio", 'r')));
 		echo "rdit('".$file."', Math.ceil(".$fourpack." / res) * res);\">";
 		$sign = 'ico-radio';
-            } elseif (ereg(".txt", $file)){
+            } elseif (preg_match("/\.txt\z/i", $file)){
             	echo "showit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
 	        $sign = 'ico-pap';
-	    } elseif (ereg(".epub", $file)){
+	    } elseif (preg_match("/\.epub\z/i", $file)){
 		echo "readit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
 		$sign = 'ico-book';
 		include '.data/book.php';
-	    } elseif (ereg('.pdf', $file)){
+	    } elseif (preg_match('/\.pdf\z/i', $file)){
                 echo "seeit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
                 $sign = 'ico-book';
             } else {

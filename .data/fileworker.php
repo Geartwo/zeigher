@@ -3,10 +3,10 @@ include 'all.php';
 //Rename
 $folder = $_GET['f'];
 if(isset ($_GET['renold']) && isset ($_GET['rennew'])){
-	$newf = $_GET['newf'];
-	if ($isad >=3) {
-		$old = utf8_encode ($_GET['renold']);
-		$new = utf8_encode ($_GET['rennew']);
+$newf = $_GET['newf'];
+if ($isad >=3) {
+$old =$_GET['renold'];
+$new =$_GET['rennew'];
                         rename(".".$folder."/".$old, ".".$newf."/".$new);
                         rename(".".$folder."/.pic_".$old.".jpg", ".".$newf."/.pic_".$new.".jpg");
                         $df = implode('/', explode('%2F', rawurlencode($folder)));

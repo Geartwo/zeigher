@@ -32,7 +32,11 @@ if ($settings->points == 'true' && $bintro == false && $fb == false) {
 	}
 }
 if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
-	foreach ($_FILES['fileselect']['name'] as $f => $name) {     
+	foreach ($_FILES['fileselect']['name'] as $f => $name) {
+	    if(isset($_POST['bintro'])){
+		$name = ".bintro.jpg";
+		unlink(".pic.bintro.jpg.jpg");
+	    }
 	    if ($_FILES['fileselect']['error'][$f] == 4) {
 	        continue; // Skip file if any error found
 	    }	       
@@ -49,6 +53,7 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name))
 	            $count++; // Number of successfully uploaded file
                        @$mysqltime = date("Y-m-d G:i:s");
+			$name = $db->real_escape_string($name);
                        $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$realfolder', '$mysqltime', '$name', 1, '$text')");
                        $row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
                        $id = $row['id'];
