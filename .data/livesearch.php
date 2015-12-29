@@ -13,6 +13,7 @@ if ($mode == "dmyma") {
                 echo "<li><a href=\".?f=". $id . "\">" . $name . "</a></li>";
         }
         $search2 = $db->query("SELECT * FROM files WHERE name LIKE '%$q%' AND folder = './.files' ORDER BY name LIMIT 10");
+	$more = count($search2);
         while ($row = @mysqli_fetch_assoc($search2)){
 		$lf = 1;
                 $name = $row['name'];
@@ -26,13 +27,14 @@ if ($mode == "dmyma") {
         }
 }else {
         $search = $db->query("SELECT * FROM files WHERE name LIKE '%$q%' ORDER BY orfile DESC, name LIMIT 10");
+	$more = count($search);
 	while ($row = @mysqli_fetch_assoc($search)){
     		$name = $row['name'];
     		$folder = $row['folder'];
     		$orfile = $row['orfile'];
     		$lf = 1;
-		if ($orfile == 2) {
-			if ($or == 0) { $or = 2; echo "Ordner:"; }
+		if ($orfile == 0) {
+			if ($or == 0) { $or = 0; echo "File:"; }
 			echo "<li><a href=\".?f=". $folder . "/" . $name . "\">" . $name . "</a></li>";
 		}
     		if ($orfile == 1) {
@@ -40,6 +42,8 @@ if ($mode == "dmyma") {
 			echo "<li><a href=\".?f=". $folder . "\">" . $name . "</a></li>";
 		}
 	}
+echo $more."t";
+	if($more == 10) echo "<a>More</a>";
 }
 if ($lf == 0) echo"Es tut uns leid, aber \"" . $q . "\" wurde nicht gefunden.";
 

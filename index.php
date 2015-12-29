@@ -70,6 +70,10 @@ if(isset($_GET['wish'])){
 		while(($file = readdir($oph)) !== false){
 			if($file[0] == '.') continue;
 			if(!is_dir($folder . "/" . $file)) continue;
+        		$datnf_array[] = $file;
+                }
+                natsort($datnf_array);
+                foreach($datnf_array as $file){
 			$dbfile = $db->real_escape_string($file);
 			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
 			$fileid = $row['id'];
@@ -100,7 +104,6 @@ if(isset($_GET['wish'])){
 			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('".$folder."');\"></a><div/>";
 		}
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
-		natsort($ord_array);
 		$realfirst = "";
 		foreach($ord_array as $fileid){
             $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
@@ -177,7 +180,7 @@ if(isset($_GET['wish'])){
 			if(is_dir($folder."/".$file) | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
 			$datn_array[] = $file;
 		}
-		if(!isset($notsort)) natsort($datn_array);
+		natsort($datn_array);
 		foreach($datn_array as $file){
 			$dbfile = $db->real_escape_string($file);
 			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
@@ -303,7 +306,7 @@ if(isset($_GET['wish'])){
             echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\" draggable='false'>
 	    <form style='display: inline-block;' id='".$rawfile."z' onsubmit=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\">
 
-<font class='bigback bigfileback'><font class='".$sign."'></font>" . $htmlescfile . "</font></form>";
+<font class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font></form>";
 	    if ($orfile == 5) {
                 echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
             }

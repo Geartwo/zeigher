@@ -50,17 +50,19 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 		#		continue; // Skip invalid file formats
 		#	}
 	        #else{ // No error found! Move uploaded files 
-	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name))
-	            $count++; // Number of successfully uploaded file
+	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name)){
+			if ($bintro == true | $fb==true){
+				echo "<script>self.location.href='..?f=".$realfolder."'</script>";
+				exit;
+			}
                        @$mysqltime = date("Y-m-d G:i:s");
 			$name = $db->real_escape_string($name);
                        $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$realfolder', '$mysqltime', '$name', 1, '$text')");
                        $row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
                        $id = $row['id'];
                        $db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
-	        #}
+	        }
 	    }
 	}
-	if ($bintro == true | $fb==true) echo "<script>self.location.href='..?f=".$realfolder."'</script>";
 	echo "<script>self.location.href='../'</script>";
 }

@@ -1,4 +1,3 @@
-<script type="text/javascript" src=".data/jquery-2.1.3.min.js"></script>
 <html onload="resolution()">
 <link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
 <?php

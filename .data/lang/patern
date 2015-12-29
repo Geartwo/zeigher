@@ -101,5 +101,6 @@ $lang->description = '';
 $lang->toptags = '';
 $lang->newfiles = '';
 $lang->datachange = '';
-$lang->upload = ''
+$lang->upload = '';
+$lang->newfolder = '';
 ?>

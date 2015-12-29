@@ -101,5 +101,6 @@ $lang->description = 'Beschreibung';
 $lang->toptags = 'Top Tags';
 $lang->newfiles = 'Neuste Datein';
 $lang->datachange = 'Deine Daten wurden erfolgreich ge&auml;ndert.';
-$lang->upload = 'Datei Hochladen'
+$lang->upload = 'Datei Hochladen';
+$lang->newfolder = 'Neuer Ordner';
 ?>
