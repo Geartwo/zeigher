@@ -96,11 +96,7 @@ if(isset($_GET['wish'])){
 				fclose($docfile);
 			}
 			echo "</textarea>
-			<form id='biupform' style='display: inline-block;' action='.data/upload.php?folder=".$folder."' method='POST' enctype='multipart/form-data'>
-			<input id='biup' name='fileselect[]' type='file'>
-			<input name='bintro' type='hidden'>
-			</form>
-			<a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
+<a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
 			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('".$folder."');\"></a><div/>";
 		}
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
@@ -350,11 +346,11 @@ if(isset($_GET['wish'])){
     }
 if($isad>=3 && $edit==1 && $mode=='fmyma'){
     echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','New Folder')\">New Folder</font>";
-echo "<form id='biupform' style='display: inline-block;' action='.data/upload.php?folder=".$folder."' method='POST' enctype='multipart/form-data'>
-                        <input id='biup' name='fileselect[]' multiple='multiple' type='file'>
-                        <input name='fb' type='hidden'>
-			<input class='".$color."' type=submit>
-                        </form>";
+echo "<input id='filebiup' multiple type='file'>
+<input id='fileupfolder' type='hidden' value='".$folder."'>
+<input id='fileupmode' type='hidden' value='fb'>
+<input class='".$color."' type=submit onclick=\"UploadFile('file')\">
+<progress id='fileupg' value='0' max='100' style='margin-top:10px'><span id='filepercent'>0%</span></progress><br>";
 }
     echo "<script>
 	newload = true;

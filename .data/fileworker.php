@@ -21,10 +21,13 @@ $new =$_GET['rennew'];
 }elseif (isset ($_GET['newfolder']) && $isad >=3){
                 $new = 'New Folder';
                 mkdir(".".$folder."/".$new, 0755);
-                echo "<script>self.location.href=\"?f=.".$folder."\"</script>";
 }elseif (isset ($_GET['delfile']) && $isad >=8){
-	unlink(".".$folder."/".$_GET['delfile']);
+	$del = $_GET['delfile'];
+	unlink(".".$folder."/".$del);
+	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
 }elseif (isset ($_GET['deldir']) && $isad >=8){
-        rmdir(".".$folder."/".$_GET['deldir']);
+	$del = $_GET['deldir'];
+        rmdir(".".$folder."/".$del);
+	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
 }
 ?>

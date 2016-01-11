@@ -315,7 +315,7 @@ function SetNameDel(kk, cc, file, newcc) {
 		xmlhttp=new XMLHttpRequest();
                 xmlhttp.onreadystatechange=function() {
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                                
+                               location.reload(); 
                         }
                 }
                 xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&deldir="+ kk,true);
@@ -409,7 +409,7 @@ function SND (kk, cc, newcc, id, nodir) {
                 xmlhttp=new XMLHttpRequest();
                 xmlhttp.onreadystatechange=function() {
                         if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-
+				location.reload();
                         }
                 }
                 xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&delfile="+ kk,true);
@@ -421,7 +421,7 @@ function SND (kk, cc, newcc, id, nodir) {
         	xmlhttp=new XMLHttpRequest();
     		xmlhttp.onreadystatechange=function() {
     			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-      				
+      				location.reload();
     			}
   		}
 		xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&deldir="+ kk,true);
@@ -452,38 +452,42 @@ function FileSelectHandler(e) {
 	}
 
 }
-
-// upload JPEG files
-function UploadFile(file) {
-
+function UploadFile(upid) {
+	var fileInput = document.getElementById(upid + 'biup').files;
+	var folder = document.getElementById(upid + 'upfolder').value;
+	var mode = document.getElementById(upid + 'upmode').value;
+	var data = new FormData();
+	for (var i = 0, file; file = fileInput[i]; ++i) {
+		data.append('fileselect[]', file);
+	}
+	data.append('mode',mode);
 	var xhr = new XMLHttpRequest();
-	if (xhr.upload && file.size <= $id("MAX_FILE_SIZE").value) {
-		var prog = document.getElementById("progress");
-
-    prog.value = 0;
-    prog.max = 100;
-
+      xhr.upload.addEventListener("progress", function(e) {
+              var pc = parseInt(e.loaded / e.total * 100);
+              document.getElementById(upid + "upg").value = pc;
+		document.getElementById(upid + "percent").innerHTML = pc+'%';
+      }, false);
+	xhr.onreadystatechange=function() {
+		if (xhr.readyState==4 && xhr.status==200) {
+                               location.reload(); 
+                        }
+                }
     xhr.onerror = function(e) {
         alert("onError");
     };
+//	xhr.upload.addEventListener("progress", function(e) {
+//		var pc = parseInt(100 - (e.loaded / e.total * 100));
+//		prog.value = pc;
+//	}, false);
+//    xhr.onload = function(e) {
+//        document.getElementById("prozent").innerHTML = "100%";
+//        prog.value = prog.max;
+//    };
 
-    xhr.onload = function(e) {
-        document.getElementById("prozent").innerHTML = "100%";
-        prog.value = prog.max;
-    };
-
-    xhr.upload.onprogress = function(e) {
-        var p = Math.round(100 / e.total * e.loaded);
-        document.getElementById("progress").value = p;
-        document.getElementById("prozent").innerHTML = p + "%";
-    };
 			// start upload
-		xhr.open("POST", $id("upload").action, true);
-		xhr.setRequestHeader("X_FILENAME", file.name);
-		xhr.send(file);
-
-	}
-
+		xhr.open("POST", '.data/upload.php?folder='+folder, true);
+		xhr.setRequestHeader('Cache-Control','no-cache');
+		xhr.send(data);
 }
 function showFileSize(mompoints) {
     var input, file, point, returner, ok;

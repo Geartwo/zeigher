@@ -1,18 +1,16 @@
 <?php
 include 'all.php';
 $fn = (isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false);
-if(isset($_POST['bintro'])) {
+if($_POST['mode'] == "bintro") {
 	$bintro = true;
 	$rn = '.bintro.jpg';
-}elseif(isset($_POST['fb'])) {
+}elseif($_POST['mode'] == "fb") {
         $fb = true;
-}else{
-        $bintro = false;
 }
 $folder = "../" . $_GET['folder'] . "/";
 $realfolder = $_GET['folder'];
 @$text = $db->real_escape_string($_POST['impeditor']);
-if ($settings->points == 'true' && $bintro == false && $fb == false) {
+if ($settings->points == 'true' && !isset($bintro) && !isset($fb)) {
 	$points = $_POST['points'];
 	if ($points > $upload_mb) { 
 		echo "Error: File to Big<br><a href='..'>Back</a>";
@@ -31,7 +29,7 @@ if ($settings->points == 'true' && $bintro == false && $fb == false) {
 		$eintragen = $db->query("UPDATE user SET premium = '$userpremium' WHERE id = '$userid'");
 	}
 }
-if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
+if(!empty($_FILES['fileselect'])){
 	foreach ($_FILES['fileselect']['name'] as $f => $name) {
 	    if(isset($_POST['bintro'])){
 		$name = ".bintro.jpg";
@@ -51,18 +49,22 @@ if(isset($_POST) and $_SERVER['REQUEST_METHOD'] == "POST"){
 		#	}
 	        #else{ // No error found! Move uploaded files 
 	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name)){
-			if ($bintro == true | $fb==true){
+			if (isset($bintro)){
 				echo "<script>self.location.href='..?f=".$realfolder."'</script>";
 				exit;
 			}
                        @$mysqltime = date("Y-m-d G:i:s");
 			$name = $db->real_escape_string($name);
                        $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$realfolder', '$mysqltime', '$name', 1, '$text')");
-                       $row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
-                       $id = $row['id'];
-                       $db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
+                       #$row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
+                       #$id = $row['id'];
+                       #$db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
 	        }
 	    }
 	}
+	if (isset($fb)){
+        	echo "<script>self.location.href='..?f=".$realfolder."'</script>";
+        	exit;
+        }
 	echo "<script>self.location.href='../'</script>";
-}
+}else{echo"Wrong";}
