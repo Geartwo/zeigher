@@ -15,7 +15,6 @@ if ($mode == 'fmyma' | $mode == 'dmyma' && $installed == true) {
 	printf("No Mode Selectet");
         exit;
 }
-
 if (isset($db) && $installed == true) {
 	if (!mysqli_set_charset($db, "utf8")) {
     	printf("Error loading character set utf8: %s\n", mysqli_error($db));

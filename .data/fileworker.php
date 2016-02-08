@@ -19,7 +19,7 @@ $new =$_GET['rennew'];
                         echo $lang->norenameright;
                 }
 }elseif (isset ($_GET['newfolder']) && $isad >=3){
-                $new = 'New Folder';
+                $new = $_GET['newfolder'];
                 mkdir(".".$folder."/".$new, 0755);
 }elseif (isset ($_GET['delfile']) && $isad >=8){
 	$del = $_GET['delfile'];

@@ -1,8 +1,11 @@
+<head>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" />
+</head>
 <html onload="resolution()">
 <link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
 <?php
 error_reporting();
-$settings = new stdClass();
 $isad=0;
 include 'all.php';
 include 'functions.php';
@@ -99,7 +102,7 @@ echo "
 <div class=\"wrapper\"";
 if(isset($noheader) && !isset($_SESSION['loggedin'])) echo " style='display: none;'";
 echo "><div class=\"logoe\">";
-if(!empty($settings->logo) && $settings=!'false'){
+if(!empty($settings->logo) && $settings->logo=!'false'){
 	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->logo."'></a>";
 }elseif(!empty($settings->stitel)){
 	echo "<a class=\"logof f".$color."\" href='.'>".$settings->stitel."</a>";
@@ -108,7 +111,7 @@ if(!empty($settings->logo) && $settings=!'false'){
 }
 if(!empty($_SESSION['loggedin'])){
 	$loggedin = true;
-	if($settings->search == 'true'){
+	if(isset($settings->search) && $settings->search == 'true'){
 		echo "<div class='logos f".$color." ico-search searchl'>
 		<form method='get' style='display: inline-block; margin: 0px;'>
 		<input class='searchi' onkeyup=\"showResult(this.value);\" tabindex='1' name='f'>

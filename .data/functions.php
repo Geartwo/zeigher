@@ -1,8 +1,9 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
-<script src=".data/epub/epub.min.js"></script>
-<script src=".data/epub/libs/zip.min.js"></script>
+<?php
+require('plugins/epub/functions.html');
+?>
 <script src=".data/pdf/build/pdf.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.css">
 <script>
@@ -78,6 +79,9 @@ function streamer(id, kk, four, mpf, folder, userid) {
     } else {
 	history.pushState(null, null, ' ');
     }
+};
+function comment(){
+	
 };
 </script>
 <script>

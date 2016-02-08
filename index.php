@@ -223,7 +223,7 @@ if(isset($_GET['wish'])){
 			$singlbackground = "";
 			if(!file_exists($folder."/.pic_".$file.".jpg")){
 				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)){
-					exec('/opt/ffmpeg/ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');
+					exec('ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');
 				}elseif(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)){
 					pic_thumb($folder.'/'.$file, $folder.'/.pic_'.$file.'.jpg', '238', '150');
 				}elseif(preg_match('/\.mp3\z/i', $file) || preg_match('/\.aac\z/i', $file) || preg_match('/\.rdio\z/i', $file)){
@@ -251,52 +251,16 @@ if(isset($_GET['wish'])){
 			if(isset($onr))echo"<script>res = 1;</script>";
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
+			$pext = substr(strrchr($file, "."), 1);
 			echo "<a class='buo ord' id='num".$fourpack."' draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."'); ";
 			//File
-			if(preg_match("/\.href\z/i", $file)){
-				$docfile=fopen($yeslop .".href","r+");
-				$lfile = htmlentities(fgets($docfile));
-				fclose($docfile);
-				echo"onclick=\"self.location.href='".$lfile."'\">";
-			}elseif(preg_match("/\.mp4\z/i", $file) || preg_match("/\.webm\z/i", $file)){
-				echo "streamit('".$folder."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res);\"><script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$file."');</script>";
-				$sign = 'ico-film';
-			}elseif (preg_match("/\.mp3\z/i", $file) || preg_match("/\.aac\z/i", $file)){
-               	echo "hearit('".$folder."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res);\">
-		<script>next('".$lastfolder."', '".$fileid."', '".$rawfile."', Math.ceil(".$fourpack." / res) * res, '".$idnum."', '".$rawfile."');</script>";
-		$sign = 'ico-music';
-        	} elseif (preg_match("/\.yt\z/i", $file)){
-                $rawfile = implode(array_slice(explode('?v=',fgets(fopen($yeslop.".yt","r+"))), 1));
-                echo "ytit('".$rawfile."', Math.ceil(".$fourpack." / res) * res);\">";
-		$singlbackground = "https://img.youtube.com/vi/".$rawfile."/sddefault.jpg";
-		$sign = 'ico-yt';
-            }elseif (preg_match("/\.mkv\z/i", $file)){
-                $yeskv = $https ."://". $_SERVER["HTTP_HOST"]."/".$yeslop.".mkv";
-                echo "streamkv('".$yeskv."');\">";
-		$sign = 'ico-vlc';
-	    }elseif (preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)) {
-            	echo "pikern('".$yeslo."', Math.ceil(".$fourpack." / res) * res);\">";
-		$sign = 'ico-pic';
-            } elseif (preg_match("/\.zip\z/i", $file) || preg_match('/\.rar\z/i', $file) || preg_match('/\.iso\z/i', $file) || preg_match('/\.exe\z/i', $file) || preg_match('/\.apk\z/i', $file)){
-            	echo "\">";
-		$sign = 'ico-down';
-            } elseif (preg_match("/\.rdio\z/i", $file)){
-                $file = trim(fgets(fopen($yeslop .".rdio", 'r')));
-		echo "rdit('".$file."', Math.ceil(".$fourpack." / res) * res);\">";
-		$sign = 'ico-radio';
-            } elseif (preg_match("/\.txt\z/i", $file)){
-            	echo "showit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
-	        $sign = 'ico-pap';
-	    } elseif (preg_match("/\.epub\z/i", $file)){
-		echo "readit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
-		$sign = 'ico-book';
-		include '.data/book.php';
-	    } elseif (preg_match('/\.pdf\z/i', $file)){
-                echo "seeit('".$yeslo."', Math.ceil(".$fourpack." / res) * res, '".$color."');\">";
-                $sign = 'ico-book';
-            } else {
+			$sign = "ico-no";
+			if(file_exists($plugextension[$pext])){
+				require($plugextension[$pext]);
+			}
+	if($sign == "ico-no") {
 		echo "\">";
-		$sign = "ico-no";
+		$sign = 'ico-down';
 	    }
 	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\" draggable='false'>
@@ -345,12 +309,34 @@ if(isset($_GET['wish'])){
 	}
     }
 if($isad>=3 && $edit==1 && $mode=='fmyma'){
-    echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','New Folder')\">New Folder</font>";
-echo "<input id='filebiup' multiple type='file'>
+    echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</font><br>";
+echo "
+<div class='fileUpload btn btn-primary'>
+    <span>Upload</span>
+<input class='fileUpload' id='filebiup' multiple type='file'>
+</div>
 <input id='fileupfolder' type='hidden' value='".$folder."'>
 <input id='fileupmode' type='hidden' value='fb'>
-<input class='".$color."' type=submit onclick=\"UploadFile('file')\">
-<progress id='fileupg' value='0' max='100' style='margin-top:10px'><span id='filepercent'>0%</span></progress><br>";
+<input class='".$color."' type=submit onclick=\"UploadFile('file')\"><br>
+<progress id='fileupg' value='0' max='100' style='margin-top:10px'></progress><br>
+<style>
+.fileUpload {
+    position: relative;
+    overflow: hidden;
+    margin: 10px;
+}
+.fileUpload input.upload {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 20px;
+    cursor: pointer;
+    opacity: 0;
+    filter: alpha(opacity=0);
+</style>
+";
 }
     echo "<script>
 	newload = true;

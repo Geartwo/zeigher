@@ -8,7 +8,9 @@
 <div class="footer">
 <?php
 echo $bfooter;
-if(empty($settings->piwik)) include 'piwik.php';
+foreach($footerextension as $foex){
+        include($voex);
+}
 ?>
 </div>
 <!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->

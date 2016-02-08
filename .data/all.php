@@ -5,6 +5,23 @@ $wish = "";
 ini_set("session.cookie_lifetime","2592000");
 ini_set("session.gc_maxlifetime", "2592000");
 session_start();
+$pluginfolder = $_SERVER['DOCUMENT_ROOT'] . "/.data/plugins";
+$plugdir = scandir($pluginfolder);
+foreach($plugdir as $pfolder) {
+	if($pfolder[0] == ".") continue;
+	if(file_exists($pluginfolder."/".$pfolder."/extension.php")) {
+		$plugextension[$pfolder] = $pluginfolder."/".$pfolder."/extension.php";
+	}
+	if(file_exists($pluginfolder."/".$pfolder."/header.php")) {
+                $headerextension[$pfolder] = $pluginfolder."/".$pfolder."/header.php";
+        }
+	if(file_exists($pluginfolder."/".$pfolder."/footer.php")) {
+                $footerextension[$pfolder] = $pluginfolder."/".$pfolder."/footer.php";
+        }
+	if(file_exists($pluginfolder."/".$pfolder."/voteroom.php")) {
+                $voteroomextension[$pfolder] = $pluginfolder."/".$pfolder."/voteroom.php";
+        }
+}
 include 'sql.php';
 if (!isset($installed)) {
 	echo "<script>self.location.href='install.php'</script>";
