@@ -1,32 +1,44 @@
 <?php
+@include '../.settings/config.php';
+@include '.settings/config.php';
+if (!isset($installed)) {
+	echo "<script>self.location.href='install.php'</script>";
+	exit;
+}
 $host = $_SERVER['HTTP_HOST'];
 if(!isset($folder)) $folder = ".";
 $wish = "";
 ini_set("session.cookie_lifetime","2592000");
 ini_set("session.gc_maxlifetime", "2592000");
+$settings = new stdClass();
+$max_upload = (int)(ini_get('upload_max_filesize'));
+$max_post = (int)(ini_get('post_max_size'));
+$memory_limit = (int)(ini_get('memory_limit'));
+$upload_mb = min($max_upload, $max_post, $memory_limit);
 session_start();
-$pluginfolder = $_SERVER['DOCUMENT_ROOT'] . "/.data/plugins";
-$plugdir = scandir($pluginfolder);
-foreach($plugdir as $pfolder) {
-	if($pfolder[0] == ".") continue;
-	if(file_exists($pluginfolder."/".$pfolder."/extension.php")) {
-		$plugextension[$pfolder] = $pluginfolder."/".$pfolder."/extension.php";
+if (!isset($installed)) {
+	$pluginfolder = $_SERVER['DOCUMENT_ROOT'] . "/.data/plugins";
+	$plugdir = scandir($pluginfolder);
+	foreach($plugdir as $pfolder) {
+		if($pfolder[0] == ".") continue;
+		if(file_exists($pluginfolder."/".$pfolder."/extension.php")) {
+			$plugextension[$pfolder] = $pluginfolder."/".$pfolder."/extension.php";
+		}
+		if(file_exists($pluginfolder."/".$pfolder."/header.php")) {
+			$headerextension[$pfolder] = $pluginfolder."/".$pfolder."/header.php";
+        }
+		if(file_exists($pluginfolder."/".$pfolder."/footer.php")) {
+            $footerextension[$pfolder] = $pluginfolder."/".$pfolder."/footer.php";
+        }
+		if(file_exists($pluginfolder."/".$pfolder."/voteroom.php")) {
+            $voteroomextension[$pfolder] = $pluginfolder."/".$pfolder."/voteroom.php";
+        }
+		if(file_exists($pluginfolder."/".$pfolder."/function.php")) {
+            $functionsextension[$pfolder] = $pluginfolder."/".$pfolder."/function.php";
+        }
 	}
-	if(file_exists($pluginfolder."/".$pfolder."/header.php")) {
-                $headerextension[$pfolder] = $pluginfolder."/".$pfolder."/header.php";
-        }
-	if(file_exists($pluginfolder."/".$pfolder."/footer.php")) {
-                $footerextension[$pfolder] = $pluginfolder."/".$pfolder."/footer.php";
-        }
-	if(file_exists($pluginfolder."/".$pfolder."/voteroom.php")) {
-                $voteroomextension[$pfolder] = $pluginfolder."/".$pfolder."/voteroom.php";
-        }
 }
 include 'sql.php';
-if (!isset($installed)) {
-	echo "<script>self.location.href='install.php'</script>";
-	exit;
-}
 //Setting
 if (isset($_SESSION['userid'])) {$userid = $_SESSION['userid'];} else {$userid = '-1';}
 if (isset($_SESSION['edit'])) {$edit = $_SESSION['edit'];} else {$edit = 0;}
@@ -67,7 +79,7 @@ if (isset($db) && $installed == true) {
 	}else{
 		$colorid = 0;
 	}
-	$dbquery = $db->query("SELECT value FROM settings WHERE setting = 'color'");
+	$dbquery = $db->query("SELECT value FROM settings WHERE setting = 'color'AND userid = '$colorid'");
 	while ($row = $dbquery->fetch_assoc()){
 		$color = $row['value'];
 	}

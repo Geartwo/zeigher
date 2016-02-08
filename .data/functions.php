@@ -2,10 +2,12 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
 <?php
-require('plugins/epub/functions.html');
+if(isset($functionsextension)){
+	foreach($functionsextension as $fuex){
+        include($fuex);
+	}
+}
 ?>
-<script src=".data/pdf/build/pdf.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.css">
 <script>
 playtime = 0;
 
@@ -473,6 +475,7 @@ function UploadFile(upid) {
       }, false);
 	xhr.onreadystatechange=function() {
 		if (xhr.readyState==4 && xhr.status==200) {
+			console.log(xhr.responseText) 
                                location.reload(); 
                         }
                 }
@@ -501,7 +504,7 @@ function showFileSize(mompoints) {
         return;
     }
 
-    input = document.getElementById('fileselect');
+    input = document.getElementById('filebiup');
     returner = document.getElementById('points');
     if (!input) {
         returner("p", "Um, couldn't find the fileinput element.");
@@ -514,15 +517,14 @@ function showFileSize(mompoints) {
     }
     else {
         file = input.files[0]; console.log(file);
-	point = Math.ceil(file.size/1048576);
-	mompoints = mompoints-point;
-	if (mompoints > 0) {
-		unbut('ok');
-		ok = " - Ok";
-		document.getElementById("uppoints").value = point;
-	} else { 
-		ok = " - Zu wenig Punkte" 
-	}
+		point = Math.ceil(file.size/1048576);
+		mompoints = mompoints-point;
+		if (mompoints > 0) {
+			unbut('ok');
+			ok = " - Ok";
+		} else { 
+			ok = " - Zu wenig Punkte" 
+		}
         returner.innerHTML = "Es kostet " + point + " Punkt/e<br>Restpunkte: " + mompoints + ok;
     }
 }

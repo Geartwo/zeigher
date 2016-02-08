@@ -8,8 +8,10 @@
 <div class="footer">
 <?php
 echo $bfooter;
-foreach($footerextension as $foex){
-        include($voex);
+if(isset($footerextension)){
+	foreach($footerextension as $foex){
+        include($foex);
+	}
 }
 ?>
 </div>

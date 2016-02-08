@@ -1,6 +1,4 @@
 <?php
-@include '../.settings/config.php';
-@include '.settings/config.php';
 if(!isset($theme))$theme = "default";
 //SQL connect
 if ($mode == 'fmyma' | $mode == 'dmyma' && $installed == true) {
@@ -21,7 +19,6 @@ if (isset($db) && $installed == true) {
     	exit();
 	}
 	//Get Settings
-	$settings = new stdClass();
 	$dbquery = $db->query("SELECT * FROM settings WHERE userid = '0'");
 	while ($row = $dbquery->fetch_assoc()){
 		$settings->$row['setting'] = $row['value'];

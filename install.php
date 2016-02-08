@@ -68,6 +68,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 		die("<b style='color: red'>Fatal Error: Connection failed - " . $conn->connect_error . "</b><br><a href='?mode=" . $_POST['mode'] . "'>Retry</a>");
 	}
 	if(!file_exists('.settings')) mkdir('.settings');
+	if(!file_exists('.data/plugins')) mkdir('.data/plugins');
 	$datei = fopen(".settings/config.php", "a+");
 	fwrite($datei, '<?php'."\r\n");
 	fwrite($datei, '$mode = \''.$_POST['mode']."';\r\n");
@@ -79,7 +80,6 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	} else {
 	    fwrite($datei, '$sqlitefolder = \''.$_POST['dbankfolder']."';\r\n");
 	}
-	fwrite($datei, '$secret_salt = \''.$_POST['salt']."';\r\n");
 	fwrite($datei, "?>\r\n");
 	fclose($datei);
 	echo "<script>self.location.href='install.php'</script>";

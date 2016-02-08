@@ -8,6 +8,9 @@ var four = 0;
 </script>
 <?php
 include '.data/header.php';
+if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
+	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
+}
 $ufolder = implode('/', explode('%2F', rawurlencode($folder)));
 if(file_exists($folder ."/intro.jpg")){
 	echo "<img class=\"tbild\" onmousedown=\"return false;\" src=\"".$ufolder."/intro.jpg\" alt=\"mainpic\">";
@@ -113,8 +116,8 @@ if(isset($_GET['wish'])){
 				$endthumb = $folder."/".$file;
 			}elseif($mode != 'dmyma' && file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg")){
 				$endthumb = rawurlencode($folder."/".$file);
-			}elseif(file_exists($zgif."/.pic_.bintro.jpg.jpg")){
-				$endthumb = $cgif;
+			}elseif(file_exists("./.pic_.bintro.jpg.jpg")){
+				$endthumb = "./.pic_.bintro.jpg.jpg";
 			}
 			if($file[0] == "-" && $realfirst != "-"){
 				echo "<div class=\"alpha\">".$lang->category."</div>";
@@ -221,6 +224,9 @@ if(isset($_GET['wish'])){
 			if($orfile == 4) $rawfile = ".bintro.jpg";
 			#Thumbnail Generate
 			$singlbackground = "";
+			if(file_exists("./.pic_.bintro.jpg.jpg")){
+				$endthumb = ".";
+			}
 			if(!file_exists($folder."/.pic_".$file.".jpg")){
 				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)){
 					exec('ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');

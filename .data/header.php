@@ -11,7 +11,6 @@ include 'all.php';
 include 'functions.php';
 $regist='';
 if (isset($_GET['login'])) $use = 'none';
-if (file_exists('/.settings/config.php'))include '/.settings/config.php';
 set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
@@ -34,10 +33,6 @@ $bsiter = array_slice($parts, 1, $partz -1);
 $piczahl = 0;
 $picrow = 1;
 $dbfree = 2;
-$max_upload = (int)(ini_get('upload_max_filesize'));
-$max_post = (int)(ini_get('post_max_size'));
-$memory_limit = (int)(ini_get('memory_limit'));
-$upload_mb = min($max_upload, $max_post, $memory_limit);
 //Destroy Session
 if(isset ($_GET['log'])){
 	$_SESSION['loggedin'] = false;
@@ -90,7 +85,7 @@ if (isset ($endgif)) {
 }
 
 //Real Header
-if(!isset($settings->stitel)) $settings->stitel = $url;
+if(empty($settings->stitel)) $settings->stitel = $url;
 if(isset($nnout)){
 	echo "<style>
 	.wrapper { display: none; }
