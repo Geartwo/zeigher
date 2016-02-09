@@ -117,7 +117,7 @@ if(isset($_GET['wish'])){
 			}elseif($mode != 'dmyma' && file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg")){
 				$endthumb = rawurlencode($folder."/".$file);
 			}elseif(file_exists("./.pic_.bintro.jpg.jpg")){
-				$endthumb = "./.pic_.bintro.jpg.jpg";
+				$endthumb = ".";
 			}
 			if($file[0] == "-" && $realfirst != "-"){
 				echo "<div class=\"alpha\">".$lang->category."</div>";
@@ -224,7 +224,7 @@ if(isset($_GET['wish'])){
 			if($orfile == 4) $rawfile = ".bintro.jpg";
 			#Thumbnail Generate
 			$singlbackground = "";
-			if(file_exists("./.pic_.bintro.jpg.jpg")){
+			if(file_exists("./.pic_.bintro.jpg.jpg") && $mode=='dmyma'){
 				$endthumb = ".";
 			}
 			if(!file_exists($folder."/.pic_".$file.".jpg")){

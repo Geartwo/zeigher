@@ -97,8 +97,8 @@ echo "
 <div class=\"wrapper\"";
 if(isset($noheader) && !isset($_SESSION['loggedin'])) echo " style='display: none;'";
 echo "><div class=\"logoe\">";
-if(!empty($settings->logo) && $settings->logo=!'false'){
-	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->logo."'></a>";
+if(!empty($settings->logo) && $settings->logo=='true'){
+	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->stitel."'></a>";
 }elseif(!empty($settings->stitel)){
 	echo "<a class=\"logof f".$color."\" href='.'>".$settings->stitel."</a>";
 }else{
