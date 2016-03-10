@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_PO
 				$db->query("UPDATE user SET pass = '$ph' WHERE email = '$email'");
 			}
 			$_SESSION['loggedin'] = true;
-			echo "<script>location.reload();</script>";
+			echo "<script>location.href='.?f=".$folder."'</script>";
 		}elseif($dbpassword != $ph || password_verify($_POST['password'],$dbpassword) == false){
 			echo $lang->wrongpass;
 		}elseif($dbfree != 1) {
