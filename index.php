@@ -25,7 +25,7 @@ if(file_exists($folder ."/.intro.txt")){
 		$intro = $line."\n"; 
 	}
 	fclose($docfile);
-	echo "</div>
+	echo "</div>";
 	$intro = 'true';
 }else{
 	echo "<div id='intro' class=\"intro\"></div>";
