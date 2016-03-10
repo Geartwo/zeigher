@@ -13,12 +13,12 @@ if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintr
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
 }
 $ufolder = implode('/', explode('%2F', rawurlencode($folder)));
-if(file_exists($folder ."/intro.jpg")){
-	echo "<img class=\"tbild\" onmousedown=\"return false;\" src=\"".$ufolder."/intro.jpg\" alt=\"mainpic\">";
+if(file_exists($folder ."/.intro.jpg")){
+	echo "<img class=\"tbild\" onmousedown=\"return false;\" src=\"".$ufolder."/.intro.jpg\" alt=\"mainpic\">";
 }
-if(file_exists($folder ."/intro.txt")){
+if(file_exists($folder ."/.intro.txt")){
 	echo "</a><div id='intro' class=\"intro\">";
-	$docfile=fopen($folder . "/intro.txt","r+");
+	$docfile=fopen($folder . "/.intro.txt","r+");
 	while(!feof($docfile)) { 
 		$line = htmlentities(fgets($docfile,1000)); 
 		echo $line."<br>";
@@ -26,7 +26,6 @@ if(file_exists($folder ."/intro.txt")){
 	}
 	fclose($docfile);
 	echo "</div>
-	<br>";
 	$intro = 'true';
 }else{
 	echo "<div id='intro' class=\"intro\"></div>";
