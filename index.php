@@ -8,6 +8,7 @@ var four = 0;
 </script>
 <?php
 include '.data/header.php';
+//echo session_save_path();
 if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
 }
@@ -31,7 +32,7 @@ if(file_exists($folder ."/intro.txt")){
 	echo "<div id='intro' class=\"intro\"></div>";
 }
 //Login & Register
-if(!isset($_SESSION['loggedin']) && $settings->use == 'none' && !isset($_GET['register']) || isset($_GET['login'])){
+if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['register']) || isset($_GET['login'])){
 	include '.data/login.php';
 }
 if(isset($_GET['register'])){
@@ -66,7 +67,7 @@ if(isset($_GET['wish'])){
 }elseif (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 	echo "<div class=\"intro\"><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
 	<a href=\"?f=".$tgif."\">".$lang->back."</a></div>";
-}elseif (isset($_SESSION['loggedin']) || $settings->use == 'all'){
+}elseif ($_SESSION['loggedin'] == true || $settings->use == 'all'){
 	//Folder listing
 	if ($mode != 'dmyma'){
 		$oph = opendir($folder);
@@ -142,10 +143,10 @@ if(isset($_GET['wish'])){
 			}
 			if($ord_array[0] != "xpvkleer"){
 				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$folder."/".$file."\">
-				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','".$fourpack."')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">
+				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">
 				<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>";
 				if($isad >=3 && $edit == 1){
-					echo "</a><form style='display: inline-block' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a>";
+					echo "</a><form style='display: inline-block' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','');\"></a>";
 				}
 				echo "</div></a>";
 			}
@@ -270,7 +271,7 @@ if(isset($_GET['wish'])){
 	    }
 	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\" draggable='false'>
-	    <form style='display: inline-block;' id='".$rawfile."z' onsubmit=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\">
+	    <form style='display: inline-block; width: 100%' id='".$rawfile."z' onsubmit=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\">
 
 <font class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font></form>";
 	    if ($orfile == 5) {

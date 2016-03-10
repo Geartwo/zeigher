@@ -187,7 +187,6 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     objectid VARCHAR(50) NOT NULL,
     points VARCHAR(50)
     )");    
-    if ($mode == 'dmyma') {
     	$db->query("CREATE TABLE tags (
     	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
 		tagname VARCHAR(50) NOT NULL,
@@ -205,12 +204,12 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
     	type VARCHAR(50) NOT NULL,
     	objectid VARCHAR(50) NOT NULL,
-    	userid VARCHAR(25) NOT NULL
+    	userid VARCHAR(25) NOT NULL,
+	conpro INT(32) NOT NULL
     	)");
 	
 	mkdir(".trash", 0700);
 	mkdir(".files", 0700);
-    }
     if (!isset($mainmail)) $mainmail = "root@localhost.local";
     $ph = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $db->query("INSERT INTO user (user, pass, email, isad, free) VALUES ('$username', '$ph', '$mainmail', 9, 1)");

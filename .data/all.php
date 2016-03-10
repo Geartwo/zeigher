@@ -16,9 +16,15 @@ $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
 $upload_mb = min($max_upload, $max_post, $memory_limit);
 session_start();
-if (!isset($installed)) {
+if (isset($installed)) {
 	$pluginfolder = $_SERVER['DOCUMENT_ROOT'] . "/.data/plugins";
 	$plugdir = scandir($pluginfolder);
+	//Extension VAR set
+	$plugextension = "";
+	$headerextension = "";
+	$footerextension = "";
+	$voteroomxtension = "";
+	$functionsextension = "";
 	foreach($plugdir as $pfolder) {
 		if($pfolder[0] == ".") continue;
 		if(file_exists($pluginfolder."/".$pfolder."/extension.php")) {

@@ -1,6 +1,7 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
+<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.0/fingerprint2.min.js"></script>
 <?php
 if(isset($functionsextension)){
 	foreach($functionsextension as $fuex){
@@ -82,11 +83,25 @@ function streamer(id, kk, four, mpf, folder, userid) {
 	history.pushState(null, null, ' ');
     }
 };
-function comment(){
-	
+function com(type, oid, mode, comsub){
+	var comment = document.getElementById('comment').innerHTML;
+	xmlhttp=new XMLHttpRequest();
+                xmlhttp.onreadystatechange=function() {
+                if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+                        //filev.innerHTML=xmlhttp.responseText;
+                }
+        }
+                xmlhttp.open("POST",".data/comments.php",true);
+                xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+                xmlhttp.send("comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&comsub=" + comsub);
 };
-</script>
-<script>
+function comsort(){
+var comsort = document.getElementById('comsort');
+var allElements = document.getElementsByName("coms");
+for (var i = 0, n = allElements.length; i < n; ++i) {
+  alert(allElements[i]);
+}
+};
 function streamit(folder, file, cc, id) {
     var sty = document.getElementById(cc); 
     if(sty.style.display == "block"){

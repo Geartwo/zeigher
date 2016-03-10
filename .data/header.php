@@ -95,7 +95,6 @@ if(isset($nnout)){
 echo "
 <div class='whole'>
 <div class=\"wrapper\"";
-if(isset($noheader) && !isset($_SESSION['loggedin'])) echo " style='display: none;'";
 echo "><div class=\"logoe\">";
 if(!empty($settings->logo) && $settings->logo=='true'){
 	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->stitel."'></a>";
@@ -104,8 +103,7 @@ if(!empty($settings->logo) && $settings->logo=='true'){
 }else{
 	echo "<a class=\"logof f".$color."\" href='.'>".$hostname."</a>";
 }
-if(!empty($_SESSION['loggedin'])){
-	$loggedin = true;
+if($_SESSION['loggedin'] == true){
 	if(isset($settings->search) && $settings->search == 'true'){
 		echo "<div class='logos f".$color." ico-search searchl'>
 		<form method='get' style='display: inline-block; margin: 0px;'>
@@ -153,7 +151,7 @@ echo "
 
 <div class=\"wholy clear\">
 ";
-if(isset($_SESSION['loggedin'])) {
+if($_SESSION['loggedin'] == true) {
     echo "<div class=\"news\">";
     if (file_exists("news.txt") && isset($news)){
         echo "</a><div class=\"newslist\">";

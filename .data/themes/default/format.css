@@ -52,6 +52,7 @@ body  { font-family: 'Open Sans Condensed', "Trebuchet MS", "Helvetica CY", sans
 .searchl { display: inline-block; width: 190px; background: white; height: 25px; padding-bottom: 4px; }
 .searchl:hover > #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
 .searchi:focus ~ #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
+.link{cursor: pointer;}
 .buttet {
 margin: 0 1 1 0;
 display: inline-block;
@@ -67,7 +68,7 @@ cursor: pointer;
 .ordif { float: left; }
 .bigfolder { cursor: pointer; word-wrap: break-word; overflow: hidden; float: left; color: rgba(0, 0, 0, 0.9); height: 150px; width: 50%; max-width: 250px; display: inline-block; font-family: 'Open Sans Condensed',"Trebuchet MS","Helvetica CY",sans-serif; font-size: 22px; line-height: 30px; font-weight: bold; }
 .bigfolder:hover > .bigback { height: 100%; }
-.bigback { color: rgba(255, 255, 255, 1); padding: 3px; width: 100%; background: rgba(0, 0, 0, 0.3); display: inline-block; text-align: center; }
+.bigback { color: rgba(255, 255, 255, 1); padding: 3px; width: 100%; background: rgba(0, 0, 0, 0.3); display: inline-block;}
 .main { width:100%; background-color: rgba(255, 255, 255, 0.5); float:left;}
 .newson { width: 79%; max-width: 795px; margin-left: 1%; }
 .newsoff { width: 100%; }

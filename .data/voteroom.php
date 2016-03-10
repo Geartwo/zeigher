@@ -25,49 +25,35 @@ echo $lang->uploaded.": ".$filedate."<b class='vote' id='fileup' onclick=\"conpr
 $my_html."<br>";
 echo "<div class=\"comments\">";
 echo "<br><a name=\"comment\"><b style=\"font-size: 20px;\"><font class='ico-kom'></font>".$lang->comments.":</b></a><br>";
-$dbro = $db->query("SELECT id FROM comments WHERE objectid = '$fileid' ORDER BY sub ASC, id ASC");
+$dbro = $db->query("SELECT id FROM comments WHERE objectid = '$fileid' ORDER BY id ASC");
 while ($dbid = $dbro->fetch_array ()) {
     $folderid = $dbid[0];
-    $dbquery = $db->query("SELECT * FROM comments WHERE id = '$fileid'");
-    while ($row = $dbquery->fetch_assoc()){
+    $row = $db->query("SELECT * FROM comments WHERE id = '$folderid'")->fetch_assoc();
         $comid = $row['id'];
         $comcom = $row['comment'];
-        $comus = $row['user'];
+        $comusid = $row['userid'];
+	$comus = $db->query("SELECT user FROM user WHERE id = '$comusid'")->fetch_object()->user;
         $comdate = $row['date'];
-                $comsub = $row['sub'];
-    }
-    $usercom = ucfirst($username);
+        $comsub = $row['sub'];
+    $usercom = $username;
     if (isset($comid)) {
-        $comnam = $db->fetch_array ($db->query("SELECT userid FROM comments WHERE id = '$comsub'"));
-        $comnam = ucfirst($comnam[0]);
-        $comus = ucfirst($comus);
-                $comdate = date("d.m.Y - H:i", strToTime($comdate));
-                if ($comid == $comsub) {
-                        echo "<div class=\"overcom ".$color."\">" . $comus . " <div class=\"datcom\">" . $comdate . " <a href=\"?f=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a>
-                        </div><div class=\"undercom\">" . $comcom . "</div></div>";
+        $comdate = date("d.m.Y - H:i", strToTime($comdate));
+        if ($comid == $comsub) {
+                        echo "<div name='coms' id='com".$comsub."' class=\"overcom ".$color."\">" . $folderid ." ". $comus . " <div class=\"datcom\">" . $comdate . " <a class='link' href=\"?f=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a>";
+			if ($isad >= 8 || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
+                        echo "</div><div class=\"undercom\">" . $comcom . "</div></div>";
                         $nowid = $comid;
                 } else {
-                        echo "<div class=\"overcom anscom ".$color."\">" . $comus . "'s ".$lang->answerto." " . $comnam . " <div class=\"datcom\">" . $comdate .
+                        echo "<div name='coms' id='com".$comsub."' class=\"overcom ".$color."\">"  . $folderid ." " . $comus . "'s ".$lang->answerto." " . $comnam . " <div class=\"datcom\">" . $comdate .
                         " <a href=\"?ordner=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a></div><div class=\"undercom\">" . $comcom . "</div></div>";
                 }
-                if ($isad >= 8 || $usercom == $comus ) {
-                        echo "
-                        <form action=\"?ordner=".$folder."#comment\" method=\"post\">
-                        <input type=\"hidden\" name=\"sub\" value=\"" . $comus . "\">
-                        <input type=\"hidden\" name=\"comid\" value=\"" . $comid . "\">
-                        <input type=\"hidden\" name=\"comsub\" value=\"" . $comsub . "\">
-                        <input type=\"submit\" class=\"buttet, ".$color."\" value=\"".$lang->del."\" name=\"cl\">
-                        </form>";
-                 }
         }
 }
-if(isset($_SESSION['loggedin'])) {
+if($_SESSION['loggedin'] == true) {
         echo "<div style='display: none;' id='newcom'>
     Neuer Kommentar:
-    <form>
-    <textarea cols=\"80\" rows=\"10\" name=\"comment\" /></textarea><br>
-    <input type=\"submit\" class=\"buttet, ".$color."\" value=\"".$lang->comment."\" />
-        </form>
+    <textarea cols=\"80\" rows=\"10\" id='comment' name=\"comment\" /></textarea><br>
+    <input type=\"submit\" class=\"buttet, ".$color."\" value=\"".$lang->comment."\" onclick=\"com('file', '".$fileid."', 'comment');\"/>
 	</div>
         ";
 #'$userid', '$comment', '$folder', '$date', '$nextId', 'folder'
@@ -84,5 +70,8 @@ if(isset($_SESSION['loggedin'])) {
                         </form>
                         ";
 }
-include 'comments.php';
 ?>
+<select id='comsort' onchange='comsort();'>
+<option value='timeline'>Time</option>
+<option value='chrono'>Chrono</option>
+</select>
