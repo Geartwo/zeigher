@@ -1,7 +1,6 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
-<script src="http://cdn.jsdelivr.net/fingerprintjs2/1.1.0/fingerprint2.min.js"></script>
 <?php
 if(isset($functionsextension)){
 	foreach($functionsextension as $fuex){
