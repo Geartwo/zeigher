@@ -10,25 +10,6 @@ if($_POST['mode'] == "bintro") {
 $folder = "../" . $_GET['folder'] . "/";
 $realfolder = $_GET['folder'];
 @$text = $db->real_escape_string($_POST['impeditor']);
-if ($settings->points == 'true' && !isset($bintro) && !isset($fb)) {
-	$points = $_POST['points'];
-	if ($points > $upload_mb) { 
-		echo "Error: File to Big<br><a href='..'>Back</a>";
-		exit;
-	} else {
-		if ($userpoints < $points) {
-			if ($userpoints > 0) {
-				$points = $points - $userpoints;
-				$userpoints = 0;
-			}
-			$userpremium = $userpremium - $points;
-		} else {
-			$userpoints = $userpoints - $points;
-		}
-		$eintragen = $db->query("UPDATE points SET points = '$userpoints' WHERE type = 'user' AND objectid = '$userid'");
-		$eintragen = $db->query("UPDATE user SET premium = '$userpremium' WHERE id = '$userid'");
-	}
-}
 if(!empty($_FILES['fileselect'])){
 	foreach ($_FILES['fileselect']['name'] as $f => $name) {
 	    if(isset($_POST['bintro'])){
@@ -37,18 +18,37 @@ if(!empty($_FILES['fileselect'])){
 	    }
 	    if ($_FILES['fileselect']['error'][$f] == 4) {
 	        continue; // Skip file if any error found
-	    }	       
-	    if ($_FILES['fileselect']['error'][$f] == 0) {	           
+	    }
+	    if ($_FILES['fileselect']['error'][$f] == 0) {			
 	        #if ($_FILES['fileselect']['size'][$f] > $max_file_size) {
 	        #    $message[] = "$name is too large!.";
 	        #    continue; // Skip large files
 	        #}
-		#	elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $valid_formats) ){
-		#		$message[] = "$name is not a valid format";
-		#		continue; // Skip invalid file formats
-		#	}
+			#	elseif( ! in_array(pathinfo($name, PATHINFO_EXTENSION), $valid_formats) ){
+			#		$message[] = "$name is not a valid format";
+			#		continue; // Skip invalid file formats
+			#	}
 	        #else{ // No error found! Move uploaded files 
-	            if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name)){
+			if ($settings->points == 'true' && !isset($bintro) && !isset($fb)) {
+				$points = ceil($_FILES['fileselect']['size'][$f]/1048576);
+				if ($points > $upload_mb) { 
+					echo "Error: File to Big<br><a href='..'>Back</a>";
+					exit;
+				} else {
+					if ($userpoints < $points) {
+						if ($userpoints > 0) {
+							$points = $points - $userpoints;
+							$userpoints = 0;
+						}
+						$userpremium = $userpremium - $points;
+					} else {
+						$userpoints = $userpoints - $points;
+					}
+					$eintragen = $db->query("UPDATE points SET points = '$userpoints' WHERE type = 'user' AND objectid = '$userid'");
+					$eintragen = $db->query("UPDATE user SET premium = '$userpremium' WHERE id = '$userid'");
+				}
+			}
+	        if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name)){
 			if (isset($bintro)){
 				echo "<script>self.location.href='..?f=".$realfolder."'</script>";
 				exit;
@@ -66,5 +66,4 @@ if(!empty($_FILES['fileselect'])){
         	echo "<script>self.location.href='..?f=".$realfolder."'</script>";
         	exit;
         }
-	echo "<script>self.location.href='../'</script>";
 }else{echo"Wrong";}

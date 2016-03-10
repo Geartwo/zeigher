@@ -182,16 +182,16 @@ if($folder != "upload"){
 	} else {
 		$realpoints = $userpremium;
 	}
-$realpoints = 99999;
-	echo "<form action='.data/upload.php?folder=.files' method='POST' enctype='multipart/form-data'>
-	<input onclick=\"unbut('off')\" onchange=\"showFileSize(".$realpoints.")\" class=\"buttet ".$color."\" type='file' id='fileselect' name='fileselect[]' multiple='multiple' />
-	<input id='uppoints' type='hidden' name='points' value=''>
-	<input id='upsub' class=\"buttet ".$color."\" type='hidden' value='Upload Files'><br>
+	echo "
+	<input onclick=\"unbut('off')\" onchange=\"showFileSize(".$realpoints.")\" class=\"buttet ".$color."\" type='file' id='filebiup' multiple>
+	<input id='upsub' class=\"buttet ".$color."\" type='hidden' value='Upload Files' onclick=\"UploadFile('file')\"><br>
+	<input id='fileupfolder' type='hidden' value='.files'>
+	<input id='fileupmode' type='hidden' value='1'>
 	" . $lang->description . ":<br>
 	<textarea name=\"impeditor\" id=\"editor1\"></textarea>
 	<div id='points'></div>
-	</form>
-	<progress id='progress' style='margin-top:10px'></progress> <span id='prozent'></span><br>
+
+	<progress id='fileupg' value='0' max='100' style='margin-top:10px'></progress> <span id='filepercent'></span><br>
 	<script>var simplemde = new SimpleMDE({element: document.getElementById('editor1')});</script>";
 	//Tags
 	if($mode == 'dmyma') {

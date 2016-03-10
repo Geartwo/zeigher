@@ -8,7 +8,11 @@
 <div class="footer">
 <?php
 echo $bfooter;
-if(empty($settings->piwik)) include 'piwik.php';
+if(isset($footerextension)){
+	foreach($footerextension as $foex){
+        include($foex);
+	}
+}
 ?>
 </div>
 <!--<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>-->

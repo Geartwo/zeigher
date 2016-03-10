@@ -1,6 +1,4 @@
 <?php
-@include '../.settings/config.php';
-@include '.settings/config.php';
 if(!isset($theme))$theme = "default";
 //SQL connect
 if ($mode == 'fmyma' | $mode == 'dmyma' && $installed == true) {
@@ -15,14 +13,12 @@ if ($mode == 'fmyma' | $mode == 'dmyma' && $installed == true) {
 	printf("No Mode Selectet");
         exit;
 }
-
 if (isset($db) && $installed == true) {
 	if (!mysqli_set_charset($db, "utf8")) {
     	printf("Error loading character set utf8: %s\n", mysqli_error($db));
     	exit();
 	}
 	//Get Settings
-	$settings = new stdClass();
 	$dbquery = $db->query("SELECT * FROM settings WHERE userid = '0'");
 	while ($row = $dbquery->fetch_assoc()){
 		$settings->$row['setting'] = $row['value'];

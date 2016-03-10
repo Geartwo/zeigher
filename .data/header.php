@@ -1,14 +1,16 @@
+<head>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<meta charset="utf-8" />
+</head>
 <html onload="resolution()">
 <link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
 <?php
 error_reporting();
-$settings = new stdClass();
 $isad=0;
 include 'all.php';
 include 'functions.php';
 $regist='';
 if (isset($_GET['login'])) $use = 'none';
-if (file_exists('/.settings/config.php'))include '/.settings/config.php';
 set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
@@ -31,10 +33,6 @@ $bsiter = array_slice($parts, 1, $partz -1);
 $piczahl = 0;
 $picrow = 1;
 $dbfree = 2;
-$max_upload = (int)(ini_get('upload_max_filesize'));
-$max_post = (int)(ini_get('post_max_size'));
-$memory_limit = (int)(ini_get('memory_limit'));
-$upload_mb = min($max_upload, $max_post, $memory_limit);
 //Destroy Session
 if(isset ($_GET['log'])){
 	$_SESSION['loggedin'] = false;
@@ -87,7 +85,7 @@ if (isset ($endgif)) {
 }
 
 //Real Header
-if(!isset($settings->stitel)) $settings->stitel = $url;
+if(empty($settings->stitel)) $settings->stitel = $url;
 if(isset($nnout)){
 	echo "<style>
 	.wrapper { display: none; }
@@ -99,8 +97,8 @@ echo "
 <div class=\"wrapper\"";
 if(isset($noheader) && !isset($_SESSION['loggedin'])) echo " style='display: none;'";
 echo "><div class=\"logoe\">";
-if(!empty($settings->logo) && $settings=!'false'){
-	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->logo."'></a>";
+if(!empty($settings->logo) && $settings->logo=='true'){
+	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->stitel."'></a>";
 }elseif(!empty($settings->stitel)){
 	echo "<a class=\"logof f".$color."\" href='.'>".$settings->stitel."</a>";
 }else{
@@ -108,7 +106,7 @@ if(!empty($settings->logo) && $settings=!'false'){
 }
 if(!empty($_SESSION['loggedin'])){
 	$loggedin = true;
-	if($settings->search == 'true'){
+	if(isset($settings->search) && $settings->search == 'true'){
 		echo "<div class='logos f".$color." ico-search searchl'>
 		<form method='get' style='display: inline-block; margin: 0px;'>
 		<input class='searchi' onkeyup=\"showResult(this.value);\" tabindex='1' name='f'>
