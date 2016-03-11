@@ -116,8 +116,8 @@ if(isset($_GET['wish'])){
 				$endthumb = $folder."/".$file;
 			}elseif($mode != 'dmyma' && file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg")){
 				$endthumb = rawurlencode($folder."/".$file);
-			}elseif(file_exists("./.pic_.bintro.jpg.jpg")){
-				$endthumb = ".";
+			}elseif(file_exists(urldecode($cgif.'/.pic_.bintro.jpg.jpg'))){
+				$endthumb = $cgif;
 			}
 			if($file[0] == "-" && $realfirst != "-"){
 				echo "<div class=\"alpha\">".$lang->category."</div>";
