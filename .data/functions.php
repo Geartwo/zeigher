@@ -24,7 +24,7 @@ function drop(ev, file, folder, id) {
     ev.preventDefault();
     var oldfi = ev.dataTransfer.getData("fitext");
     var oldfo = ev.dataTransfer.getData("fotext");
-    SND(oldfi, oldfo, folder+"/"+file, id);
+    SND(oldfi, oldfo, folder+"/"+file, id, '', 'd');
 }
 
 function resolution() {
@@ -391,27 +391,30 @@ function SN (kk, cc, id) {
 	var no = document.getElementById(kk + "n")
 	var str = document.getElementById(kk + "r")
 	var stk = document.getElementById(kk + "k")
+	var stb = document.getElementById(kk + "b")
         var sty = document.getElementById("num"+ id)
     if(str.type != "hidden") {
-	stk.draggable='false';
+	stk.draggable=true;
         str.type = "hidden";
+	stb.style.display = "inline-block";
         ok.className = "ico-edit";
         no.className = "ico-no";
     } else {
-	stk.draggable='true';
+	stk.draggable=false;
         str.type = "";
+	stb.style.display = "none";
         ok.className = "ico-no";
         no.className = "ico-ok";
     }
 }
 
-function SND (kk, cc, newcc, id, nodir) {
+function SND (kk, cc, newcc, id, nodir, dr) {
 	var sty = document.getElementById("num"+ id)
 	var ok = document.getElementById(kk + "o")
 	var no = document.getElementById(kk + "n")
 	var str = document.getElementById(kk + "r")
 	var z = document.getElementById(kk + "z")
-    if(str.type != "hidden") {
+    if(str.type != "hidden" || dr=='d') {
 	xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {

@@ -269,21 +269,24 @@ if(isset($_GET['wish'])){
 		$sign = 'ico-down';
 	    }
 	    $lastfolder = $folder;
-            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\" draggable='false'>
-	    <form style='display: inline-block; width: 100%' id='".$rawfile."z' onsubmit=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1); event.preventDefault();\">
-
-<font class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font></form>";
-	    if ($orfile == 5) {
-                echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
-            }
+            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad >=3 && $edit == 1) {
-	    $extension = substr(strrchr($file, "."), 1);
-	    echo "</a>
-            <input type='hidden' id='".$rawfile."r' value='".$htmlescfile."' draggable='false'><br>
+	    echo "draggable=true>";
+            $extension = substr(strrchr($file, "."), 1);
+            echo "</a>
+            <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
+            <input type='hidden' id='".$rawfile."r' value='".$htmlescfile."' draggable='false'>
+            </form>
             <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
             <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
             ";
+	    }else{
+		echo ">";
 	    }
+	    echo "<font id='".$rawfile."b' class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font>";
+	    if ($orfile == 5) {
+                echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
+            }
 			echo "</div></a>";
 		        if(isset($onr)){
 			echo"<style>
