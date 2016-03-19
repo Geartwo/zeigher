@@ -12,16 +12,10 @@ if ($_POST["mode"] == 'comment') {
         if (isset($_POST["sub"])) $nextId = $_POST["sub"];
         $db->query("INSERT INTO comments (userid, comment, objectid, date, sub, type) VALUES ('$userid', '$comment', '$oid', '$date', '$nextId', '$type')");
 }
-if ($_POST["mode"] == 'comment' && $isad >= 5) {
-    if (isset($_POST["sub"])) $comus = $_POST["sub"];
-    if (isset($_POST["comsub"])) $comsub = $_POST["comsub"];
-    if (isset($_POST["comid"])) $comid = $_POST["comid"];
+if ($_POST["mode"] == 'cl' && $isad >= 5) {
+    $sub = $_POST["sub"];
     if ($isad >= 8 || $usercom == $comus ) {
-        if ($comsub == $comid) {
-            $db->query("DELETE FROM comments WHERE sub = '$comsub'");   
-        } else{
-		$db->query("DELETE FROM comments WHERE id = '$comid'");
-        }
+    $db->query("DELETE FROM comments WHERE sub = '$sub'");   
     }
 }
 ?>

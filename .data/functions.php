@@ -83,16 +83,16 @@ function streamer(id, kk, four, mpf, folder, userid) {
     }
 };
 function com(type, oid, mode, comsub){
-	var comment = document.getElementById('comment').innerHTML;
+	var comment = document.getElementById('comment').value;
 	xmlhttp=new XMLHttpRequest();
                 xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-                        //filev.innerHTML=xmlhttp.responseText;
+                        location.reload();
                 }
         }
                 xmlhttp.open("POST",".data/comments.php",true);
                 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-                xmlhttp.send("comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&comsub=" + comsub);
+                xmlhttp.send("comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&sub=" + comsub);
 };
 function comsort(){
 var comsort = document.getElementById('comsort');

@@ -1,5 +1,5 @@
 <?php
-include 'sql.php';
+include 'all.php';
 echo '<hl>';
 $q=$_GET["q"];
 $lf = 0;
@@ -42,7 +42,6 @@ if ($mode == "dmyma") {
 			echo "<li><a href=\".?f=". $folder . "\">" . $name . "</a></li>";
 		}
 	}
-echo $more."t";
 	if($more == 10) echo "<a>More</a>";
 }
 if ($lf == 0) echo"Es tut uns leid, aber \"" . $q . "\" wurde nicht gefunden.";

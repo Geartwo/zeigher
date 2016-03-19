@@ -40,7 +40,7 @@ while ($dbid = $dbro->fetch_array ()) {
         $comdate = date("d.m.Y - H:i", strToTime($comdate));
         if ($comid == $comsub) {
                         echo "<div name='coms' id='com".$comsub."' class=\"overcom ".$color."\">" . $folderid ." ". $comus . " <div class=\"datcom\">" . $comdate . " <a class='link' href=\"?f=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a>";
-			if ($isad >= 8 || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
+		if ($isad >= 8 || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
                         echo "</div><div class=\"undercom\">" . $comcom . "</div></div>";
                         $nowid = $comid;
                 } else {

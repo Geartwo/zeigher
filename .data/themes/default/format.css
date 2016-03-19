@@ -44,12 +44,12 @@ body  { font-family: 'Open Sans Condensed', "Trebuchet MS", "Helvetica CY", sans
 
 .logoe { margin: 0 auto 0; max-width: 1000px; width: 100%; min-height: 42px; }
 .logof { height: 32px; font-family: 'Audiowide', arial, sans-serif; font-size: 32px;  cursor: pointer; float: left; margin-top: 5px;}
-.logos { cursor: pointer; display: inline-block; margin-top: 5px; margin-left: 5px; }
+.logos { cursor: pointer; display: inline-block; margin-top: 5px; margin-left: 5px; font-size: 1.2em; font-weight: bold; }
 .search { margin: 0px;}
 .searchr { padding-top: 5px; }
 .searchi { width: 150px; border: none;}
 .searchi:focus { outline: none;}
-.searchl { display: inline-block; width: 190px; background: white; height: 25px; padding-bottom: 4px; }
+.searchl { display: inline-block; width: 190px; background: white; height: 25px; padding-left: 2px; margin: 6px; }
 .searchl:hover > #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
 .searchi:focus ~ #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
 .link{cursor: pointer;}
@@ -73,10 +73,10 @@ cursor: pointer;
 .newson { width: 79%; max-width: 795px; margin-left: 1%; }
 .newsoff { width: 100%; }
 
-.overcom { border: 2px solid black; background: black; color: white; margin-bottom: 5px; width: 60%; }
+.overcom { border: 2px solid black; background: black; color: white; margin-bottom: 5px; min-width: 400px; width: 60%; }
 .undercom { background: white; color: black; padding-left: 5px; overflow: hidden; }
 .anscom { margin-left: 15px; }
-.datcom { float: right; }
+.datcom { }
 
 a { text-decoration:none; color: #424242; }
 .sites { color: #444; text-decoration:none; display: inline-block; }
@@ -125,12 +125,12 @@ padding: 5px;
 .udt { background-color: grey; }
 .ord:befor { content: "\00BB"; }
 
-#menu2 { margin-top: 5px; background: #212121; padding: 5px; border-radius: 5px; position: absolute; margin-left: -165px; width: 155px; text-align: right; }
+#menu2 { background: #212121; padding: 5px; border-radius: 5px; position: absolute; margin-left: -165px; width: 155px; text-align: right; }
 .clear { clear: both; }
 .block { display: block; }
 .none { display: none; }
 h1, h2, h3, h4 h5, ul { margin: 0px; }
-#menu2 ul { list-style-type:none; list-style-image:none; margin:0px; padding:0px; }
+#menu2 ul { list-style-type:none; list-style-image:none; margin:0px; padding:0px; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 #menu2 li.usr { }
 .usr2 a { text-align:right; margin-bottom: 5px; }
 .usr2 ul{ display:none; }
