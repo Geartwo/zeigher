@@ -39,6 +39,7 @@ if(isset ($_GET['log'])){
 	session_destroy();
 	echo "<script>self.location.href='?f=".$folder."'</script>";
 }
+if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = "false";
 //Background
 $tgif = ".";
 $ugif = ".";
@@ -103,18 +104,13 @@ if(!empty($settings->logo) && $settings->logo=='true'){
 }else{
 	echo "<a class=\"logof f".$color."\" href='.'>".$hostname."</a>";
 }
-if($_SESSION['loggedin'] == true){
-	if(isset($settings->search) && $settings->search == 'true'){
-		echo "<div class='logos f".$color." ico-search searchl'>
-		<form method='get' style='display: inline-block; margin: 0px;'>
-		<input class='searchi' onkeyup=\"showResult(this.value);\" tabindex='1' name='f'>
-		<input type='submit' style='display: none;'>
-		</form>
-		<br><div id='livesearch' class=''></div>
-		</div>";
-	}
-	if($settings->wishes == 'true') echo "<div class=\"logos f".$color."\" onclick=\"self.location.href='.?wish'\">".$lang->wishes."</div>";
-	if($settings->qrcode == 'true') echo "<div class=\"logos f".$color."\" onclick=\"self.location.href='.?f=".$folder."&qr'\">".$lang->qr."</div>";
+if($_SESSION['loggedin'] == "true"){
+
+    if(isset($headerextension)){
+	   foreach($headerextension as $huex){
+            include($huex);
+	   }
+    }
 	if(isset($userpremium)) {$plus = "+";} else {$plus = "";}
 	if($settings->points == 'true') echo "<div class=\"logos f".$color."\" onclick=\"\">".$lang->points.": ".$userpoints.$plus.$userpremium."</div>";
 	echo "<div class=\"menuer\">

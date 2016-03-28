@@ -10,7 +10,7 @@ if(isset($functionsextension)){
 ?>
 <script>
 playtime = 0;
-
+//Main Feutures
 function allowDrop(ev) {
     ev.preventDefault();
 }
@@ -125,14 +125,7 @@ function streamit(folder, file, cc, id) {
     } 
 };
 
-function ytit(kk, cc) {
-    var sty = document.getElementById(cc); 
-    if(sty.style.display == "block"){
-        sty.innerHTML = '<iframe width="400" height="255" src="https://www.youtube-nocookie.com/embed/' + kk +'?rel=0&autoplay=1" frameborder="0" allowfullscreen></iframe>';
-    } else {
-        sty.innerHTML = 'leer';
-    } 
-};
+
 
 function rdit(kk, cc) {
     var sty = document.getElementById(cc); 
@@ -391,7 +384,7 @@ function SN (kk, cc, id) {
 	var no = document.getElementById(kk + "n")
 	var str = document.getElementById(kk + "r")
 	var stk = document.getElementById(kk + "k")
-	var stb = document.getElementById(kk + "b")
+	var stb = document.getElementById(kk + "z")
         var sty = document.getElementById("num"+ id)
     if(str.type != "hidden") {
 	stk.draggable=true;
@@ -419,8 +412,6 @@ function SND (kk, cc, newcc, id, nodir, dr) {
         xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 			location.reload();
-                        //z.innerHTML = str.value;
-			//SN (kk, cc);
                 }
         }
         xmlhttp.open("GET",".data/fileworker.php?f="+ cc +"&newf="+ newcc +"&renold="+ kk +"&rennew="+ str.value,true);
@@ -685,6 +676,7 @@ function pic_thumb($image, $target, $max_width, $max_height) {
 	}
 	}
 }
+if(!isset($theme)) $theme = "default";
 include 'lang/' . getLanguage();
 include "themes/".$theme."/variable.php";
 echo "<link rel='stylesheet' type='text/css' href='.data/themes/".$theme."/format.css'>";

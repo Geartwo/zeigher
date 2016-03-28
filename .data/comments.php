@@ -1,6 +1,6 @@
 <?php
 include 'all.php';
-if($_SESSION['loggedin'] != true) exit;
+if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != "true") exit;
 if ($_POST["mode"] == 'comment') {
         $date = date("Y-m-d H:i:s");
         $comment = $_POST["comment"];

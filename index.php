@@ -73,10 +73,11 @@ if(isset($_GET['wish'])){
 		while(($file = readdir($oph)) !== false){
 			if($file[0] == '.') continue;
 			if(!is_dir($folder . "/" . $file)) continue;
-        		$datnf_array[] = $file;
-                }
-                natsort($datnf_array);
-                foreach($datnf_array as $file){
+            $datnf_array[] = $file;
+        }
+        if(isset($datnf_array)){
+            natsort($datnf_array);
+            foreach($datnf_array as $file){
 			$dbfile = $db->real_escape_string($file);
 			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
 			$fileid = $row['id'];
@@ -87,7 +88,8 @@ if(isset($_GET['wish'])){
 				$fileid = $row['id'];
 			}
 			if(is_dir($folder . "/" . $file)) $ord_array[] = $fileid;
-		}
+            }
+        }
 		if($isad >=3 && $edit == 1){
 			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$folder."');\">";
 			if(file_exists($folder ."/intro.txt")){
@@ -142,12 +144,13 @@ if(isset($_GET['wish'])){
 			}
 			if($ord_array[0] != "xpvkleer"){
 				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$folder."/".$file."\">
-				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">
-				<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>";
-				if($isad >=3 && $edit == 1){
+				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
+                if($isad >=3 && $edit == 1){
+                    $fourpack = 1;
 					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a>";
 				}
-				echo "</div></a>";
+				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
+				</div></a>";
 			}
 			$dbfile = $db->real_escape_string($file);
 			$dbquery = $db->query("SELECT * FROM files WHERE name = '$dbfile' AND folder = '$ufolder'");
@@ -179,7 +182,8 @@ if(isset($_GET['wish'])){
 			if(is_dir($folder."/".$file) | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
 			$datn_array[] = $file;
 		}
-		natsort($datn_array);
+        if(isset($datn_array)){
+            natsort($datn_array);
 		foreach($datn_array as $file){
 			$dbfile = $db->real_escape_string($file);
 			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
@@ -192,6 +196,7 @@ if(isset($_GET['wish'])){
 			}
 			$dat_array[] = $fileid;
 		}
+        }
 	}
 	if(empty($dat_array)){
 		if(!isset($intro) && empty($ord_array)){
@@ -283,7 +288,7 @@ if(isset($_GET['wish'])){
 	    }else{
 		echo ">";
 	    }
-	    echo "<font id='".$rawfile."b' class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font>";
+	    echo "<font id='".$rawfile."z' class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font>";
 	    if ($orfile == 5) {
                 echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
             }
