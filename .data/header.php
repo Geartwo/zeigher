@@ -39,7 +39,7 @@ if(isset ($_GET['log'])){
 	session_destroy();
 	echo "<script>self.location.href='?f=".$folder."'</script>";
 }
-if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = "false";
+if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
 //Background
 $tgif = ".";
 $ugif = ".";
