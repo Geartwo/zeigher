@@ -10,7 +10,7 @@ echo '</div>';
  * @author Rana
  * @link http://codesamplez.com/programming/php-html5-video-streaming-tutorial
  */
-if ($_SESSION['loggedin'] == false && $use == 'none') {
+if ($_SESSION['loggedin'] != true) {
     echo "<script>self.location.href='..'</script>";
     exit();
 }
