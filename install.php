@@ -19,7 +19,6 @@ $settings->logo = "";
 if(isset($_SESSION['loggedin'])){
 	$_SESSION['loggedin'] = false;
 	session_destroy();
-	echo "<script>self.location.href='install.php'</script>";
 }
 
 //Step 1 - Mode choose
