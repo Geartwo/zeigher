@@ -19,6 +19,22 @@ if(!empty($_FILES['fileselect'])){
 	    if ($_FILES['fileselect']['error'][$f] == 4) {
 	        continue; // Skip file if any error found
 	    }
+	    $finfo = new finfo(FILEINFO_MIME_TYPE);
+	    if (false === $ext = array_search($finfo->file($_FILES['fileselect']['tmp_name'][$f]),
+        array(
+            'jpg' => 'image/jpeg',
+            'png' => 'image/png',
+            'gif' => 'image/gif',
+            'mp4' => 'video/mp4',
+            'webm' => 'video/webm',
+            'mp3' => 'audio/mpeg',
+            'pdf' => 'application/pdf',
+	    'epub' => 'application/epub',
+	    'zip' => 'application/zip',
+	    'txt' => 'text/plain',
+        ), true)){
+        	throw new RuntimeException('Invalid file format.');
+    	    }
 	    if ($_FILES['fileselect']['error'][$f] == 0) {			
 	        #if ($_FILES['fileselect']['size'][$f] > $max_file_size) {
 	        #    $message[] = "$name is too large!.";
