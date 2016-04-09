@@ -15,7 +15,8 @@ Webseite besuchen: '.$https.'://'.$name;
         <h2>Dein vorschlag wurde abgeschickt. </h2>
         <input type=\"submit\" class=\"buttet\" value=\"Mehr W&uuml;nsche?\" onclick=\"self.location.href='formular.php'\" />
         ";
-} else {
+}
+if(isset($_GET['wish'])){
     echo '<h2>'.$lang->wishes.'</h2>
     <form action=".?wish" method="post">
     <select name="cat">

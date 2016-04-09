@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 $spsite = "admin";
 $spsiten = "Admin";
 include '.data/header.php';
@@ -208,19 +208,9 @@ if(isset($isad) && $isad > 0){
                 echo "<div class=\"boxl boxm \">" .$usmail. "</div>";
             }
             echo "
-            <form class=\"boxf\" action=\"admin.php\" method=\"post\">
-            <input type=\"hidden\" name=\"acti\" value=\"1\">
-            <input type=\"hidden\" name=\"nutz\" value=\"".$usntzr."\">
-            <input type=\"hidden\" name=\"oisad\" value=\"".$usisad."\">
-            <div class=\"boxl\"><input type=\"checkbox\" name=\"free\" ".$usfree."></div>
-            <div class=\"boxl klein\"><input type=\"number\" name=\"isad\" min=\"0\" max=\"8\" value=\"".$usisad."\"></div>
-            <input type=\"submit\" class=\"buttet boxl\" value=\"".$lang->settings."\" />
-            </form>
-            <form class=\"boxf\" action=\"admin.php\" method=\"post\">
-            <input type=\"hidden\" name=\"mail\" value=\"".$usmail."\">
-            <input type=\"hidden\" name=\"nutz\" value=\"".$usntzr."\">
-            <input type=\"submit\" class=\"buttet boxl\" value=\"".$lang->freeplusmail."\" />
-            </form>
+            <div class=\"boxl\"><input type=\"checkbox\" id=\"user".$userwahl."free\" name=\"free\" ".$usfree."></div>
+            <div class=\"boxl\"><input type=\"text\" id=\"user".$userwahl."isad\" name=\"isad\" pattern=\"[0-9]*\" value=\"".$usisad."\"></div>
+            <div class=\"boxlbut\"><input onclick=\"userwork('".$userwahl."', 'setting');\" class=\"".$color."\" type=\"button\" value=\"".$lang->settings."\" /><input onclick=\"userwork('".$userwahl."', 'mail');\" class=\"".$color."\" type=\"button\" value=\"".$lang->freeplusmail."\" /><input onclick=\"userwork('".$userwahl."', 'delete');\" class=\"".$color."\" type=\"button\" value=\"".$lang->del."\" /></div>
             </div>
             ";
         }
@@ -267,34 +257,8 @@ if(isset($isad) && $isad > 0){
         $ph = password_hash($_POST['password'], PASSWORD_DEFAULT);
         echo $password . " = " . $ph;
     }
-    if (isset($_POST["acti"])){
-        $nutz = $_POST["nutz"];
-        if (!isset($_POST['free'])) $pofree = 0; else $pofree = 1;
-        if (!isset($_POST['isad'])) $poisad = 0; else $poisad = $_POST['isad'];
-        if (!isset($_POST['oisad'])) $oisad = 0; else $oisad = $_POST['oisad'];
-        if ($poisad > 9 || $poisad < 0) {
-            echo $lang->chosenumber;
-        } elseif (($isad - 1) < $poisad) {
-            echo $lang->putover;
-        } elseif (($isad - 1) < $oisad) {
-            echo $lang->editover;
-        } else {
-            $db->query("UPDATE user Set isad = '$poisad' WHERE user = '$nutz'");
-            $db->query("UPDATE user Set free = '$pofree' WHERE user = '$nutz'");
-            echo "Freigeschalten: " . $pofree. " / Admin: " . $poisad;
-        }
-    }
-    if (isset($_POST["mail"])) {
-        $subject = 'Sie wurden auf '.$name.'/'.$path.' freigeschalten';
-        $message = 'Sie wurden auf '.$name.' freigeschalten und können diese Seite jetzt uneingeschränkt benutzen.
-        '.$https.'://'.$hostname.'/'.$path;
-        $headers = "Content-type:text/plain;charset=utf-8" . "\n" . 'From: ' . $sender . "\r\n" . 'Reply-To: ' . $sender . "\r\n" . 'X-Mailer: PHP/' . phpversion();
-        $mail = $_POST["mail"];
-        $nutz = $_POST["nutz"];
-	    mail($mail, $subject, $message, $headers);
-    	$eintragen = $db->query("UPDATE user Set free = '1' WHERE user = '$nutz'");
-	    echo "User wurde freigeschalten.";
-    }
+
+
     
     
     

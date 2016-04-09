@@ -96,11 +96,14 @@ a { text-decoration:none; color: #424242; }
 .boxn { width: 120px;}
 .boxm { width: 250px;}
 .boxc { width: 20px;}
-.boxrow { margin-right: -4px; margin-top: -4px; margin-bottom: -4px; }
-.boxl, .boxl input[type="button"] { display:block; text-align: middle; display: inline-block; padding: 10px 4px 0 4px; border-left: 1px solid black; border-bottom: 1px solid black; height: 29px; }
-.boxf { display: inline-block; height: 26px; }
-.boxa { width: 232px; margin-bottom: 1px; border-right: 1px solid black;}
-.boxall { border-top: 1px solid black; }
+.boxrow { display: table-row;}
+.boxl { font-size: 1.5em; text-align: center; display: table-cell; border-right: 1px solid black; border-bottom: 1px solid black;}
+.boxlbut input[type="button"] { height: 3em; text-align: center; margin: 0 1 0 0; }
+.boxl input[type="text"] { font-size: 1.05em; text-align: center; width: 25px; margin: 0; padding: 0;}
+.boxl input[type="checkbox"] { height: 2.09em; width: 28px; display: }
+.boxf { display: inline-table; margin: 0;}
+.boxa { }
+.boxall { border-top: 1px solid black; border-left: 1px solid black; display: table; border-collapse:collapse; }
 audio { max-width: 600px; width: 100%; }
 audio.rdio { width: 50%; }
 .alpha { color: #666;  font-size: x-large; }

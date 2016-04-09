@@ -23,17 +23,21 @@ if(isset($_SESSION['loggedin'])){
 
 //Step 1 - Mode choose
 if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) && !file_exists('.settings/config.php')){
-  echo "
-  <form>
-  " . $lang->mode . ":<br>
-  <select name='mode'>
-  <!--<option value='fsql'>" . $lang->folderlite . "</option>-->
-  <option value='fmyma'>" . $lang->foldersql . "</option>
-  <option value='dmyma'>" . $lang->poolbased . "</option>
-  </select><br>
-  <input type='submit' value='" . $lang->send . "'></input>
-  </form>
-  ";
+    if (extension_loaded('gd') && function_exists('gd_info')) {
+        echo "
+        <form>
+        " . $lang->mode . ":<br>
+        <select name='mode'>
+        <!--<option value='fsql'>" . $lang->folderlite . "</option>-->
+        <option value='fmyma'>" . $lang->foldersql . "</option>
+        <option value='dmyma'>" . $lang->poolbased . "</option>
+        </select><br>
+        <input type='submit' value='" . $lang->send . "'></input>
+        </form>
+        ";
+    }else{
+        echo"PHP GD library is NOT installed on your web server";
+    }
 } elseif (isset($_GET['mode'])) {
     //Step 2 - Set Database
     echo "

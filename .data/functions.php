@@ -14,19 +14,16 @@ playtime = 0;
 function allowDrop(ev) {
     ev.preventDefault();
 }
-
 function drag(ev, file, folder, test) {
     ev.dataTransfer.setData("fitext", file);
     ev.dataTransfer.setData("fotext", folder);
 }
-
 function drop(ev, file, folder, id) {
     ev.preventDefault();
     var oldfi = ev.dataTransfer.getData("fitext");
     var oldfo = ev.dataTransfer.getData("fotext");
     SND(oldfi, oldfo, folder+"/"+file, id, '', 'd');
 }
-
 function resolution() {
     var w1 = window.innerWidth;
     var h1 = window.innerHeight;
@@ -39,7 +36,6 @@ function resolution() {
     document.getElementById("outerY").innerHTML = h2;
 
 }
-
 function pikern(id, kk) {
     var sty = document.getElementById(kk); 
     if(sty.style.display == 'block'){
@@ -48,7 +44,6 @@ function pikern(id, kk) {
         sty.innerHTML = 'leer';
     }
 };
-
 function streamer(id, kk, four, mpf, folder, userid) {
     four = 'num' + four;
     var file = document.getElementById(id);
@@ -94,6 +89,19 @@ function com(type, oid, mode, comsub){
                 xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
                 xmlhttp.send("comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&sub=" + comsub);
 };
+function userwork(id, action){
+    var free = document.getElementById('user'+id+'free').checked;
+	var isad = document.getElementById('user'+id+'isad').value;
+	xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            location.reload();
+        }
+    }
+    xmlhttp.open("POST",".data/adminworker.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send("user=1&id=" + id + "&action=" + action + "&isad=" + isad + "&free=" + free );
+};
 function comsort(){
 var comsort = document.getElementById('comsort');
 var allElements = document.getElementsByName("coms");
@@ -124,9 +132,6 @@ function streamit(folder, file, cc, id) {
         sty.innerHTML = 'leer';
     } 
 };
-
-
-
 function rdit(kk, cc) {
     var sty = document.getElementById(cc); 
     if(sty.style.display == "block"){
@@ -141,7 +146,6 @@ function rdit(kk, cc) {
         rd.pause();
     } 
 };
-
 function streamkv(kk) {
     var sty = document.getElementById(kk); 
     if(sty.style.display == "block"){
@@ -150,7 +154,6 @@ function streamkv(kk) {
         sty.innerHTML = 'leer';
     }
 };
-
 function next(folder, fileid, file, cc, id, mpf) {
 var nid = 'num' + id;
 if (window.lastnid) {
@@ -173,7 +176,6 @@ window.lastnid = nid;
 window.lastid = id;
 window.lastmpf = mpf;
 };
-
 function hearit(folder, file, cc, id) {
     var sty = document.getElementById(cc); 
     if(sty.style.display == "block"){
@@ -201,7 +203,6 @@ function hearit(folder, file, cc, id) {
         sty.innerHTML = 'leer';
     } 
 };
-
 function readit(kk, cc, color) {
     var sty = document.getElementById(cc); 
     if(sty.style.display == "block"){
@@ -221,7 +222,6 @@ Book.on('Book:pageChanged', function(location){
 function readchange() {
 //document.getElementById("nowpage").innerHTML = Book.spinePos;
 }
-
 var pdfpage = 0;
 function seeit(kk, cc, color) {
     var sty = document.getElementById(cc);
@@ -234,7 +234,6 @@ function seeit(kk, cc, color) {
         sty.innerHTML = 'leer';
     }
 };
-
 function pdf(num, cc, kk) {
 if (num == 'prev') {
     num = pdfpage - 1;
@@ -272,7 +271,6 @@ var canvas = document.getElementById(cc + 'b');
         });
         });
 }
-
 function ChangeType(kk, cc, file) {
 	var sty = document.getElementById(kk)
 	if(sty.type == "text"){
@@ -305,7 +303,6 @@ function SetName(kk, cc, file) {
         no.className = "ico-ok";
     }
 }
-
 function SetNameDel(kk, cc, file, newcc) {
 	var sty = document.getElementById(kk + "z")
 	var dow = document.getElementById(kk + "d") 
@@ -336,7 +333,6 @@ function SetNameDel(kk, cc, file, newcc) {
 	}
     }
 }
-
 function SetDesc (kk) {
         var sty = document.getElementById("intro")
         var ok = document.getElementById("descedit")
@@ -357,7 +353,6 @@ function SetDesc (kk) {
 	bi.style.display = 'none';
     }
 }
-
 function SetDescUploadBack () {
     var sty = document.getElementById("intro")
     if(sty.style.display == "none") {
@@ -368,7 +363,6 @@ function SetDescUploadBack () {
 	document.getElementById("biupform").submit();	
     }
 }
-
 function NF (cc, name) {
 xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
@@ -400,7 +394,6 @@ function SN (kk, cc, id) {
         no.className = "ico-ok";
     }
 }
-
 function SND (kk, cc, newcc, id, nodir, dr) {
 	var sty = document.getElementById("num"+ id)
 	var ok = document.getElementById(kk + "o")
@@ -444,12 +437,10 @@ function SND (kk, cc, newcc, id, nodir, dr) {
 	}
     }
 }
-
 function UpIt() {
     var sty = document.getElementById('upit')
     sty.className = "upit";
 }
-
 // file selection
 function FileSelectHandler(e) {
 

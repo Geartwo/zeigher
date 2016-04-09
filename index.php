@@ -61,12 +61,15 @@ if($mode == 'dmyma'){
 		}
 	}
 }
-if(isset($_GET['wish'])){
-	include ".data/wish.php";
-}elseif (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
+if(isset($mainextension)){
+    foreach($mainextension as $maex){
+        include($maex);
+    }
+}
+if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 	echo "<div class=\"intro\"><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
 	<a href=\"?f=".$tgif."\">".$lang->back."</a></div>";
-}elseif ($_SESSION['loggedin'] == true || $settings->use == 'all'){
+}elseif (!isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 	//Folder listing
 	if ($mode != 'dmyma'){
 		$oph = opendir($folder);
@@ -147,7 +150,7 @@ if(isset($_GET['wish'])){
 				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
                 if($isad >=3 && $edit == 1){
                     $fourpack = 1;
-					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a>";
+					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$folder."/".$file."\">";
 				}
 				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
 				</div></a>";
@@ -276,7 +279,7 @@ if(isset($_GET['wish'])){
 	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad >=3 && $edit == 1) {
-	    echo "draggable=true>";
+	       echo "draggable=true>";
             $extension = substr(strrchr($file, "."), 1);
             echo "</a>
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
@@ -284,6 +287,7 @@ if(isset($_GET['wish'])){
             </form>
             <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
             <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
+            <a draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."');\" >
             ";
 	    }else{
 		echo ">";
@@ -369,8 +373,6 @@ echo "
     if ($mode != 'dmyma') {
 		closedir($oph);
 	}
-} elseif(isset($_GET['wish'])) {
-	include ".data/wish.php";
 }
 include '.data/footer.php';
 ?>

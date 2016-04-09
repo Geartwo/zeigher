@@ -41,6 +41,9 @@ if (isset($installed)) {
 		if(file_exists($pluginfolder.$slash.$pfolder.$slash."function.php")) {
             $functionsextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."function.php";
         }
+        if(file_exists($pluginfolder.$slash.$pfolder.$slash."main.php")) {
+            $mainextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."main.php";
+        }
 	}
 }
 include 'sql.php';
