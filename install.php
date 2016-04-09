@@ -208,7 +208,12 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     	type VARCHAR(50) NOT NULL,
     	objectid VARCHAR(50) NOT NULL,
     	userid VARCHAR(25) NOT NULL,
-	conpro INT(32) NOT NULL
+	    conpro INT(32) NOT NULL
+    	)");
+        $db->query("CREATE TABLE isad (
+    	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    	right VARCHAR(50) NOT NULL,
+    	value INT(1) NOT NULL
     	)");
 	
 	mkdir(".trash", 0700);
@@ -266,18 +271,29 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	$regnow = $_POST['regnow'];
 	$use = $_POST['use'];
 	$mainmail = $_POST['mainmail'];
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('theme', '$theme', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('regist', '$regist', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('regnow', '$regnow', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('use', '$use', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('mainmail', '$mainmail', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('points', 'true', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('color', 'green', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('wishes', 'false', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('qrcode', 'false', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('search', 'false', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('stitel', '$stitel', '', '0')");
-	$eintragen = $db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('logo', 'false', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('theme', '$theme', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('regist', '$regist', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('regnow', '$regnow', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('use', '$use', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('mainmail', '$mainmail', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('points', 'true', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('color', 'green', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('wishes', 'false', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('qrcode', 'false', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('search', 'false', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('stitel', '$stitel', '', '0')");
+	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('logo', 'false', '', '0')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('getpasshash', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('update', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('randc', '1')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('seemailaddr', '6')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('imprint', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('promotion', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('news', '2')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('settings', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('isad', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('fileeditor', '8')");
+    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('description', '3')");
 	$datei = fopen(".settings/config.php", "a+");
 	fwrite($datei, '<?php'."\r\n");
 	fwrite($datei, '$installed = true'.";\r\n");

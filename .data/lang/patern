@@ -103,4 +103,7 @@ $lang->newfiles = '';
 $lang->datachange = '';
 $lang->upload = '';
 $lang->newfolder = '';
+$lang->isad = '';
+$lang->right = '';
+$lang->value = '';
 ?>

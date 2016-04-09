@@ -12,8 +12,8 @@ Webseite besuchen: '.$https.'://'.$name;
         $headers = "Content-type:text/plain;charset=utf-8" . "\n" . 'From: ' . $settings->mainmail . "\r\n" . 'Reply-To: ' . $settings->mainmail . "\r\n" . 'X-Mailer: PHP/' . phpversion();
         mail($settings->mainmail, $subject, $message, $headers);
         echo "
-        <h2>Dein vorschlag wurde abgeschickt. </h2>
-        <input type=\"submit\" class=\"buttet\" value=\"Mehr W&uuml;nsche?\" onclick=\"self.location.href='formular.php'\" />
+        <h2>Dein vorschlag wurde abgeschickt.
+        Mehr W&uuml;nsche?</h2>
         ";
 }
 if(isset($_GET['wish'])){

@@ -11,6 +11,7 @@ $wish = "";
 ini_set("session.cookie_lifetime","2592000");
 ini_set("session.gc_maxlifetime", "2592000");
 $settings = new stdClass();
+$sysisad = new stdClass();
 $max_upload = (int)(ini_get('upload_max_filesize'));
 $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));

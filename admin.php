@@ -7,9 +7,9 @@ while ($row = $dbquery->fetch_assoc()){
 $isad = $row['isad'];
 }
 if(isset($isad) && $isad > 0){
-	if($folder != "setting" && $isad >= 8){
+	if($folder != "setting" && $isad >= $sysisad->settings){
 		echo "<input type='submit' class='buttet ".$color."' value='".$lang->settings."' onclick=\"self.location.href='?f=setting'\" /><br>";
-	}elseif ($isad >= 8){
+	}elseif ($isad >= $sysisad->settings){
 		echo "<input type='submit' class='buttet ".$color."' value='".$lang->settings."' onclick=\"self.location.href='admin.php'\" /><br>";
 		if(isset($_GET['value'])) {
 			$setting = $_GET['setting'];
@@ -54,9 +54,9 @@ if(isset($isad) && $isad > 0){
         <br>
         ";
     }
-    if($folder != "news" && $isad >= 2) {
+    if($folder != "news" && $isad >= $sysisad->news) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->news."\" onclick=\"self.location.href='?f=news'\" /><br>";
-    }  elseif ($isad >= 2) {
+    }  elseif ($isad >= $sysisad->news) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->news."\" onclick=\"self.location.href='admin.php'\" /><br>";
         echo "
         <script type=\"text/javascript\" src=\"data/ckeditor/ckeditor.js\"></script>
@@ -78,9 +78,9 @@ if(isset($isad) && $isad > 0){
         ";
     }
     
-    if($folder != "imprint" && $isad >= 8) {
+    if($folder != "imprint" && $isad >= $sysisad->imprint) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->imprint."\" onclick=\"self.location.href='?f=imprint'\" /><br>";
-    }  elseif ($isad >= 8) {
+    }  elseif ($isad >= $sysisad->imprint) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->save."\" onclick=\"self.location.href='admin.php'\" /><br>";
         echo "
         <script type=\"text/javascript\" src=\"data/ckeditor/ckeditor.js\"></script>
@@ -102,9 +102,9 @@ if(isset($isad) && $isad > 0){
         ";
     }
     
-	if($folder != "promotion" && $isad >= 8){
+	if($folder != "promotion" && $isad >= $sysisad->promotion){
 		echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->promotioncode."\" onclick=\"self.location.href='?f=promotion'\" /><br>";
-	}elseif ($isad >= 8){
+	}elseif ($isad >= $sysisad->promotion){
 		echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->promotioncode."\" onclick=\"self.location.href='admin.php'\" /><br>";
 		if (isset($_POST["lacode"])) {
 		$code = $_POST["lacode"];
@@ -169,9 +169,9 @@ if(isset($isad) && $isad > 0){
 		</form>
 		<br>";
 	}
-    if($folder != "randc" && $isad >= 1) {
+    if($folder != "randc" && $isad >= $sysisad->randc) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->randc."\" onclick=\"self.location.href='?f=randc'\" /><br>";
-    }  elseif ($isad >= 1) {
+    }  elseif ($isad >= $sysisad->randc) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->randc."\" onclick=\"self.location.href='admin.php'\" /><br>";
         $dbro = $db->query("SELECT id FROM user ORDER BY user");
         $dum = $dbro->num_rows;
@@ -202,7 +202,7 @@ if(isset($isad) && $isad > 0){
             <div class=\"boxrow\">
             <div class=\"boxl boxn\">" .$usntzr. "</div>
             ";
-            if ($isad < 6) {
+            if ($isad <= $sysisad->seemailaddr) {
                 echo "<div class=\"boxl boxm \">****@****.**</div>";
             } else {
                 echo "<div class=\"boxl boxm \">" .$usmail. "</div>";
@@ -217,11 +217,41 @@ if(isset($isad) && $isad > 0){
         echo "</div>";
     }
     
-    if($folder != "update" && $isad >= 7) {
+    if($folder != "isad" && $isad >= $sysisad->isad) {
+        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->isad."\" onclick=\"self.location.href='?f=isad'\" /><br>";
+    }  elseif ($isad >= $sysisad->isad) {
+        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->isad."\" onclick=\"self.location.href='admin.php'\" /><br>";
+        $dbro = $db->query("SELECT id FROM isad ORDER BY iright");
+        echo "
+        <div class=\"boxall\">
+        <div class=\"boxrow\">
+        <div class=\"boxl boxn\">".$lang->right."</div>
+        <div class=\"boxl boxc \">".$lang->value."</div>
+        <div class=\"boxl boxa \">".$lang->actions."</div>
+        </div>";
+        while ($dbid = $dbro->fetch_array ()) {
+            $rightid = $dbid[0];
+            $dbquery = $db->query("SELECT * FROM isad WHERE id = '$rightid'");
+            while ($row = $dbquery->fetch_assoc()){
+                $right = $row['iright'];
+                $value = $row['ivalue'];
+            }
+            echo "
+            <div class=\"boxrow\">
+            <div class=\"boxl\">".$right."</div>
+            <div class=\"boxl\"><input type=\"text\" id=\"isad".$rightid."value\" name=\"isad\" pattern=\"[0-9]*\" value=\"".$value."\"></div>
+            <div class=\"boxlbut\"><input onclick=\"isad('".$rightid."');\" class=\"".$color."\" type=\"button\" value=\"".$lang->settings."\" /></div>
+            </div>
+            ";
+        }
+        echo "</div>";
+    }
+
+    if($folder != "update" && $isad >= $sysisad->update) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->newversion."\" onclick=\"self.location.href='?f=update'\" /><br>";
-    }  elseif ($isad >= 7) {
+    }  elseif ($isad >= $sysisad->update) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->newversion."\" onclick=\"self.location.href='admin.php'\" /><br>";
-        $uversion  = @file_get_contents('http://tekkit.at/data/version.html');
+        $uversion  = @file_get_contents('http://chrometech.at/zeigher/version.html');
         if ($version < $uversion ) {
             $utdc = "submit";
         } else {
@@ -238,9 +268,9 @@ if(isset($isad) && $isad > 0){
         ";
     }
     
-    if($folder != "password" && $isad >= 8) {
+    if($folder != "password" && $isad >= $sysisad->getpasshash) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->getpasshash."\" onclick=\"self.location.href='?f=password'\" /><br>";
-    }  elseif ($isad >= 8) {
+    }  elseif ($isad >= $sysisad->getpasshash) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->getpasshash."\" onclick=\"self.location.href='admin.php'\" /><br>";
         echo "
         <div class=\"login\">

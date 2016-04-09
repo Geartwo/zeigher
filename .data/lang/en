@@ -103,4 +103,7 @@ $lang->newfiles = 'Newest files';
 $lang->datachange = 'Your data was successfully changed.';
 $lang->upload = 'Upload File';
 $lang->newfolder = 'New Folder';
+$lang->isad = 'Admin Rights';
+$lang->right = 'Right';
+$lang->value = 'Value';
 ?>

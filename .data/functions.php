@@ -100,7 +100,19 @@ function userwork(id, action){
     }
     xmlhttp.open("POST",".data/adminworker.php",true);
     xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-    xmlhttp.send("user=1&id=" + id + "&action=" + action + "&isad=" + isad + "&free=" + free );
+    xmlhttp.send("user&id=" + id + "&action=" + action + "&isad=" + isad + "&free=" + free);
+};
+function isad(id){
+    var value = document.getElementById('isad'+id+'value').value;
+	xmlhttp=new XMLHttpRequest();
+    xmlhttp.onreadystatechange=function() {
+        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+            location.reload();
+        }
+    }
+    xmlhttp.open("POST",".data/adminworker.php",true);
+    xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+    xmlhttp.send("isad&id=" + id + "&value=" + value);
 };
 function comsort(){
 var comsort = document.getElementById('comsort');
