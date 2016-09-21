@@ -68,7 +68,7 @@ if($folder != "setting"){
 				$subject = 'Ihr Passwort auf '.$name.' wurde zurückgesetzt';
 				$time = date('j\.n\.Y \u\m G:i:s');
 				$message = 'Das Passwort des Users '.$username.' wurde am '.$time.' Uhr zurückgesetzt.
-				Falls diese Änderung nicht von ihnen gemacht wurde antworten sie auf diese Mail, sonst können sie die Mail verwerfen.';
+Falls diese Änderung nicht von ihnen gemacht wurde antworten sie auf diese Mail, sonst können sie die Mail verwerfen.';
 				$headers = "Content-type:text/plain;charset=utf-8" . "\n" . 'From: ' . $settings->mainmail . "\r\n" . 'Reply-To: ' . $settings->mainmail . "\r\n" . 'X-Mailer: PHP/' . phpversion();
 				mail($mail, $subject, $message, $headers);
 			}

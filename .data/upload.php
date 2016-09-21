@@ -31,6 +31,8 @@ if(!empty($_FILES['fileselect'])){
             'pdf' => 'application/pdf',
 	    'epub' => 'application/epub',
 	    'zip' => 'application/zip',
+	    'zip' => 'application/octet-stream',
+	    '7z' => 'application/x-7z-compressed',
 	    'txt' => 'text/plain',
         ), true)){
         	throw new RuntimeException('Invalid file format.');

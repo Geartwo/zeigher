@@ -1,4 +1,5 @@
 <?php
+@include '../../../.settings/config.php';
 @include '../.settings/config.php';
 @include '.settings/config.php';
 if (!isset($installed)) {

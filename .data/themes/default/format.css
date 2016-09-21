@@ -77,7 +77,6 @@ cursor: pointer;
 .undercom { background: white; color: black; padding-left: 5px; overflow: hidden; }
 .anscom { margin-left: 15px; }
 .datcom { }
-
 a { text-decoration:none; color: #424242; }
 .sites { color: #444; text-decoration:none; display: inline-block; }
 .sites:hover { color: #253201; }
@@ -86,8 +85,8 @@ a { text-decoration:none; color: #424242; }
 .buo { text-align: left; }
 .meune { width: 100%; }
 #list { overflow: hidden; margin: 0 auto; }
-.intro { color: black; max-width: 800px;}
-.tbild { width: 175px; border-radius: 7px; margin-left: 10px; }
+.intro { color: black; font-size: x-large; max-width: 800px; text-overflow: ellipsis; max-height: 1.3em; overflow: hidden; white-space: nowrap; background: rgba(255, 255, 255, 0.3); padding: 5px; }
+.tbild { width: 175px; border-radius: 7px; float: right; margin-left: 10px; }
 .fbild { float: right; width: 140px; border: solid 5px grey; height: 190px; }
 .righter { float: right; }
 .lt { color: black; }
@@ -98,7 +97,7 @@ a { text-decoration:none; color: #424242; }
 .boxc { width: 20px;}
 .boxrow { display: table-row;}
 .boxl { font-size: 1.5em; text-align: center; display: table-cell; border-right: 1px solid black; border-bottom: 1px solid black;}
-.boxlbut input[type="button"] { height: 3em; text-align: center; margin: 0 1 0 0; }
+.boxlbut input[type="button"] { height: 3em; text-align: center; margin: 0 1 1 0; }
 .boxl input[type="text"] { font-size: 1.05em; text-align: center; width: 25px; margin: 0; padding: 0;}
 .boxl input[type="checkbox"] { height: 2.09em; width: 28px; display: }
 .boxf { display: inline-table; margin: 0;}

@@ -106,4 +106,5 @@ $lang->newfolder = '';
 $lang->isad = '';
 $lang->right = '';
 $lang->value = '';
+$lang->resetpwd = '';
 ?>

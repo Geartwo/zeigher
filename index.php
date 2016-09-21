@@ -1,5 +1,3 @@
-<meta name=viewport content="width=device-width, initial-scale=1">
-<meta charset="utf-8" />
 <script>
 var res = Math.floor(window.innerWidth / 250);
 if (res == 1) res = 2;
@@ -8,7 +6,6 @@ var four = 0;
 </script>
 <?php
 include '.data/header.php';
-//echo session_save_path();
 if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
 }
@@ -16,26 +13,15 @@ $ufolder = implode('/', explode('%2F', rawurlencode($folder)));
 if(file_exists($folder ."/.intro.jpg")){
 	echo "<img class=\"tbild\" onmousedown=\"return false;\" src=\"".$ufolder."/.intro.jpg\" alt=\"mainpic\">";
 }
-if(file_exists($folder ."/.intro.txt")){
-	echo "</a><div id='intro' class=\"intro\">";
-	$docfile=fopen($folder . "/.intro.txt","r+");
-	while(!feof($docfile)) { 
-		$line = htmlentities(fgets($docfile,1000)); 
-		echo $line."<br>";
-		$intro = $line."\n"; 
-	}
-	fclose($docfile);
-	echo "</div>";
-	$intro = 'true';
-}else{
-	echo "<div id='intro' class=\"intro\"></div>";
-}
 //Login & Register
-if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['register']) || isset($_GET['login'])){
+if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['register']) && !isset($_GET['reset']) || isset($_GET['login'])){
 	include '.data/login.php';
 }
 if(isset($_GET['register'])){
 	include '.data/register.php';
+}
+if(isset($_GET['reset'])){
+        include '.data/reset.php';
 }
 //QR-Code
 if(isset($_GET['qr'])){
@@ -67,7 +53,7 @@ if(isset($mainextension)){
     }
 }
 if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
-	echo "<div class=\"intro\"><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
+	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
 	<a href=\"?f=".$tgif."\">".$lang->back."</a></div>";
 }elseif (!isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 	//Folder listing

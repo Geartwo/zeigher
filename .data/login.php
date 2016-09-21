@@ -1,5 +1,4 @@
 <?php
-echo "<div class=\"intro\">".$lang->morefunctions."<div>";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
 	$email = $_POST['email'];
 	$password = $_POST['password'];
@@ -38,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_PO
 			$_SESSION['loggedin'] = true;
 			echo "<script>location.href='.?f=".$folder."'</script>";
 		}elseif($dbpassword != $ph || password_verify($_POST['password'],$dbpassword) == false){
-			echo $lang->wrongpass;
+			echo $lang->wrongpass."<br>";
+			echo "<a href='?f=". $folder ."&reset'>".$lang->resetpwd."</a><br><br>";
 		}elseif($dbfree != 1) {
 			echo $lang->notfree;
 		}else{
@@ -47,6 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_PO
 		$_SESSION['userid'] = $userid;
 	}
 	echo "</div>";
+}else{
+	echo "<div class=\"\">".$lang->morefunctions."<div><br>";
 }
 echo "<div class=\"login\">
 <form action=\"index.php?f=". $folder ."&login\" method=\"post\">

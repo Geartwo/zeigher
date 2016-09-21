@@ -1,9 +1,5 @@
 <?php
-echo '<div style="display: none;">';
-session_start();
-set_time_limit(0);
-if (file_exists ('config.php')) { include 'config.php'; } else { include '.data/config.php'; }
-echo '</div>';
+include 'all.php';
 /**
  * Description of VideoStream
  *
@@ -11,8 +7,8 @@ echo '</div>';
  * @link http://codesamplez.com/programming/php-html5-video-streaming-tutorial
  */
 if ($_SESSION['loggedin'] != true) {
-    echo "<script>self.location.href='..'</script>";
-    exit();
+#    echo "<script>self.location.href='..'</script>";
+#    exit();
 }
 
 class VideoStream

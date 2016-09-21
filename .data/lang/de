@@ -106,4 +106,5 @@ $lang->newfolder = 'Neuer Ordner';
 $lang->isad = 'Admin Rechte';
 $lang->right = 'Recht';
 $lang->value = 'Wert';
+$lang->resetpwd = 'Passwort vergessen?';
 ?>
