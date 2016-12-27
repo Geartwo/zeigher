@@ -1,5 +1,4 @@
 <?php
-include 'all.php';
 //Rename
 $folder = $_GET['f'];
 if(isset ($_GET['renold']) && isset ($_GET['rennew'])){
@@ -7,8 +6,16 @@ $newf = $_GET['newf'];
 if ($isad >=3) {
 $old =$_GET['renold'];
 $new =$_GET['rennew'];
-                        rename(".".$folder."/".$old, ".".$newf."/".$new);
-                        rename(".".$folder."/.pic_".$old.".jpg", ".".$newf."/.pic_".$new.".jpg");
+	if(preg_match("/\.mp3\z/i", $old) && !preg_match("/\.mp3\z/i", $new)):
+		exec('ffmpeg -i "'.$folder.'/'.$old.'" "'.$folder.'/'.$new.'" > /dev/null');
+		unlink($folder."/".$old);
+	elseif(preg_match("/\.wma\z/i", $old) && !preg_match("/\.wma\z/i", $new)):
+		exec('ffmpeg -i "'.$folder.'/'.$old.'" "'.$folder.'/'.$new.'" > /dev/null');
+		unlink($folder."/".$old);
+	else:
+		rename($folder."/".$old, $newf."/".$new);
+	endif;
+                        rename($folder."/.pic_".$old.".jpg", $newf."/.pic_".$new.".jpg");
                         $df = implode('/', explode('%2F', rawurlencode($folder)));
 			$new = $db->real_escape_string($new);
                         $newf = $db->real_escape_string($newf);
@@ -20,14 +27,14 @@ $new =$_GET['rennew'];
                 }
 }elseif (isset ($_GET['newfolder']) && $isad >=3){
                 $new = $_GET['newfolder'];
-                mkdir(".".$folder."/".$new, 0755);
+                mkdir($folder."/".$new, 0755);
 }elseif (isset ($_GET['delfile']) && $isad >=8){
 	$del = $_GET['delfile'];
-	unlink(".".$folder."/".$del);
+	unlink($folder."/".$del);
 	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
 }elseif (isset ($_GET['deldir']) && $isad >=8){
 	$del = $_GET['deldir'];
-        rmdir(".".$folder."/".$del);
+        rmdir($folder."/".$del);
 	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
 }
 ?>

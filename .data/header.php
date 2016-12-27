@@ -6,8 +6,6 @@
 <link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
 <?php
 error_reporting();
-$isad=0;
-include 'all.php';
 include 'functions.php';
 $regist='';
 if (isset($_GET['login'])) $use = 'none';
@@ -15,7 +13,41 @@ set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
 if (isset($https)) $https = "https"; else $https = "http";
-if(isset ($_GET['f'])) $folder = $_GET['f'];
+function workpath($a){
+if($a == "undefined"):
+        $a = ".";
+endif;
+$a = str_replace("%20", " ", $a);
+$b=split("/", $a);
+if($a[0] == "/"):
+        $c[]="";
+        $b = array_slice($b, 1);
+else:
+        $c=split("/", $_SESSION['workdir']);
+        $c = array_slice($c, 1);
+endif;
+foreach($b as $d):
+        if($d == "."):
+                continue;
+        elseif($d == ".."):
+                $c = array_slice($c, 0, -1);
+        else:
+                $c[] = $d;
+        endif;
+endforeach;
+$e = implode("/", $c);
+if($e[0] != "/"):
+        $e = "/".$e;
+endif;
+if(file_exists(".".$e) == false):
+        $e = false;
+endif;
+return $e;
+}
+if(isset ($_GET['f'])):
+	$cmsfolder = workpath($_GET['f']);
+	$folder = ".".$cmsfolder;
+endif;
 if(!isset($folder)) {$folder ='.';}
 $alarm = explode('/', $folder);
 $aleartred = in_array('..', $alarm);
@@ -94,9 +126,11 @@ if(isset($nnout)){
 	</style>";
 }
 echo "
+<div style='display: inline-block;' id='key'></div>
 <div class='whole'>
-<div class=\"wrapper\"";
-echo "><div class=\"logoe\">";
+<div class='wrapper'>
+<div id='tbild' style='transition: max-width 0.5s linear 0s, margin 0.5s linear 0s; float: right; position: absolute; top: 5; right: 5; overflow: hidden; margin: 5px;'></div>
+<div class='logoe'>";
 if(!empty($settings->logo) && $settings->logo=='true'){
 	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->stitel."'></a>";
 }elseif(!empty($settings->stitel)){
@@ -145,7 +179,7 @@ echo "
 </div class=\"logoe\">
 </div class=\"wrapper\">
 
-<div class=\"wholy clear\">
+<div class=\"wholy\">
 ";
 if($_SESSION['loggedin'] == true) {
     echo "<div class=\"news\">";

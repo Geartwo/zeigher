@@ -1,11 +1,18 @@
 <?php
-include 'all.php';
 include 'functions.php';
+$pluginfolder = ".plugins";
+$plugdir = scandir($pluginfolder);
+foreach($plugdir as $pfolder) {
+	if($pfolder[0] == ".") continue;
+        if(file_exists($pluginfolder.$slash.$pfolder.$slash."voteroom.php")) {
+            $voteroomextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."voteroom.php";
+        }
+}
 foreach($voteroomextension as $voex){
 	include($voex);
 }
-$fileid = $_POST['file'];
-$folder = $_POST['folder'];
+$fileid = $_GET['watchfile'];
+$folder = $_GET['folder'];
 $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
 @$filedate = date("d.m.Y G:i", strtotime($row['date']));
 $upuserid = $row['userid'];
@@ -20,7 +27,7 @@ $upuser = $row['user'];
 echo $filename;
 $description = str_replace("<", htmlentities("<"), $description);
 $my_html = \Michelf\Markdown::defaultTransform($description);
-echo "<a class='ico-down' href='.data/downloader.php?file=.".$folder."/".$filename."'></a><br>";
+echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=".$folder."/".$filename."'></a><br>";
 echo $lang->uploaded.": ".$filedate."<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '".$fileid."', 'file');\">".$pro."</b><b class='vote'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '".$fileid."', 'file');\">".$con."</b><b class='vote'>-</b> ".$lang->user.": ".$upuser."<br>".
 $my_html."<br>";
 echo "<div class=\"comments\">";

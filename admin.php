@@ -1,84 +1,38 @@
 <?php
 $spsite = "admin";
 $spsiten = "Admin";
+include '.data/all.php';
 include '.data/header.php';
 if(isset($username))$dbquery = $db->query("SELECT * FROM user WHERE user = '$username'");
 while ($row = $dbquery->fetch_assoc()){
 $isad = $row['isad'];
 }
-if(isset($isad) && $isad > 0){
-	if($folder != "setting" && $isad >= $sysisad->settings){
-		echo "<input type='submit' class='buttet ".$color."' value='".$lang->settings."' onclick=\"self.location.href='?f=setting'\" /><br>";
-	}elseif ($isad >= $sysisad->settings){
-		echo "<input type='submit' class='buttet ".$color."' value='".$lang->settings."' onclick=\"self.location.href='admin.php'\" /><br>";
-		if(isset($_GET['value'])) {
-			$setting = $_GET['setting'];
-			$value = $_GET['value'];
-			$db->query("UPDATE settings SET value = '$value' WHERE setting = '$setting' AND userid = 0");
-		}
-		echo
-		$lang->mode.": ".$mode."<br>";
-		if($mode == 'fmyma' | $mode == 'dmyma') {
-			echo $lang->dbuser.": ".$dbuser."<br>
-			".$lang->dbhost.": ".$dbhost."<br>
-			".$lang->dbank.": ".$dbank."<br>";
-		}
-		$dbquery = $db->query("SELECT * FROM settings WHERE userid = '0'");
-		while ($row = $dbquery->fetch_assoc()){
-			echo "
-			<form>
-			".$row['setting'].": 
-			<input type='hidden' name='f' value='setting'>
-			<input type='hidden' name='setting' value=".$row['setting'].">";
-			if ($row['value'] == 'true' | $row['value'] == 'false') {
-			echo "
-			<select name='value'>
-			<option value=true ";
-			if ($row['value'] == 'true') echo "selected";
-			echo">".$lang->y."</option>
-			<option value=false ";
-			if ($row['value'] == 'false') echo "selected";
-			echo ">".$lang->n."</option>
-			</select>
-			";
-			} else {
-				echo "<input name='value' value=".$row['value'].">";
-			}
-			echo "
-			<input type='submit' class='buttet ".$color."'>
-			</form>";
-		}
-		echo "Max-Upload: ".$upload_mb."MB<br>";
-        echo "
-        ".$lang->translated.": ".$lang->translator."<br>
-        <br>
-        ";
-    }
-    if($folder != "news" && $isad >= $sysisad->news) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->news."\" onclick=\"self.location.href='?f=news'\" /><br>";
-    }  elseif ($isad >= $sysisad->news) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->news."\" onclick=\"self.location.href='admin.php'\" /><br>";
-        echo "
-        <script type=\"text/javascript\" src=\"data/ckeditor/ckeditor.js\"></script>
-        <form action=\"admin.php\" method=\"post\">
-        <label for=\"admin.php\"></label>
-        <textarea  class=\"ckeditor\" cols=\"80\" rows=\"10\" name=\"editor\" id=\"editor1\" >";
-        if (file_exists("news.txt")){
-            $datei=fopen("news.txt","r+");
-            while(!feof($datei)) { 
-                $zeile = fgets($datei,1000); 
-                echo $zeile; 
-            }
-            fclose($datei);
+if (isset($installed)) {
+        $pluginfolder = ".plugins";
+        $plugdir = scandir($pluginfolder);
+        foreach($plugdir as $pfolder) {
+                if($pfolder[0] == ".") continue;
+                $longpfolder = $pluginfolder.DIRECTORY_SEPARATOR.$pfolder.DIRECTORY_SEPARATOR;
+                if(file_exists($longpfolder."admin.php")) {
+                        $adminextension[$pfolder] = $longpfolder."admin.php";
+                }
         }
-        echo "
-        </textarea>
-        <input type=\"submit\" class='buttet ".$color."' value=\"&raquo; ".$lang->save."\"/>
-        </form>
-        ";
-    }
-    
-    if($folder != "imprint" && $isad >= $sysisad->imprint) {
+
+}
+if(isset($adminextension) && $isad > 0){
+        foreach($adminextension as $key => $adex){
+                echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
+                if($_GET['d'] == $key){
+                        echo "admin.php";
+                }else{
+                        echo "?d=".$key;
+                }
+                echo "'\" /><br>";
+                include $adex;
+        }
+}
+if(isset($isad) && $isad > 0){
+        if($folder != "imprint" && $isad >= $sysisad->imprint) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->imprint."\" onclick=\"self.location.href='?f=imprint'\" /><br>";
     }  elseif ($isad >= $sysisad->imprint) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->save."\" onclick=\"self.location.href='admin.php'\" /><br>";
@@ -169,83 +123,6 @@ if(isset($isad) && $isad > 0){
 		</form>
 		<br>";
 	}
-    if($folder != "randc" && $isad >= $sysisad->randc) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->randc."\" onclick=\"self.location.href='?f=randc'\" /><br>";
-    }  elseif ($isad >= $sysisad->randc) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->randc."\" onclick=\"self.location.href='admin.php'\" /><br>";
-        $dbro = $db->query("SELECT id FROM user ORDER BY user");
-        $dum = $dbro->num_rows;
-        $dfro = $db->query("SELECT id FROM user WHERE free = 1");
-        $dfm = $dfro->num_rows;
-        echo "
-        B/F<br>
-        ".$dum."/".$dfm."
-        <div class=\"boxall\">
-        <div class=\"boxrow\">
-        <div class=\"boxl boxn\">".$lang->user."</div>
-        <div class=\"boxl boxm \">".$lang->email."</div>
-        <div class=\"boxl boxc \">F</div>
-        <div class=\"boxl boxc \">A</div>
-        <div class=\"boxl boxa \">".$lang->actions."</div>
-        </div>";
-        while ($dbid = $dbro->fetch_array ()) {
-            $userwahl = $dbid[0];   
-            $dbquery = $db->query("SELECT * FROM user WHERE id = '$userwahl'");
-            while ($row = $dbquery->fetch_assoc()){
-                $usntzr = $row['user'];
-                $usisad = $row['isad'];
-                $usfree = $row['free'];
-                $usmail = $row['email'];
-            }
-            if ($usfree == 1) $usfree = "checked"; else $usfree = "";
-            echo "
-            <div class=\"boxrow\">
-            <div class=\"boxl boxn\">" .$usntzr. "</div>
-            ";
-            if ($isad <= $sysisad->seemailaddr) {
-                echo "<div class=\"boxl boxm \">****@****.**</div>";
-            } else {
-                echo "<div class=\"boxl boxm \">" .$usmail. "</div>";
-            }
-            echo "
-            <div class=\"boxl\"><input type=\"checkbox\" id=\"user".$userwahl."free\" name=\"free\" ".$usfree."></div>
-            <div class=\"boxl\"><input type=\"text\" id=\"user".$userwahl."isad\" name=\"isad\" pattern=\"[0-9]*\" value=\"".$usisad."\"></div>
-            <div class=\"boxlbut\"><input onclick=\"userwork('".$userwahl."', 'setting');\" class=\"".$color."\" type=\"button\" value=\"".$lang->settings."\" /><input onclick=\"userwork('".$userwahl."', 'mail');\" class=\"".$color."\" type=\"button\" value=\"".$lang->freeplusmail."\" /><input onclick=\"userwork('".$userwahl."', 'delete');\" class=\"".$color."\" type=\"button\" value=\"".$lang->del."\" /></div>
-            </div>
-            ";
-        }
-        echo "</div>";
-    }
-    
-    if($folder != "isad" && $isad >= $sysisad->isad) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->isad."\" onclick=\"self.location.href='?f=isad'\" /><br>";
-    }  elseif ($isad >= $sysisad->isad) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->isad."\" onclick=\"self.location.href='admin.php'\" /><br>";
-        $dbro = $db->query("SELECT id FROM isad ORDER BY iright");
-        echo "
-        <div class=\"boxall\">
-        <div class=\"boxrow\">
-        <div class=\"boxl boxn\">".$lang->right."</div>
-        <div class=\"boxl boxc \">".$lang->value."</div>
-        <div class=\"boxl boxa \">".$lang->actions."</div>
-        </div>";
-        while ($dbid = $dbro->fetch_array ()) {
-            $rightid = $dbid[0];
-            $dbquery = $db->query("SELECT * FROM isad WHERE id = '$rightid'");
-            while ($row = $dbquery->fetch_assoc()){
-                $right = $row['iright'];
-                $value = $row['ivalue'];
-            }
-            echo "
-            <div class=\"boxrow\">
-            <div class=\"boxl\">".$right."</div>
-            <div class=\"boxl\"><input type=\"text\" id=\"isad".$rightid."value\" name=\"isad\" pattern=\"[0-9]*\" value=\"".$value."\"></div>
-            <div class=\"boxlbut\"><input onclick=\"isad('".$rightid."');\" class=\"".$color."\" type=\"button\" value=\"".$lang->settings."\" /></div>
-            </div>
-            ";
-        }
-        echo "</div>";
-    }
 
     if($folder != "update" && $isad >= $sysisad->update) {
         echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->newversion."\" onclick=\"self.location.href='?f=update'\" /><br>";
@@ -267,30 +144,6 @@ if(isset($isad) && $isad > 0){
         </form>
         ";
     }
-    
-    if($folder != "password" && $isad >= $sysisad->getpasshash) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->getpasshash."\" onclick=\"self.location.href='?f=password'\" /><br>";
-    }  elseif ($isad >= $sysisad->getpasshash) {
-        echo "<input type=\"submit\" class='buttet ".$color."' value=\"".$lang->getpasshash."\" onclick=\"self.location.href='admin.php'\" /><br>";
-        echo "
-        <div class=\"login\">
-        <form action=\"admin.php\" method=\"post\">
-        <div class=\"lt\">".$lang->password.":</div><input type=\"password\" name=\"password\" /><br>
-        <input type=\"submit\" class='buttet ".$color."' value=\"&raquo; ".$lang->query."\" />
-        </form>
-        </div class=\"login\">
-        ";
-    }
-  
-    if (isset($_POST["password"])){
-        $password = $_POST['password'];
-        $ph = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        echo $password . " = " . $ph;
-    }
-
-
-    
-    
     
     if (isset($_POST["update"])) {
         if (!extension_loaded('zip')) {  

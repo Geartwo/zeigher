@@ -23,31 +23,6 @@ if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
 }else{
     $slash = "/";
 }
-if (isset($installed)) {
-	$pluginfolder = dirname(__FILE__).$slash."plugins";
-	$plugdir = scandir($pluginfolder);
-	foreach($plugdir as $pfolder) {
-		if($pfolder[0] == ".") continue;
-		if(file_exists($pluginfolder.$slash.$pfolder.$slash."extension.php")) {
-			$plugextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."extension.php";
-		}
-		if(file_exists($pluginfolder.$slash.$pfolder.$slash."header.php")) {
-			$headerextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."header.php";
-        }
-		if(file_exists($pluginfolder.$slash.$pfolder.$slash."footer.php")) {
-            $footerextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."footer.php";
-        }
-		if(file_exists($pluginfolder.$slash.$pfolder.$slash."voteroom.php")) {
-            $voteroomextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."voteroom.php";
-        }
-		if(file_exists($pluginfolder.$slash.$pfolder.$slash."function.php")) {
-            $functionsextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."function.php";
-        }
-        if(file_exists($pluginfolder.$slash.$pfolder.$slash."main.php")) {
-            $mainextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."main.php";
-        }
-	}
-}
 include 'sql.php';
 //Setting
 if (isset($_SESSION['userid'])) {$userid = $_SESSION['userid'];} else {$userid = '-1';}

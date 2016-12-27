@@ -3,8 +3,42 @@ var res = Math.floor(window.innerWidth / 250);
 if (res == 1) res = 2;
 if (res >= 4) res = 4;
 var four = 0;
+window.onload = window.onresize = function(event) {
+	var winsize = window.innerWidth-1400;
+	if( winsize <= 0){
+		tbild.style.right = winsize; 
+	}else{
+		tbild.style.right = winsize/2;
+	}
+};
 </script>
 <?php
+include '.data/all.php';
+if (isset($installed)) {
+        $pluginfolder = ".plugins";
+        $plugdir = scandir($pluginfolder);
+        foreach($plugdir as $pfolder) {
+                if($pfolder[0] == ".") continue;
+                if(file_exists($pluginfolder.$slash.$pfolder.$slash."extension.php")) {
+                        $plugextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."extension.php";
+                }
+                if(file_exists($pluginfolder.$slash.$pfolder.$slash."header.php")) {
+                        $headerextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."header.php";
+        }
+                if(file_exists($pluginfolder.$slash.$pfolder.$slash."footer.php")) {
+            $footerextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."footer.php";
+        }
+                if(file_exists($pluginfolder.$slash.$pfolder.$slash."voteroom.php")) {
+            $voteroomextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."voteroom.php";
+        }
+                if(file_exists($pluginfolder.$slash.$pfolder.$slash."function.php")) {
+            $functionsextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."function.php";
+        }
+        if(file_exists($pluginfolder.$slash.$pfolder.$slash."main.php")) {
+            $mainextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."main.php";
+        }
+        }
+}
 include '.data/header.php';
 if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
@@ -47,16 +81,29 @@ if($mode == 'dmyma'){
 		}
 	}
 }
+if(file_exists($folder ."/.intro.txt")){
+echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
+        $docfile=fopen($folder . "/.intro.txt","r+");
+        while(!feof($docfile)) {
+                $line = htmlentities(fgets($docfile,1000));
+                echo $line."<br>";
+                $intro = $line."\n";
+        }
+        fclose($docfile);
+        echo "</div>";
+        $intro = 'true';
+}
 if(isset($mainextension)){
     foreach($mainextension as $maex){
         include($maex);
     }
 }
+echo "<div style='clear: right;'></div>";
+//Folder listing
 if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
 	<a href=\"?f=".$tgif."\">".$lang->back."</a></div>";
 }elseif (!isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
-	//Folder listing
 	if ($mode != 'dmyma'){
 		$oph = opendir($folder);
 		while(($file = readdir($oph)) !== false){
@@ -72,7 +119,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			$fileid = $row['id'];
 			if(!isset($fileid)){
 				$mysqltime = date("Y-m-d H:i:s");
-				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 1)");
+				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('1', '$folder', '$mysqltime', '$dbfile', 1)");
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
 			}
@@ -132,11 +179,11 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 				}
 			}
 			if($ord_array[0] != "xpvkleer"){
-				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$folder."/".$file."\">
+				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">
 				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
                 if($isad >= $sysisad->fileeditor && $edit == 1){
                     $fourpack = 1;
-					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$folder."/".$file."\">";
+					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">";
 				}
 				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
 				</div></a>";
@@ -252,7 +299,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			$pext = substr(strrchr($file, "."), 1);
-			echo "<a class='buo ord' id='num".$fourpack."' draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."'); ";
+			echo "<a class='buo ord' id='num".$idnum."' draggable='false' onclick=\"streamer(".$idnum.", '".$fileid."', '".$rawfile."', '".$folder."'); ";
 			//File
 			$sign = "ico-no";
 			if(file_exists($plugextension[$pext])){
@@ -273,7 +320,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
             </form>
             <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
             <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
-            <a draggable='false' onclick=\"streamer(Math.ceil(".$fourpack." / res) * res, '".$fileid."', '".$idnum."', '".$rawfile."', '".$folder."');\" >
+            <a draggable='false' onclick=\"streamer(".$idnum.", '".$fileid."', '".$rawfile."', '".$folder."');\" >
             ";
 	    }else{
 		echo ">";
@@ -291,27 +338,32 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			<br class='clear'>";}
 			$four = $four + 1;
 			$idnum = $idnum + 1;
-			echo "<div class='fourpack' style='display: none;' id='".$fourpack."'>
-			</div>
-			<div class='fourpack' id='".$fourpack."v'>
-			</div>";
-			$fourpack = $fourpack + 1;
-	}
-    	$thereAreFiles = true;
-    }
-    if($thereAreFiles == true) {
-    $fourdiv = $fourpack / 4;
-    for(;;) {
-        echo "<div class='clear'></div>
-	<div class='fourpack' style='display: none;' id='".$fourpack."'>
-       	</div>
-        <div class='fourpack' id='".$fourpack."v'>
- 	</div>";
-	if(is_integer($fourdiv) == true) break;
-    	$fourpack = $fourpack + 1;
-	$fourdiv = $fourpack / 4;
 	}
     }
+echo "
+<script>
+function controlblock(){
+streamercontrol.style.display = 'block';
+clearTimeout(window.controltimeout);
+window.controltimeout = setTimeout(function(){streamercontrol.style.display = 'none';}, 1000);
+}
+</script>
+<div id='streamerfild' class='clear' style='display: none;'>
+<div id='streamermax'>
+<div id='streamerfile' onmousemove='controlblock();'></div>
+<div id='streamercontrol' onmousemove='controlblock();'>
+<span id='streamerfull' onclick='full();'>Full</span>
+</div>
+</div>
+<div id='streamertext' onmouseover='document.onkeydown = \"\";' onmouseout='document.onkeydown = window.keyuse;'></div>
+</div>
+<script>window.lastnum = ";
+if(isset($idnum)):
+	echo $idnum;
+else:
+	echo 0;
+endif;
+echo"</script>";
 if($isad >= $sysisad->fileeditor && $edit==1 && $mode=='fmyma'){
     echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</font><br>";
 echo "
@@ -342,20 +394,6 @@ echo "
 </style>
 ";
 }
-    echo "<script>
-	newload = true;
-	if(window.location.hash) {
-        var hash = location.hash.replace(/^.*?#/, '');
-	var pairs = hash.split('&');
-	hash = pairs[0];
-	if(pairs[1]){
-	playtime = pairs[1];
-	} else {
-	playtime = 0;
-	}
-    	document.getElementById(hash).click();
-    }
-    </script>";
     if ($mode != 'dmyma') {
 		closedir($oph);
 	}

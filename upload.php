@@ -1,5 +1,5 @@
 <?php
-include 'all.php';
+include '.data/all.php';
 $fn = (isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false);
 if($_POST['mode'] == "bintro") {
 	$bintro = true;
@@ -7,8 +7,7 @@ if($_POST['mode'] == "bintro") {
 }elseif($_POST['mode'] == "fb") {
         $fb = true;
 }
-$folder = "../" . $_GET['folder'] . "/";
-$realfolder = $_GET['folder'];
+$folder = $_GET['folder'] . "/";
 @$text = $db->real_escape_string($_POST['impeditor']);
 if(!empty($_FILES['fileselect'])){
 	foreach ($_FILES['fileselect']['name'] as $f => $name) {
@@ -20,6 +19,7 @@ if(!empty($_FILES['fileselect'])){
 	        continue; // Skip file if any error found
 	    }
 	    $finfo = new finfo(FILEINFO_MIME_TYPE);
+if(false):
 	    if (false === $ext = array_search($finfo->file($_FILES['fileselect']['tmp_name'][$f]),
         array(
             'jpg' => 'image/jpeg',
@@ -33,10 +33,13 @@ if(!empty($_FILES['fileselect'])){
 	    'zip' => 'application/zip',
 	    'zip' => 'application/octet-stream',
 	    '7z' => 'application/x-7z-compressed',
+	    'iso' => 'application/octet-stream',
+	    'iso' => 'application/x-zip-compressed',
 	    'txt' => 'text/plain',
         ), true)){
         	throw new RuntimeException('Invalid file format.');
     	    }
+endif;
 	    if ($_FILES['fileselect']['error'][$f] == 0) {			
 	        #if ($_FILES['fileselect']['size'][$f] > $max_file_size) {
 	        #    $message[] = "$name is too large!.";
@@ -50,7 +53,7 @@ if(!empty($_FILES['fileselect'])){
 			if ($settings->points == 'true' && !isset($bintro) && !isset($fb)) {
 				$points = ceil($_FILES['fileselect']['size'][$f]/1048576);
 				if ($points > $upload_mb) { 
-					echo "Error: File to Big<br><a href='..'>Back</a>";
+					echo "Error: File to Big<br><a href='.'>Back</a>";
 					exit;
 				} else {
 					if ($userpoints < $points) {
@@ -68,12 +71,12 @@ if(!empty($_FILES['fileselect'])){
 			}
 	        if(move_uploaded_file($_FILES["fileselect"]["tmp_name"][$f], $folder.$name)){
 			if (isset($bintro)){
-				echo "<script>self.location.href='..?f=".$realfolder."'</script>";
+				echo "<script>self.location.href='.?f=".$folder."'</script>";
 				exit;
 			}
                        @$mysqltime = date("Y-m-d G:i:s");
 			$name = $db->real_escape_string($name);
-                       $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$realfolder', '$mysqltime', '$name', 1, '$text')");
+                       $db->query("INSERT INTO files (userid, folder, date, name, orfile, description) VALUES ('$userid', '$folder', '$mysqltime', '$name', 0, '$text')");
                        #$row = $db->query("SELECT id FROM tags WHERE tagname='$name'")->fetch_assoc();
                        #$id = $row['id'];
                        #$db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'file', '$id')");
@@ -81,7 +84,7 @@ if(!empty($_FILES['fileselect'])){
 	    }
 	}
 	if (isset($fb)){
-        	echo "<script>self.location.href='..?f=".$realfolder."'</script>";
+        	echo "<script>self.location.href='.?f=".$folder."'</script>";
         	exit;
         }
 }else{echo"Wrong";}
