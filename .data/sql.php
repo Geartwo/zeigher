@@ -23,10 +23,5 @@ if (isset($db) && $installed == true) {
 	while ($row = $dbquery->fetch_assoc()){
 		$settings->$row['setting'] = $row['value'];
 	}
-    //Get Isad
-	$dbquery = $db->query("SELECT * FROM isad");
-	while ($row = $dbquery->fetch_assoc()){
-		$sysisad->$row['iright'] = $row['ivalue'];
-	}
 }
 ?>

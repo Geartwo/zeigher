@@ -33,7 +33,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
         <option value='fmyma'>" . $lang->foldersql . "</option>
         <option value='dmyma'>" . $lang->poolbased . "</option>
         </select><br>
-        <input type='submit' value='" . $lang->send . "'></input>
+        <input type='submit' class='".$color."' value='" . $lang->send . "'></input>
         </form>
         ";
     }else{
@@ -57,7 +57,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	echo $lang->dbankfolder .":<br>
 	<input name='dbankfolder' value='".getcwd()."/.data/'></input><br>";
     }
-	echo"<input type='submit' value='" . $lang->send . "'></input>
+	echo"<input type='submit' class='".$color."' value='" . $lang->send . "'></input>
     </form>";
 } elseif (isset($_POST['dbuser']) && !file_exists('.settings/config.php')) {
 	//Step 3 - Test Database
@@ -104,7 +104,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     " . $lang->repass .":<br>
     <input name='repass' type='password'></input><br>
     
-    <input type='submit' value='" . $lang->send . "'></input>
+    <input type='submit' class='".$color."' value='" . $lang->send . "'></input>
     
     </form>
     ";
@@ -254,7 +254,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     <option value='none'>" . $lang->y . "</option>
     <option value='all'>" . $lang->n . "</option>
     </select><br>
-	<input type='submit' value='" . $lang->send . "'></input>
+	<input type='submit' class='".$color."' value='" . $lang->send . "'></input>
     </form>
     ";
 } elseif (isset($_GET['settings']) && $_SERVER['REQUEST_METHOD'] == 'POST') {
