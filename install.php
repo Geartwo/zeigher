@@ -10,6 +10,7 @@ $mode = "";
 #	}
 #}
 $spsite = "Install";
+include '.data/all.php';
 include '.data/header.php';
 
 //Install Settings
