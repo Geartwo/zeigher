@@ -48,7 +48,7 @@ if(isset ($_GET['f'])):
 	$cmsfolder = workpath($_GET['f']);
 	$folder = ".".$cmsfolder;
 endif;
-if(!isset($folder)) {$folder ='.';}
+if(!isset($folder)) {$folder ='/';}
 $alarm = explode('/', $folder);
 $aleartred = in_array('..', $alarm);
 $name = ucfirst($_SERVER['HTTP_HOST']);

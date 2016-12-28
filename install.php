@@ -72,7 +72,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 		die("<b style='color: red'>Fatal Error: Connection failed - " . $conn->connect_error . "</b><br><a href='?mode=" . $_POST['mode'] . "'>Retry</a>");
 	}
 	if(!file_exists('.settings')) mkdir('.settings');
-	if(!file_exists('.data/plugins')) mkdir('.data/plugins');
+	if(!file_exists('.plugins')) mkdir('.plugins');
 	$datei = fopen(".settings/config.php", "a+");
 	fwrite($datei, '<?php'."\r\n");
 	fwrite($datei, '$mode = \''.$_POST['mode']."';\r\n");
