@@ -107,4 +107,5 @@ $lang->isad = 'Admin Rechte';
 $lang->right = 'Recht';
 $lang->value = 'Wert';
 $lang->resetpwd = 'Passwort vergessen?';
+$lang->plugins = 'Erweiterungen';
 ?>

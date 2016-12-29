@@ -107,4 +107,5 @@ $lang->isad = '';
 $lang->right = '';
 $lang->value = '';
 $lang->resetpwd = '';
+$lang->plugins = '';
 ?>

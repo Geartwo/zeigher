@@ -81,6 +81,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	    fwrite($datei, '$dbwd = \''.$_POST['dbwd']."';\r\n");
 	    fwrite($datei, '$dbhost = \''.$_POST['dbhost']."';\r\n");
 	    fwrite($datei, '$dbank = \''.$_POST['dbank']."';\r\n");
+	    fwrite($datei, '$dbank = \'1.0\';'."\r\n");
 	} else {
 	    fwrite($datei, '$sqlitefolder = \''.$_POST['dbankfolder']."';\r\n");
 	}
@@ -211,11 +212,11 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     	userid VARCHAR(25) NOT NULL,
 	    conpro INT(32) NOT NULL
     	)");
-        $db->query("CREATE TABLE isad (
-    	id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    	right VARCHAR(50) NOT NULL,
-    	value INT(1) NOT NULL
-    	)");
+	$db->query("CREATE TABLE plugins (
+        id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(50) NOT NULL,
+        active INT(1)
+        )");
 	
 	mkdir(".trash", 0700);
 	mkdir(".files", 0700);

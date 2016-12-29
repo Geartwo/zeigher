@@ -7,18 +7,48 @@ if(isset($username))$dbquery = $db->query("SELECT * FROM user WHERE user = '$use
 while ($row = $dbquery->fetch_assoc()){
 $isad = $row['isad'];
 }
-if (isset($installed)) {
-        $pluginfolder = ".plugins";
-        $plugdir = scandir($pluginfolder);
-        foreach($plugdir as $pfolder) {
-                if($pfolder[0] == ".") continue;
-                $longpfolder = $pluginfolder.DIRECTORY_SEPARATOR.$pfolder.DIRECTORY_SEPARATOR;
-                if(file_exists($longpfolder."admin.php")) {
-                        $adminextension[$pfolder] = $longpfolder."admin.php";
-                }
-        }
-
-}
+$pluginfolder = ".plugins";
+$dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
+while($row = $dbquery->fetch_assoc()):
+	$longpfolder = $pluginfolder.DIRECTORY_SEPARATOR.$row['name'].DIRECTORY_SEPARATOR;
+	if(file_exists($longpfolder."admin.php")):
+		$adminextension[$row['name']] = $longpfolder."admin.php";
+	endif;
+endwhile;
+if($isad >= 1):
+	$key = "plugins";
+	echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
+	if($_GET['d'] == $key):
+		echo "admin.php";
+	else:
+		echo "?d=".$key;
+	endif;
+	echo "'\" /><br>";
+	if($_GET['d'] == $key):
+		echo "<div class='boxall'>";
+		$plugdir = scandir($pluginfolder);
+		foreach($plugdir as $pfolder):
+			if($pfolder[0] == ".") continue;
+			$dbquery = $db->query("SELECT * FROM plugins WHERE name = '$pfolder'");
+			if($dbquery->num_rows == 0):
+				$db->query("INSERT INTO plugins (name, active) VALUES ('$pfolder', 0)");
+				$dbquery = $db->query("SELECT * FROM plugins WHERE name = '$pfolder'");
+			endif;
+			$row = $dbquery->fetch_assoc();
+			if(isset($lang->$row['name'])):
+		 		$row['realname'] = $lang->$row['name'];
+			else:
+				$row['realname'] = $row['name'];
+			endif;
+			echo "<div class='boxrow'>
+			<div class='boxl boxn'>".$row['realname']."</div><div class='boxl'><input id='check-".$row['name']."' type='checkbox' onclick=\"activatePlugin('".$row['name']."')\"";
+			if($row['active'] == 1) echo "checked";
+			echo "></div>
+			</div>";
+		endforeach;
+		echo "</div>";
+	endif;
+endif;
 if(isset($adminextension) && $isad > 0){
         foreach($adminextension as $key => $adex){
                 echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
@@ -77,7 +107,7 @@ if(isset($isad) && $isad > 0){
 			for ($i = 0; $i < $length; $i++) {
 				$randomString .= $characters[rand(0, strlen($characters) - 1)];
 			}
-			$eintragen = $db->query("INSERT INTO promotion (code, expires) VALUES ('$randomString', '$exp')");
+			$db->query("INSERT INTO promotion (code, expires) VALUES ('$randomString', '$exp')");
 			echo $lang->newcodeready;
 		}
 		if (isset($_POST["com"])) {

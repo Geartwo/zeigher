@@ -383,6 +383,19 @@ xmlhttp=new XMLHttpRequest();
         xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&newfolder="+ name,true);
         xmlhttp.send();
 }
+function activatePlugin (name) {
+var check = document.getElementById("check-" + name).checked;
+xmlhttp=new XMLHttpRequest();
+if(check == false) {
+	window.confirm("Data could be get lost. Are you sure?");
+}
+xmlhttp.onreadystatechange=function() {
+if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+}
+}
+xmlhttp.open("GET","ajax.php?x=main&file=plugin.php&check="+ check +"&name="+ name,true);
+xmlhttp.send();
+}
 function SN (kk, cc, id) {
     var ok = document.getElementById(kk + "o")
     var no = document.getElementById(kk + "n")
@@ -663,7 +676,13 @@ function pic_thumb($image, $target, $max_width, $max_height) {
     }
 }
 if(!isset($theme)) $theme = "default";
-include 'lang/' . getLanguage();
+$langcode = getLanguage();
+include 'lang/' . $langcode;
+if(isset($langextension)){
+    foreach($langextension as $laex){
+        include($laex);
+    }
+}
 include "themes/".$theme."/variable.php";
 echo "<link rel='stylesheet' type='text/css' href='.data/themes/".$theme."/format.css'>";
 ?>
