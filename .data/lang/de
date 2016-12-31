@@ -108,4 +108,5 @@ $lang->right = 'Recht';
 $lang->value = 'Wert';
 $lang->resetpwd = 'Passwort vergessen?';
 $lang->plugins = 'Erweiterungen';
+$lang->nopluginsfound = 'Keine Plugins gefunden';
 ?>

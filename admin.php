@@ -36,6 +36,9 @@ if($isad == 1):
 			echo "></div>
 			</div>";
 		endforeach;
+		if($plugdir == ""):
+			echo $lang->nopluginsfound;
+		endif;
 		echo "</div>";
 	endif;
 endif;
