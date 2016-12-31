@@ -6,7 +6,6 @@ if (!isset($installed)) {
 	echo "<script>self.location.href='install.php'</script>";
 	exit;
 }
-$host = $_SERVER['HTTP_HOST'];
 if(!isset($folder)) $folder = ".";
 $wish = "";
 ini_set("session.cookie_lifetime","2592000");
@@ -18,11 +17,6 @@ $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
 $upload_mb = min($max_upload, $max_post, $memory_limit);
 session_start();
-if (strtoupper(substr(PHP_OS, 0, 3)) == 'WIN') {
-    $slash = "\\";
-}else{
-    $slash = "/";
-}
 include 'sql.php';
 //Setting
 if (isset($_SESSION['userid'])) {$userid = $_SESSION['userid'];} else {$userid = '-1';}
@@ -38,13 +32,11 @@ if (isset($db) && $installed == true) {
 		$themeid = 0;
 	}
 	$theme = $db->query("SELECT value FROM settings WHERE setting = 'theme' AND userid = '$themeid'");
-	$row = $theme->fetch_assoc();
-	$theme = $row['value'];
-	$dbquery = $db->query("SELECT * FROM user WHERE id = '$userid'");
-	while ($row = $dbquery->fetch_assoc()){
-		$isad = $row['isad'];
-		$username = $row['user'];
-	}
+	$theme = $theme->fetch_object()->value;
+	$dbquery = $db->query("SELECT isad, user FROM user WHERE id = '$userid'");
+	$row = $dbquery->fetch_object();
+	$isad = $row->isad;
+	$username = $row->user;
 	if ($settings->points == 'true') {
 		//Get Points
 		$dbquery = $db->query("SELECT * FROM points WHERE objectid = '$userid'");
@@ -69,5 +61,5 @@ if (isset($db) && $installed == true) {
 		$color = $row['value'];
 	}
 }
-if (!isset($color)) {$color = "green";}
+if (!isset($color)) $color = "green";
 ?>

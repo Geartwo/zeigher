@@ -1,6 +1,12 @@
 <?php
 //Check write perm
-if (!is_writable('.')) { echo "<b style='color: red'>Fatal Error: No write permission</b>"; exit; }
+$error = "";
+if(!is_writable('.')) $error = $error."<b style='color: red'>Fatal Error: No write permission</b><br>";
+if(extension_loaded('gd') && function_exists('gd_info')) $error."<b style='color: red'>Fatal Error: PHP Extension GD is not installed";
+if($error == ""):
+	echo $error;
+	exit;
+endif;
 $installed = false;
 $mode = "";
 #todo
@@ -24,7 +30,6 @@ if(isset($_SESSION['loggedin'])){
 
 //Step 1 - Mode choose
 if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) && !file_exists('.settings/config.php')){
-    if (extension_loaded('gd') && function_exists('gd_info')) {
         echo "
         <form>
         " . $lang->mode . ":<br>
@@ -36,9 +41,6 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
         <input type='submit' class='".$color."' value='" . $lang->send . "'></input>
         </form>
         ";
-    }else{
-        echo"PHP GD library is NOT installed on your web server";
-    }
 } elseif (isset($_GET['mode'])) {
     //Step 2 - Set Database
     echo "
@@ -178,14 +180,6 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
     date DATETIME NOT NULL
     )");
 
-    $db->query("CREATE TABLE promotion (
-    id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY, 
-    code VARCHAR(5) NOT NULL,
-    expires DATE NOT NULL,
-    comment VARCHAR(50) NOT NULL,
-    prompoints INT(11)
-    )");
-
     $db->query("CREATE TABLE points (
     id INT(11) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     type VARCHAR(50) NOT NULL,
@@ -222,7 +216,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	mkdir(".files", 0700);
     if (!isset($mainmail)) $mainmail = "root@localhost.local";
     $ph = password_hash($_POST['password'], PASSWORD_DEFAULT);
-    $db->query("INSERT INTO user (user, pass, email, isad, free) VALUES ('$username', '$ph', '$mainmail', 9, 1)");
+    $db->query("INSERT INTO user (user, pass, email, isad, free) VALUES ('$username', '$ph', '$mainmail', 1, 1)");
     $db->query("INSERT INTO points (type, objectid, points) VALUES ('user', '1', '60')");
     if ($mode == 'dmyma') {
     	$db->query("INSERT INTO tags (tagname, userid) VALUES ('$username', '0')");

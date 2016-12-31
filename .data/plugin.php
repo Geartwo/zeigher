@@ -12,23 +12,24 @@ foreach($requirements as $key => $require):
 	$require = preg_replace("/([\<\>\=])+/", '',$require);
 	if($key == "core" && version_compare($zeigher_version, $require , $compare) == true):
 		 continue;
-	else:
+	elseif($key == "core"):
 		echo "Error: Zeigher version $zeigher_version is not compatible with the required version $require";
 		$error = 1;
 		continue;
 	endif;
-	$dbquery = $db->query("SELECT active FROM plugins WHERE name = '$name' AND active = 1");
+	$dbquery = $db->query("SELECT active FROM plugins WHERE name = '$key' AND active = 1");
 	if(file_exists($pluginfolder.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR."info.php")):
 		include $pluginfolder.DIRECTORY_SEPARATOR.$key.DIRECTORY_SEPARATOR."info.php";
 		if(version_compare($version, $require, $compare) == false):
-			echo "Error: Required plugin $key $version is not compatible with $key$require";
+			echo "Error: Required plugin $key $version is not compatible with $key $compare$require";
 			$error = 1;
 		elseif($dbquery->num_rows != 1):
-			echo "Error: Required plugin $key$require is not installed";
+echo $dbquery->num_rows;
+			echo "Error: Required plugin $key $compare$require is not installed";
                         $error = 1;
 		endif;
 	else:
-		echo "Error: Required plugin $key$require is not present";
+		echo "Error: Required plugin $key $compare$require is not present";
 		$error = 1;
 	endif;
 endforeach;
@@ -39,4 +40,4 @@ if($check == 'true' && file_exists($longpfolder."install.php")):
 elseif($check == 'false' && file_exists($longpfolder."uninstall.php")):
 	include $longpfolder."uninstall.php";
 endif;
-
+echo "OK";

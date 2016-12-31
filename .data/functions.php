@@ -136,18 +136,6 @@ function com(type, oid, mode, comsub){
                 xmlhttp.open("GET","ajax.php?x=main&file=comments.php&comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&sub=" + comsub,true);
                 xmlhttp.send();
 };
-function userwork(id, action){
-    var free = document.getElementById('user'+id+'free').checked;
-    var isad = document.getElementById('user'+id+'isad').value;
-    xmlhttp=new XMLHttpRequest();
-    xmlhttp.onreadystatechange=function() {
-        if (xmlhttp.readyState==4 && xmlhttp.status==200) {
-        location.reload();
-        }
-    }
-    xmlhttp.open("GET","ajax.php?x=main&file=adminworker.php&user=1&id=" + id + "&action=" + action + "&isad=" + isad + "&free=" + free,true);
-    xmlhttp.send();
-};
 function isad(id){
     var value = document.getElementById('isad'+id+'value').value;
     xmlhttp=new XMLHttpRequest();
@@ -391,6 +379,10 @@ if(check == false) {
 }
 xmlhttp.onreadystatechange=function() {
 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+	if(xmlhttp.responseText != 'OK'){
+		document.getElementById("check-" + name).checked = !check;
+	}
+	document.getElementById('pluginresponse').innerHTML = xmlhttp.responseText;
 }
 }
 xmlhttp.open("GET","ajax.php?x=main&file=plugin.php&check="+ check +"&name="+ name,true);
