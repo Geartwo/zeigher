@@ -33,6 +33,7 @@ if(isset($db)):
 	$username = $db->query("SELECT user FROM user WHERE id = '$userid'")->fetch_object()->user;
 	$isadbol = $db->query("SELECT isad FROM user WHERE id = '$userid'")->fetch_object()->isad;
 	$isad = function($isadright){
+		global $isadbol;
 		return $isadbol;
 	};
 	if($settings->points == 'true'):
