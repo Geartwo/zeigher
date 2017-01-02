@@ -4,7 +4,7 @@ $spsiten = "Admin";
 include '.data/all.php';
 include '.data/header.php';
 if(isset($username))$dbquery = $db->query("SELECT * FROM user WHERE user = '$username'");
-if($isad == 1):
+if($isad):
 	$key = "plugins";
 	echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
 	if(isset($_GET['d']) && $_GET['d'] == $key):
@@ -44,6 +44,7 @@ if($isad == 1):
 endif;
 if(isset($adminextension)):
         foreach($adminextension as $key => $adex):
+		if(!isset($lang->$key)) $lang->$key = $key;
                 echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
                 if(isset($_GET['d']) && $_GET['d'] == $key):
                         echo "admin.php";

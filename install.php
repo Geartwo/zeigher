@@ -279,17 +279,6 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('search', 'false', '', '0')");
 	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('stitel', '$stitel', '', '0')");
 	$db->query("INSERT INTO settings (setting, value, name, userid) VALUES ('logo', 'false', '', '0')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('getpasshash', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('update', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('randc', '1')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('seemailaddr', '6')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('imprint', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('promotion', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('news', '2')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('settings', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('isad', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('fileeditor', '8')");
-    $db->query("INSERT INTO isad (iright, ivalue) VALUES ('description', '3')");
 	$datei = fopen(".settings/config.php", "a+");
 	fwrite($datei, '<?php'."\r\n");
 	fwrite($datei, '$installed = true'.";\r\n");

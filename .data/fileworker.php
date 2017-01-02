@@ -3,7 +3,7 @@
 $folder = $_GET['f'];
 if(isset ($_GET['renold']) && isset ($_GET['rennew'])){
 $newf = $_GET['newf'];
-if ($isad >=3) {
+if ($isad('fileworker')) {
 $old =$_GET['renold'];
 $new =$_GET['rennew'];
 	if(preg_match("/\.mp3\z/i", $old) && !preg_match("/\.mp3\z/i", $new)):
@@ -25,14 +25,14 @@ $new =$_GET['rennew'];
                 }else{
                         echo $lang->norenameright;
                 }
-}elseif (isset ($_GET['newfolder']) && $isad >=3){
+}elseif (isset ($_GET['newfolder']) && $isad('newfolder')){
                 $new = $_GET['newfolder'];
                 mkdir($folder."/".$new, 0755);
-}elseif (isset ($_GET['delfile']) && $isad >=8){
+}elseif (isset ($_GET['delfile']) && $isad('deletefolder')){
 	$del = $_GET['delfile'];
 	unlink($folder."/".$del);
 	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
-}elseif (isset ($_GET['deldir']) && $isad >=8){
+}elseif (isset ($_GET['deldir']) && $isad('deletefile')){
 	$del = $_GET['deldir'];
         rmdir($folder."/".$del);
 	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");

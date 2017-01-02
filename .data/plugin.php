@@ -1,5 +1,4 @@
 <?php
-include 'all.php';
 $check = $_GET['check'];
 $name = $_GET['name'];
 $pluginfolder = ".plugins";

@@ -23,34 +23,5 @@ if(isset($db) && $installed == true):
 	while ($row = $dbquery->fetch_assoc()):
 		$settings->$row['setting'] = $row['value'];
 	endwhile;
-	$dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
-	$pluginfolder = ".plugins";
-	while($row = $dbquery->fetch_assoc()):
-	        $longpfolder = $pluginfolder.DIRECTORY_SEPARATOR.$row['name'].DIRECTORY_SEPARATOR;
-	        if(file_exists($longpfolder."admin.php")):
-	                $adminextension[$row['name']] = $longpfolder."admin.php";
-	        endif;
-	        if(file_exists($longpfolder."extension.php")):
-	                $plugextension[$row['name']] = $longpfolder."extension.php";
-	        endif;
-	        if(file_exists($longpfolder."header.php")):
-	                $headerextension[$row['name']] = $longpfolder."header.php";
-	        endif;
-	        if(file_exists($longpfolder."footer.php")):
-	                $footerextension[$row['name']] = $longpfolder."footer.php";
-	        endif;
-	        if(file_exists($longpfolder."voteroom.php")):
-	                $voteroomextension[$row['name']] = $longpfolder."voteroom.php";
-	        endif;
-	        if(file_exists($longpfolder."function.php")):
-	                $functionsextension[$row['name']] = $longpfolder."function.php";
-	        endif;
-	        if(file_exists($longpfolder."main.php")):
-	                $mainextension[$row['name']] = $longpfolder."main.php";
-	        endif;
-	        if(file_exists($longpfolder."lang.php")):
-	                $langextension[$row['name']] = $longpfolder."lang.php";
-	        endif;
-	endwhile;
 endif;
 ?>

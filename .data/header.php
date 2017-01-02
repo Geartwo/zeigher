@@ -155,11 +155,11 @@ if($_SESSION['loggedin'] == "true"){
 	<ul>
 	<li class=\"submenu2 f".$color."\"><b><a href=\"user.php?f=setting\">".$lang->settings."</a></b></li>
 	<li class=\"submenu2 f".$color."\"><b><a href=\"user.php?f=owndata\">".$lang->owndata."</a></b></li>";
-    if(isset($isad) && $isad == 1) {
+    if($isad) {
         echo "<li class=\"submenu2\"><b><a href=\"admin.php\">".$lang->administration."</a></b></li>";
     }
     if ($edit == 1) { $editn = '<b style="color: green;">'.$lang->on.'</b>'; $editu = 0; } else { $editn = '<b style="color: red;">'.$lang->off.'</b>'; $editu = 1; }
-    if(isset($isad) && $isad == 1) {
+    if($isad) {
         echo "<li class=\"submenu2\"><b><a href=\".?f=".$folder."&edit=" . $editu . "\">".$lang->edit." " . $editn . "</a></b></li>";
     }
     echo "<li class=\"submenu2 f".$color."\"><b><a href=\".?log=".$folder."\">".$lang->logoff."</a></b></li>

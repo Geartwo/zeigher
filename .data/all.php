@@ -1,8 +1,6 @@
 <?php
-@include '../../../.settings/config.php';
-@include '../.settings/config.php';
-@include '.settings/config.php';
-if (!isset($installed)) {
+include '.settings/config.php';
+if (!isset($installed) || $installed == false) {
 	echo "<script>self.location.href='install.php'</script>";
 	exit;
 }
@@ -24,42 +22,70 @@ if (isset($_SESSION['edit'])) {$edit = $_SESSION['edit'];} else {$edit = 0;}
 if (isset($_GET['edit'])) { $edit = $_GET['edit']; }
 if ($edit == 1) { $_SESSION['edit'] = 1; } else { unset($_SESSION['edit']); }
 //SQL Ready
-if (isset($db) && $installed == true) {
+if(isset($db)):
 	$numtheme = $db->query("SELECT value FROM settings WHERE setting = 'theme' AND userid = '$userid'");
-	if($numtheme->num_rows == 1){
+	if($numtheme->num_rows == 1):
 		$themeid = $userid;
-	}else{
+	else:
 		$themeid = 0;
-	}
-	$theme = $db->query("SELECT value FROM settings WHERE setting = 'theme' AND userid = '$themeid'");
-	$theme = $theme->fetch_object()->value;
-	$dbquery = $db->query("SELECT isad, user FROM user WHERE id = '$userid'");
-	$row = $dbquery->fetch_object();
-	$isad = $row->isad;
-	$username = $row->user;
-	if ($settings->points == 'true') {
+	endif;
+	$theme = $db->query("SELECT value FROM settings WHERE setting = 'theme' AND userid = '$themeid'")->fetch_object()->value;
+	$username = $db->query("SELECT user FROM user WHERE id = '$userid'")->fetch_object()->user;
+	$isadbol = $db->query("SELECT isad FROM user WHERE id = '$userid'")->fetch_object()->isad;
+	$isad = function($isadright){
+		return $isadbol;
+	};
+	if($settings->points == 'true'):
 		//Get Points
-		$dbquery = $db->query("SELECT * FROM points WHERE objectid = '$userid'");
-		while ($row = $dbquery->fetch_assoc()){
-			$userpoints = $row['points'];
-		}
+		$userpoints = $db->query("SELECT points FROM points WHERE objectid = '$userid'")->fetch_object()->points;
 		//Get Premium Points
-		$dbquery = $db->query("SELECT * FROM user WHERE id = '$userid'");
-		while ($row = $dbquery->fetch_assoc()){
-			$userpremium = $row['premium'];
-		}
-	}
+		$userpremium = $db->query("SELECT premium FROM user WHERE id = '$userid'")->fetch_object()->premium;
+	endif;
 	//Get Color
 	$numcolor = $db->query("SELECT value FROM settings WHERE setting = 'color' AND userid = '$userid'");
-	if($numcolor->num_rows == 1){
+	if($numcolor->num_rows == 1):
 		$colorid = $userid;
-	}else{
+	else:
 		$colorid = 0;
-	}
-	$dbquery = $db->query("SELECT value FROM settings WHERE setting = 'color'AND userid = '$colorid'");
-	while ($row = $dbquery->fetch_assoc()){
-		$color = $row['value'];
-	}
-}
+	endif;
+	$color = $db->query("SELECT value FROM settings WHERE setting = 'color' AND userid = '$colorid'")->fetch_object()->value;
+	$dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
+        $pluginfolder = ".plugins";
+        while($row = $dbquery->fetch_assoc()):
+                $longpfolder = $pluginfolder.DIRECTORY_SEPARATOR.$row['name'].DIRECTORY_SEPARATOR;
+                if(file_exists($longpfolder."admin.php")):
+                        $adminextension[$row['name']] = $longpfolder."admin.php";
+                endif;
+                if(file_exists($longpfolder."extension.php")):
+                        $plugextension[$row['name']] = $longpfolder."extension.php";
+                endif;
+                if(file_exists($longpfolder."header.php")):
+                        $headerextension[$row['name']] = $longpfolder."header.php";
+                endif;
+                if(file_exists($longpfolder."footer.php")):
+                        $footerextension[$row['name']] = $longpfolder."footer.php";
+                endif;
+                if(file_exists($longpfolder."voteroom.php")):
+                        $voteroomextension[$row['name']] = $longpfolder."voteroom.php";
+                endif;
+                if(file_exists($longpfolder."function.php")):
+                        $functionsextension[$row['name']] = $longpfolder."function.php";
+                endif;
+		if(file_exists($longpfolder."function.js")):
+                        $functionsjsextension[$row['name']] = $longpfolder."function.js";
+                endif;
+                if(file_exists($longpfolder."main.php")):
+                        $mainextension[$row['name']] = $longpfolder."main.php";
+                endif;
+                if(file_exists($longpfolder."lang.php")):
+                        $langextension[$row['name']] = $longpfolder."lang.php";
+                endif;
+        endwhile;
+endif;
+if(isset($functionsextension)):
+    foreach($functionsextension as $fuex):
+        include($fuex);
+    endforeach;
+endif;
 if (!isset($color)) $color = "green";
 ?>

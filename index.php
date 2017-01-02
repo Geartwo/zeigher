@@ -101,7 +101,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			if(is_dir($folder . "/" . $file)) $ord_array[] = $fileid;
             }
         }
-		if($isad >= $sysisad->fileeditor && $edit == 1){
+		if($isad('fileeditor') && $edit == 1){
 			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$folder."');\">";
 			if(file_exists($folder ."/intro.txt")){
 				$docfile=fopen($folder . "/intro.txt","r+");
@@ -156,7 +156,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			if($ord_array[0] != "xpvkleer"){
 				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">
 				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
-                if($isad >= $sysisad->fileeditor && $edit == 1){
+                if($isad('fileeditor') && $edit == 1){
                     $fourpack = 1;
 					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">";
 				}
@@ -177,7 +177,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 	}
 	//Rename
 	if(isset($_POST['desc'])){
-		if($isad >= $sysisad->description){
+		if($isad('description')){
 			$file = fopen($folder."intro.txt","w");
 			echo fwrite($file, $_POST['desc'],0);
 			fclose($file);
@@ -286,7 +286,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 	    }
 	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
-	    if ($isad >= $sysisad->fileeditor && $edit == 1) {
+	    if ($isad('fileeditor') && $edit == 1) {
 	       echo "draggable=true>";
             $extension = substr(strrchr($file, "."), 1);
             echo "</a>
@@ -339,7 +339,7 @@ else:
 	echo 0;
 endif;
 echo"</script>";
-if($isad >= $sysisad->fileeditor && $edit==1 && $mode=='fmyma'){
+if($isad('fileeditor') && $edit==1 && $mode=='fmyma'){
     echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</font><br>";
 echo "
 <div class='fileUpload btn btn-primary'>
