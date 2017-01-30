@@ -1,10 +1,10 @@
 <?php
 if($_SERVER['REQUEST_METHOD'] == 'POST'){
-	$username = $_POST['username'];
-	$password = $_POST['password'];
-	$wpassword = $_POST['wpassword'];
-	$mail = $_POST['mail'];
-	$code = $_POST['code'];
+	$username = $db->real_escape_string($_POST['username']);
+	$password = $db->real_escape_string($_POST['password']);
+	$wpassword = $db->real_escape_string($_POST['wpassword']);
+	$mail = $db->real_escape_string($_POST['mail']);
+	$code = $db->real_escape_string($_POST['code']);
 	$dbquery = $db->query("SELECT * FROM user WHERE user = '$username'");
 	$dbnum = $dbquery->num_rows;
 	$dbquery = $db->query("SELECT * FROM user WHERE email = '$mail'");

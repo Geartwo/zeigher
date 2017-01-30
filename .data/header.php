@@ -42,6 +42,7 @@ endif;
 if(file_exists(".".$e) == false):
         $e = false;
 endif;
+if(substr($e, -1) != "/") $e = "$e/";
 return $e;
 }
 if(isset ($_GET['f'])):
@@ -54,14 +55,15 @@ $aleartred = in_array('..', $alarm);
 $name = ucfirst($_SERVER['HTTP_HOST']);
 $url = explode('.', $name);
 $url = implode('', array_slice($url, 0, 1));
-$parts = explode('/', $folder);
+$parts = explode('/', $cmsfolder);
+if($parts[0] == "") unset($parts[0]);
 $partz = count($parts);
 $f = implode(' ', array_slice($parts, 1, $partz -2));
 $lastf = implode('', array_slice($parts, -1, $partz));
 $older = implode('/', array_slice($parts, 0, $partz - 1));
 $ulastf = htmlentities($lastf);
-$siter = array_slice($parts, 1, $partz -2);
-$bsiter = array_slice($parts, 1, $partz -1);
+$siter = $parts;
+$bsiter = $parts;
 $piczahl = 0;
 $picrow = 1;
 $dbfree = 2;
@@ -69,7 +71,7 @@ $dbfree = 2;
 if(isset ($_GET['log'])){
 	$_SESSION['loggedin'] = false;
 	session_destroy();
-	echo "<script>self.location.href='?f=".$folder."'</script>";
+	echo "<script>self.location.href='$cmsfolder'</script>";
 }
 if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
 //Background
@@ -80,14 +82,15 @@ $bfooter = "";
 if (file_exists($tgif ."/.bintro.jpg")){
     $endgif = $ugif;
     if (file_exists($tgif ."/.bintro.html")){
-        $bfooter = $lang->backgroundimage.": ".@file_get_contents($tgif ."/.bintro.html");
+        $bfooter = $lang->backgroundimage.": ".@file_get_contents($tgif .".bintro.html");
         $endpic = $ugif . '/.bintro.jpg';
     } else {
         $bfooter = "";
-        $endpic = $ugif . '/.bintro.jpg';
+        $endpic = "$ugif./bintro.jpg";
     }
 }
 foreach($bsiter as $tsiter) {
+    if($tsiter == "") continue;
     $tgif = $tgif . "/" . $tsiter;
     $ugif = $ugif . "/" . rawurlencode ($tsiter);
     if (file_exists($tgif ."/.bintro.jpg")){
@@ -97,16 +100,19 @@ foreach($bsiter as $tsiter) {
         } else {
             $bfooter = "";
         }
-	$endpic = $ugif . '/.bintro.jpg';
+	$endpic = substr("$ugif/.bintro.jpg", 1);
 	$cgif = $ugif;
     }
 }
 if (isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
-if (isset ($endgif)) {
+if (isset ($endpic)) {
+	$_SESSION['lastpic'] = $endpic;
 	echo "
-	<img src='".$endgif."/.bintro.jpg' id='dummy' style='display:none;' alt='' />
+	<img src='$endpic' id='dummy' style='display:none;' alt='' />
 	<style>body{margin: 0; background: white;}</style>
 	<div id='pic' style='display: inline-block;  z-index: -1; position: fixed; height:100%;width:100%;display:none; background: no-repeat center center fixed; background-size: cover;'></div>
+";
+$rnt = "
 	<script>
 	$('#dummy').load(function() {
     $('#pic').css('background-image','url(".$endpic.")');
@@ -114,7 +120,6 @@ if (isset ($endgif)) {
 	});
 	</script>
 	";
-	$_SESSION['lastpic'] = $endpic;
 }
 
 //Real Header
@@ -160,9 +165,9 @@ if($_SESSION['loggedin'] == "true"){
     }
     if ($edit == 1) { $editn = '<b style="color: green;">'.$lang->on.'</b>'; $editu = 0; } else { $editn = '<b style="color: red;">'.$lang->off.'</b>'; $editu = 1; }
     if($isad) {
-        echo "<li class=\"submenu2\"><b><a href=\".?f=".$folder."&edit=" . $editu . "\">".$lang->edit." " . $editn . "</a></b></li>";
+        echo "<li class=\"submenu2\"><b><a href='$cmsfolder&edit=$editu'>$lang->edit $editn</a></b></li>";
     }
-    echo "<li class=\"submenu2 f".$color."\"><b><a href=\".?log=".$folder."\">".$lang->logoff."</a></b></li>
+    echo "<li class=\"submenu2 f".$color."\"><b><a href=\".?log=".$cmsfolder."\">".$lang->logoff."</a></b></li>
     </ul></li></ul></div>
     </div>";
 } elseif (!isset($spsite)) {
@@ -199,36 +204,33 @@ if (isset($news)) {$news="newson";} else {$news="newsoff";}
 echo "
 <div class=\"main\">
 <div class=\"meune\">";
-if($mode != 'dmyma' && $folder != '.'){
-    echo "<a href=\".\"><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</b></a>";
-    $tgif = ".";
+if($mode != 'dmyma' && $cmsfolder != '/'){
+    echo "<a href='/'><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</b></a>";
+    $tgif = "";
     if (isset($spsite)) {
         if (!isset($spsiten)) $spsiten = $spsite;
         $hpsite = htmlentities($spsiten);
         echo "<a href=\"". $spsite .".php\"><b class=\"sites buttet ".$color."\">".$hpsite."</b></a>";
     }
     foreach($siter as $tsiter) {
+	if($tsiter == "") continue;
         $tgif = $tgif . "/" . $tsiter;
         if ($tsiter[0] == "-") {
             $tsiter = substr($tsiter, 1);
         }
         $tsiter = htmlentities($tsiter);
-        echo "<a href=\".?f=". $tgif ."\"><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
+        echo "<a href='$tgif'><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
     }
     $mlastf = htmlentities($lastf);
-    if ($ulastf[0] == "-") {
-        $ulastf = substr($ulastf, 1);
-        $mlastf = substr($lastf, 1);
-    }
-    echo "<a href=\"?f=". $folder ."\"><b class=\"lastsitese buttet ".$color."\">".$ulastf."</b></a>
-    <title>".$mlastf."</title>";
+    //echo "<a href='$cmsfolder'><b class='lastsitese buttet $color'>$ulastf</b></a>
+    //<title>".$mlastf."</title>";
 } elseif (isset($spsite)) {
     if (!isset($spsiten)) $spsiten = $spsite;
     $hpsite = htmlentities($spsiten);
-    echo "<a href=\".\"><b class=\"sites buttet ".$color."\">".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese buttet ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
+    echo "<a href='/'><b class=\"sites buttet ".$color."\">".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese buttet ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
 } elseif($mode != 'dmyma') {
     echo "
-    <a href=\".\"><b class=\"lastsitese buttet ".$color."\">".$lang->home."</b></a>
+    <a href='/'><b class=\"lastsitese buttet ".$color."\">".$lang->home."</b></a>
     <title>".$lang->home."</title>";
 }
 

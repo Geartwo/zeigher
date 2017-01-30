@@ -45,6 +45,10 @@ if(real != 0){
     kind(real);
 }
 }
+        //$('#dummy').load(function() {
+    $('#pic').css('background-image','url("<?php echo $endpic; ?>")');
+    $('#pic').fadeIn(2500);
+        //});
 </script>
 <!-- 
 Der Kopierschutz obliegt Geartwo 

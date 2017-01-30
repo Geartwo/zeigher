@@ -1,3 +1,13 @@
+<?php
+include '.data/all.php';
+if(isset($_GET['x']) && isset($_GET['file'])):
+	include ".data/ajax.php";
+	exit;
+elseif(isset($_GET['watchfile'])):
+	include ".data/stream.php";
+	exit;
+endif;
+?>
 <script>
 var res = Math.floor(window.innerWidth / 250);
 if (res == 1) res = 2;
@@ -13,7 +23,6 @@ window.onload = window.onresize = function(event) {
 };
 </script>
 <?php
-include '.data/all.php';
 include '.data/header.php';
 if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
@@ -127,8 +136,8 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			if($mode != 'dmyma' && !file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg") && file_exists($folder."/".$file."/.bintro.jpg")){
 				pic_thumb($folder."/".$file.'/.bintro.jpg', $folder."/".$file.'/.pic_.bintro.jpg.jpg', '238', '150');
 				$endthumb = $folder."/".$file;
-			}elseif($mode != 'dmyma' && file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg")){
-				$endthumb = rawurlencode($folder."/".$file);
+			}elseif($mode != 'dmyma' && file_exists($folder.$file."/.pic_.bintro.jpg.jpg")){
+				$endthumb = rawurlencode($folder.$file);
 			}elseif(file_exists(urldecode($cgif.'/.pic_.bintro.jpg.jpg'))){
 				$endthumb = $cgif;
 			}
@@ -154,8 +163,8 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 				}
 			}
 			if($ord_array[0] != "xpvkleer"){
-				echo "<a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">
-				<div class='bigfolder' id='".$file."k' style=\"background: url('".$endthumb."/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
+				echo "<a draggable='false' id='$file-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>
+				<div class='bigfolder' id='".$file."k' style=\"background: url('/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
                 if($isad('fileeditor') && $edit == 1){
                     $fourpack = 1;
 					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">";
@@ -182,7 +191,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			echo fwrite($file, $_POST['desc'],0);
 			fclose($file);
 		}
-		echo "<script>self.location.href=\"?f=".$folder."\"</script>";
+		echo "<script>self.location.href='$cmsfolder'</script>";
 	}
 	//File listing
 	$thereAreFiles = false;
@@ -285,7 +294,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 		$sign = 'ico-down';
 	    }
 	    $lastfolder = $folder;
-            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('".$singlbackground."') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
+            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('fileeditor') && $edit == 1) {
 	       echo "draggable=true>";
             $extension = substr(strrchr($file, "."), 1);

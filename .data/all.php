@@ -6,8 +6,8 @@ if (!isset($installed) || $installed == false) {
 }
 if(!isset($folder)) $folder = ".";
 $wish = "";
-ini_set("session.cookie_lifetime","2592000");
-ini_set("session.gc_maxlifetime", "2592000");
+ini_set("session.cookie_lifetime", 2592000);
+ini_set("session.gc_maxlifetime", 2592000);
 $settings = new stdClass();
 $sysisad = new stdClass();
 $max_upload = (int)(ini_get('upload_max_filesize'));
@@ -15,6 +15,7 @@ $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
 $upload_mb = min($max_upload, $max_post, $memory_limit);
 session_start();
+//print_r($_SESSION);
 include 'sql.php';
 //Setting
 if (isset($_SESSION['userid'])) {$userid = $_SESSION['userid'];} else {$userid = '-1';}
@@ -31,6 +32,7 @@ if(isset($db)):
 	endif;
 	$theme = $db->query("SELECT value FROM settings WHERE setting = 'theme' AND userid = '$themeid'")->fetch_object()->value;
 	$username = $db->query("SELECT user FROM user WHERE id = '$userid'")->fetch_object()->user;
+	$isadbol = false;
 	$isadbol = $db->query("SELECT isad FROM user WHERE id = '$userid'")->fetch_object()->isad;
 	$isad = function($isadright){
 		global $isadbol;

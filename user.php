@@ -1,6 +1,6 @@
 <?php
 $spsite = "user";
-$spsiten = "Persöhnliches";
+$spsiten = "Persönliches";
 include '.data/all.php';
 include '.data/header.php';
 if (isset($installed)) {

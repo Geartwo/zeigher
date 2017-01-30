@@ -1,7 +1,7 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_POST['password'])) {
-	$email = $_POST['email'];
-	$password = $_POST['password'];
+	$email = $db->real_escape_string($_POST['email']);
+	$password = $db->real_escape_string($_POST['password']);
 	$hostname = $_SERVER['HTTP_HOST'];
 	$path = dirname($_SERVER['PHP_SELF']);
 
@@ -23,22 +23,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_PO
 			$isad = $row['isad'];
 			$userid = $row['id'];
 		}
-		if(password_get_info($dbpassword)['algoName']=='unknown'){
-			$salted_password = $secret_salt . $password;
-			$ph = hash('sha256', $salted_password);
-		}else{
-			$ph = " ";
-		}
-		if($dbemail == $email && $dbpassword == $ph || password_verify($_POST['password'],$dbpassword) == true && $dbfree >= 1){
-			if(password_get_info($ph)['algoName']!='bcrypt'){
-				$ph = password_hash($_POST['password'], PASSWORD_DEFAULT);
-				$db->query("UPDATE user SET pass = '$ph' WHERE email = '$email'");
-			}
+		if(password_verify($_POST['password'],$dbpassword) == true && $dbfree >= 1){
 			$_SESSION['loggedin'] = true;
-			echo "<script>location.href='.?f=".$folder."'</script>";
+			echo "<script>location.href='$cmsfolder'</script>";
 		}elseif($dbpassword != $ph || password_verify($_POST['password'],$dbpassword) == false){
 			echo $lang->wrongpass."<br>";
-			echo "<a href='?f=". $folder ."&reset'>".$lang->resetpwd."</a><br><br>";
+			echo "<a href='?reset'>".$lang->resetpwd."</a><br><br>";
 		}elseif($dbfree != 1) {
 			echo $lang->notfree;
 		}else{
@@ -51,10 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['email']) && isset($_PO
 	echo "<div class=\"\">".$lang->morefunctions."<div><br>";
 }
 echo "<div class=\"login\">
-<form action=\"index.php?f=". $folder ."&login\" method=\"post\">
+<form action='?login' method=\"post\">
 <div class=\"lt\">".$lang->email.":</div><input type=\"email\" name=\"email\" />
 <div class=\"lt\">".$lang->password.":</div><input type=\"password\" name=\"password\" autocomplete='off'/>
 <br><input type=\"submit\" class=\"buttet ico-key ".$color."\" value=\"".$lang->login."\" />";
-if($settings->regist == "true") echo "<br><a onclick=\"self.location.href='?f=". $folder ."&register'\" class=\"buttet ico-edit ".$color."\"> ".$lang->register."</a>";
+if($settings->regist == "true") echo "<br><a onclick=\"self.location.href='?register'\" class=\"buttet ico-edit ".$color."\"> ".$lang->register."</a>";
 echo "</form></div class=\"login\">";
 ?>

@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700&subset=latin,latin-ext);
 @import url(https://fonts.googleapis.com/css?family=Audiowide);
-@font-face { font-family: 'ico'; src: url('data/icons/flaticon.ttf') format('truetype'); }
-@font-face { font-family: 'ico2'; src: url('icons/flaticon.ttf') format('truetype'); }
+@font-face { font-family: 'ico'; src: url('?x=main&file=/themes/default/icons/flaticon.ttf') format('truetype'); }
+@font-face { font-family: 'ico2'; src: url('?x=main&file=/themes/default/icons/flaticon.ttf') format('truetype'); }
 .ico-cal:before { font-family: ico2, ico; content: "\e000"; }
 .ico-ok:before { font-family: ico2, ico; content: "\e001"; }
 .ico-ok { font-size: 30; cursor: pointer; }

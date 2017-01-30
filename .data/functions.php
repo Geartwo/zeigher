@@ -36,11 +36,6 @@ function resolution() {
     document.getElementById("outerY").innerHTML = h2;
 
 }
-function pikern(id, kk) {
-    if(streamerfild.style.display == 'block'){
-        streamerfile.innerHTML = '<img id="1" onmousedown="return false" style="width: 100%; max-width: 800px; height: auto;" src="ajax.php?x=main&file=newstream.php&watchfile=' + id + '">';
-    }
-};
 function streamcontent(num, kk, folder){
     var hash = location.hash.replace(/^.*?#/, '');
     var pairs = hash.split('&');
@@ -54,14 +49,14 @@ function streamcontent(num, kk, folder){
                 streamertext.innerHTML=xmlhttp.responseText;
             }
         }
-        xmlhttp.open("GET","ajax.php?x=main&file=voteroom.php&watchfile=" + kk + "&folder=" + folder,true);
+        xmlhttp.open("GET","?x=main&file=voteroom.php&watchfile=" + kk + "&folder=" + folder,true);
         xmlhttp.send();
     } else {
     history.pushState(null, null, ' ');
     }
 };
 function insertAfter(newNode, referenceNode) {
-    if(document.fullscreenElement === null || document.webkitFullscreenElement === null){
+    if(document.mozFullScreen == false|| document.webkitFullscreenElement === null){
     	referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
     }
 }
@@ -119,7 +114,6 @@ function streamer(num, kk, mpf, folder, userid){
         window.winfild = 0;
         streamerfild.style.display = 'none';
 	history.pushState(null, null, ' ');
-	streamerfile.innerHTML = '';
 	streamertext.innerHTML = '';
 	window.keyuse = checkKey;
         document.onkeydown = window.keyuse;
@@ -133,7 +127,7 @@ function com(type, oid, mode, comsub){
                         location.reload();
                 }
         }
-                xmlhttp.open("GET","ajax.php?x=main&file=comments.php&comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&sub=" + comsub,true);
+                xmlhttp.open("GET","?x=main&file=comments.php&comment=" + comment + "&type=" + type + "&oid=" + oid + "&mode=" + mode + "&sub=" + comsub,true);
                 xmlhttp.send();
 };
 function isad(id){
@@ -144,7 +138,7 @@ function isad(id){
             location.reload();
         }
     }
-    xmlhttp.open("GET","ajax.php?x=main&file=adminworker.php&sysisad&id=" + id + "&value=" + value,true);
+    xmlhttp.open("GET","?x=main&file=adminworker.php&sysisad&id=" + id + "&value=" + value,true);
     xmlhttp.send();
 };
 function mainmore(){
@@ -187,20 +181,6 @@ if (document.exitFullscreen) {
 streamerfull.innerHTML = 'Full';
 }
 }
-function rdit(kk, cc) {
-    var sty = document.getElementById(cc); 
-    if(sty.style.display == "block"){
-        var rd = document.getElementById('rd-' + kk);
-        if(rd == null) {
-            sty.innerHTML = '<audio id="rd-' + kk + '" controls class="rdio" autoplay src="' + kk + '"></audio>';
-            var rd = document.getElementById('rd-' + kk);
-        }
-        rd.play();
-    } else {
-        var rd = document.getElementById('rd-' + kk);
-        rd.pause();
-    } 
-};
 function readit(kk, cc, color) {
     var sty = document.getElementById(cc); 
     if(sty.style.display == "block"){
@@ -315,7 +295,7 @@ function SetNameDel(kk, cc, file, newcc) {
                         SetName(kk, cc);
                 }
         }
-        xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&newf="+ newcc +"&renold="+ kk + file+"&rennew="+ vc.value + file,true);
+        xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&newf="+ newcc +"&renold="+ kk + file+"&rennew="+ vc.value + file,true);
         xmlhttp.send();
     } else {
         var r = confirm("Willst du die Datei \"" + kk + unescape("\" wirklich L%F6schen?"));
@@ -326,7 +306,7 @@ function SetNameDel(kk, cc, file, newcc) {
                                location.reload(); 
                         }
                 }
-                xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&deldir="+ kk,true);
+                xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&deldir="+ kk,true);
                 xmlhttp.send();
     }
     }
@@ -368,7 +348,7 @@ xmlhttp=new XMLHttpRequest();
             location.reload();
                 }
         }
-        xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&newfolder="+ name,true);
+        xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&newfolder="+ name,true);
         xmlhttp.send();
 }
 function activatePlugin (name) {
@@ -385,7 +365,7 @@ if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 	document.getElementById('pluginresponse').innerHTML = xmlhttp.responseText;
 }
 }
-xmlhttp.open("GET","ajax.php?x=main&file=plugin.php&check="+ check +"&name="+ name,true);
+xmlhttp.open("GET","?x=main&file=plugin.php&check="+ check +"&name="+ name,true);
 xmlhttp.send();
 }
 function SN (kk, cc, id) {
@@ -422,7 +402,7 @@ function SND (kk, cc, newcc, id, nodir, dr) {
             location.reload();
                 }
         }
-        xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&newf="+ newcc +"&renold="+ kk +"&rennew="+ str.value,true);
+        xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&newf="+ newcc +"&renold="+ kk +"&rennew="+ str.value,true);
         xmlhttp.send();
     }else{
     if(nodir == 1){
@@ -434,7 +414,7 @@ function SND (kk, cc, newcc, id, nodir, dr) {
                 location.reload();
                         }
                 }
-                xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&delfile="+ kk,true);
+                xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&delfile="+ kk,true);
                 xmlhttp.send();
     }
         }else{
@@ -446,7 +426,7 @@ function SND (kk, cc, newcc, id, nodir, dr) {
                     location.reload();
                 }
         }
-        xmlhttp.open("GET","ajax.php?x=main&file=fileworker.php&f="+ cc +"&deldir="+ kk,true);
+        xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&deldir="+ kk,true);
         xmlhttp.send();
     }
     }
@@ -561,7 +541,7 @@ xmlhttp.onreadystatechange=function() {
         document.getElementById(fid + 'down').innerHTML=udsplit[1];
     }
 }
-xmlhttp.open("GET","ajax.php?x=main&file=updown.php&updown=" + cp + "&type=" + type + "&objectid=" + objectid,true);
+xmlhttp.open("GET","?x=main&file=updown.php&updown=" + cp + "&type=" + type + "&objectid=" + objectid,true);
 xmlhttp.send();
 }
 $(function() {
@@ -676,5 +656,5 @@ if(isset($langextension)){
     }
 }
 include "themes/".$theme."/variable.php";
-echo "<link rel='stylesheet' type='text/css' href='.data/themes/".$theme."/format.css'>";
+echo "<link rel='stylesheet' type='text/css' href='?x=main&file=/themes/".$theme."/format.css'>";
 ?>
