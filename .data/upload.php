@@ -1,5 +1,5 @@
 <?php
-include '.data/all.php';
+//if($_SESSION['logedin'] != true) exit;
 $fn = (isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false);
 if($_POST['mode'] == "bintro") {
 	$bintro = true;
@@ -7,7 +7,7 @@ if($_POST['mode'] == "bintro") {
 }elseif($_POST['mode'] == "fb") {
         $fb = true;
 }
-$folder = $_GET['folder'] . "/";
+$folder = ".".workpath($_GET['f']);
 @$text = $db->real_escape_string($_POST['impeditor']);
 if(!empty($_FILES['fileselect'])){
 	foreach ($_FILES['fileselect']['name'] as $f => $name) {

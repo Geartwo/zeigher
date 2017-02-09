@@ -1,22 +1,18 @@
 <?php
-$spsite = "admin";
-$spsiten = "Admin";
-include '.data/all.php';
-include '.data/header.php';
 if(isset($username))$dbquery = $db->query("SELECT * FROM user WHERE user = '$username'");
 if($isad()):
 	$key = "plugins";
-	echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
+	echo "<input type='submit' class='btn $color' value='".$lang->$key."' onclick=\"self.location.href='";
 	if(isset($_GET['d']) && $_GET['d'] == $key):
-		echo "admin.php";
+		echo "?page=admin";
 	else:
-		echo "?d=".$key;
+		echo "?page=admin&d=$key";
 	endif;
 	echo "'\" /><br>";
 	if(isset($_GET['d']) && $_GET['d']  == $key):
 		echo "<div id='pluginresponse'></div>";
 		echo "<div class='boxall'>";
-		$plugdir = scandir($pluginfolder);
+		$plugdir = scandir('.plugins');
 		foreach($plugdir as $pfolder):
 			if($pfolder[0] == ".") continue;
 			$dbquery = $db->query("SELECT * FROM plugins WHERE name = '$pfolder'");
@@ -25,13 +21,11 @@ if($isad()):
 				$dbquery = $db->query("SELECT * FROM plugins WHERE name = '$pfolder'");
 			endif;
 			$row = $dbquery->fetch_assoc();
-			if(isset($lang->$row['name'])):
-		 		$row['realname'] = $lang->$row['name'];
-			else:
-				$row['realname'] = $row['name'];
-			endif;
+			//echo $row['name'];
+			//$hook->get_info($row['name'], 'all');
+			//exit;
 			echo "<div class='boxrow'>
-			<div class='boxl boxn'>".$row['realname']."</div><div class='boxl'><input id='check-".$row['name']."' type='checkbox' onclick=\"activatePlugin('".$row['name']."')\"";
+			<div class='boxl boxn'>".$row['name']."</div><div class='boxl'><input id='check-".$row['name']."' type='checkbox' onclick=\"activatePlugin('".$row['name']."')\"";
 			if($row['active'] == 1) echo "checked";
 			echo "></div>
 			</div>";
@@ -45,15 +39,14 @@ endif;
 if(isset($adminextension) && $isad()):
         foreach($adminextension as $key => $adex):
 		if(!isset($lang->$key)) $lang->$key = $key;
-                echo "<input type='submit' class='buttet ".$color."' value='".$lang->$key."' onclick=\"self.location.href='";
+                echo "<input type='submit' class='btn $color' value='".$lang->$key."' onclick=\"self.location.href='";
                 if(isset($_GET['d']) && $_GET['d'] == $key):
-                        echo "admin.php";
+                        echo "?page=admin";
                 else:
-                        echo "?d=".$key;
+                        echo "?page=admin&d=".$key;
                 endif;
                 echo "'\" /><br>";
                 include $adex;
         endforeach;
 endif;
-include '.data/footer.php';
 ?>

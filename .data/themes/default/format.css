@@ -1,7 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700&subset=latin,latin-ext);
 @import url(https://fonts.googleapis.com/css?family=Audiowide);
-@font-face { font-family: 'ico'; src: url('?x=main&file=/themes/default/icons/flaticon.ttf') format('truetype'); }
-@font-face { font-family: 'ico2'; src: url('?x=main&file=/themes/default/icons/flaticon.ttf') format('truetype'); }
+@font-face { font-family: 'ico'; src: url('?watchfile=/.data/themes/default/icons/flaticon.ttf') format('truetype'); }
+@font-face { font-family: 'ico2'; src: url('?watchfile=/.data/themes/default/icons/flaticon.ttf') format('truetype'); }
 .ico-cal:before { font-family: ico2, ico; content: "\e000"; }
 .ico-ok:before { font-family: ico2, ico; content: "\e001"; }
 .ico-ok { font-size: 30; cursor: pointer; }
@@ -43,13 +43,17 @@ html, body {
   padding:0; 
   height:100%; 
 }
-.wrapper { background-color: #212121; }
 
+.container { background-color: #212121; }
+nav { margin: 0 auto 0; max-width: 1000px; width: 100%; min-height: 42px;}
+.navbar-left, .navbar-left > li { float: left; }
+.navbar-right { float: right; }
 
-
-.logoe { margin: 0 auto 0; max-width: 1000px; width: 100%; min-height: 42px; }
-.logof { height: 32px; font-family: 'Audiowide', arial, sans-serif; font-size: 32px;  cursor: pointer; float: left; margin-top: 5px;}
-.logos { cursor: pointer; display: inline-block; margin-top: 5px; margin-left: 5px; font-size: 1.2em; font-weight: bold; }
+.dropdown { float: right; }
+.navbar-header { }
+.navbar-brand{ height: 32px; font-family: 'Audiowide', arial, sans-serif; font-size: 32px;  cursor: pointer; float: left; }
+.navbar-nav {list-style: none; }
+.navbar-nav > li > a { cursor: pointer; display: inline-block; margin-top: 5px; margin-left: 5px; font-size: 1.2em; font-weight: bold; }
 .search { margin: 0px;}
 .searchr { padding-top: 5px; }
 .searchi { width: 150px; border: none;}
@@ -58,7 +62,7 @@ html, body {
 .searchl:hover > #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
 .searchi:focus ~ #livesearch { max-height: 2000px; transition: 0s all; transition-delay: 0s; }
 .link{cursor: pointer;}
-.buttet {
+.btn {
 margin: 0 1 1 0;
 display: inline-block;
 font-family: 'Open Sans Condensed',"Trebuchet MS","Helvetica CY",sans-serif;
@@ -195,7 +199,7 @@ input[type="button"].heart:hover, input[type="submit"].heart:hover{ background: 
 
 
 .datal { max-width: 600px; clear: both; }
-.wholy {  margin: 0 auto 0; max-width: 1000px; overflow: hidden;}
+.wholy {  margin: 0 auto 0; max-width: 1000px;}
 .news {  top: 43px; float:left; max-width: 200px; width: 20%; overflow: hidden; background: rgba(255, 255, 255, 0.5);}
 .menuer { float: right; margin-left: -150px;}
 .news1 { position: absolute; margin: 0 auto 0; width: 200px; padding: 5px; background: white; top: 43px; }
@@ -226,8 +230,8 @@ p { margin: 0; }
 
 .singles { display: inline-block; width: 50%; max-width: 250px; height: 150px; overflow: hidden; }
 #video{width: 100%; max-height: 100%; background: black; position: relative; vertical-align: middle;}
-#streamerfile{vertical-align: middle;}
-#streamermax{width: 100%; max-height: 100%; text-align: center; position: relative;}
+#streamerfile{vertical-align: middle; max-height: 100%; width: 100%;}
+#streamermax{width: 100%; text-align: center; position: relative;}
 #streamercontrol{display: none; font-size: 2em; width: 100%; background: grey; position: absolute; bottom: 0; }
 #streamervolume{position: absolute; bottom: 0; right: 0; background: grey;}
 #streamercontrol:hover{display: block;}

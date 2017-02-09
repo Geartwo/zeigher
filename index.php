@@ -1,10 +1,23 @@
 <?php
 include '.data/all.php';
-if(isset($_GET['x']) && isset($_GET['file'])):
+$cmsfolder = workpath($_GET['f']);
+if(isset($_GET['x'])):
 	include ".data/ajax.php";
 	exit;
-elseif(isset($_GET['watchfile'])):
+elseif(isset($_GET['watchfile']) | is_file(".$cmsfolder")):
 	include ".data/stream.php";
+	exit;
+elseif(isset($_GET['upload'])):
+        include ".data/upload.php";
+        exit;
+elseif(isset($_GET['logoff'])):
+	$_SESSION['loggedin'] = false;
+        session_destroy();
+        echo "<script>self.location.href='$cmsfolder'</script>";
+	exit;
+elseif(isset($_GET['api'])):
+	include ".data/api.php";
+	if(isset($api->$_GET['api'])) echo $api->$_GET['api']($cmsfolder);
 	exit;
 endif;
 ?>
@@ -24,6 +37,10 @@ window.onload = window.onresize = function(event) {
 </script>
 <?php
 include '.data/header.php';
+if (!isset($installed) || $installed == false):
+        include ".data/install.php";
+        exit;
+endif;
 if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
 	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
 }
@@ -40,10 +57,6 @@ if(isset($_GET['register'])){
 }
 if(isset($_GET['reset'])){
         include '.data/reset.php';
-}
-//QR-Code
-if(isset($_GET['qr'])){
-	echo "<img src='https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=".$https."://".$hostname.$path."?f=".$folder."'><br>";
 }
 //Tag
 if($mode == 'dmyma'){
@@ -84,9 +97,19 @@ if(isset($mainextension)){
 }
 echo "<div style='clear: right;'></div>";
 //Folder listing
-if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
-	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>
-	<a href=\"?f=".$tgif."\">".$lang->back."</a></div>";
+if(isset($_GET['page'])){
+	if(isset($page->$_GET['page'])){
+		$page->$_GET['page']();
+	}else{
+		$fourzerofour = true;
+	}
+}elseif (isset($fourzerofour)){
+	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>";
+	if($isad('edit') && $edit==1 && $mode=='fmyma'):
+		$newfolder = end(explode("/", $_GET['f']));
+        	echo "<span class='$color btn' onclick=\"NF('.".$_GET['f']."/..', '$newfolder')\">$lang->newfolder</span>";
+	endif;
+	echo "<a class='$color btn' href=\"?f=".$tgif."\">".$lang->back."</a></div>";
 }elseif (!isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 	if ($mode != 'dmyma'){
 		$oph = opendir($folder);
@@ -110,7 +133,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			if(is_dir($folder . "/" . $file)) $ord_array[] = $fileid;
             }
         }
-		if($isad('fileeditor') && $edit == 1){
+		if($isad('edit') && $edit == 1){
 			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$folder."');\">";
 			if(file_exists($folder ."/intro.txt")){
 				$docfile=fopen($folder . "/intro.txt","r+");
@@ -141,20 +164,8 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			}elseif(file_exists(urldecode($cgif.'/.pic_.bintro.jpg.jpg'))){
 				$endthumb = $cgif;
 			}
-			if($file[0] == "-" && $realfirst != "-"){
-				echo "<div class=\"alpha\">".$lang->category."</div>";
-				$realfirst = "-";
-			}
-			if($file[0] == "-"){
-				$mpf = htmlentities(substr($file, 1));	
-			}else{
-				if($realfirst == "-"){
-					echo "<br><div class='clear' style=\"height: 5px;\"></div>";
-					$realfirst = "";
-				}
 				$filename = $file;
 				$mpf = htmlentities($filename);
-			}
 			if (isset($alpha) && $alpha == "ja"){
 				$firstChr = $file[0];
 				if($firstChr != $realfirst){
@@ -164,10 +175,10 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			}
 			if($ord_array[0] != "xpvkleer"){
 				echo "<a draggable='false' id='$file-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>
-				<div class='bigfolder' id='".$file."k' style=\"background: url('/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
-                if($isad('fileeditor') && $edit == 1){
+				<div class='bigfolder $color-2' id='".$file."k' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
+                if($isad('edit') && $edit == 1){
                     $fourpack = 1;
-					echo "</a><form style='display: inline-block;' onsubmit=\"SetNameDelOrd('".$file."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href=\"?f=".$cmsfolder."/".$file."\">";
+					echo "</a><form style='display: inline-block;' onsubmit=\"SND('".$file."','".$folder."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>";
 				}
 				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
 				</div></a>";
@@ -229,6 +240,14 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 		$numItems = count($dat_array);
 		$i = 0;
 		$lastfolder = $folder;
+		$nowfolder = explode("/", explode(workpath("$cmsfolder.."), $cmsfolder)[1])[0];
+		$underfolder = scandir(".".workpath("$cmsfolder.."));
+		$nowfolderkey = array_search($nowfolder, $underfolder);
+		$lastfolderkey = $nowfolderkey-1;
+		$nextfolderkey = $nowfolderkey+1;
+		$lastfolder = $underfolder[$lastfolderkey];
+		$nextfolder = $underfolder[$nextfolderkey];
+		echo "<a id='num0'  onclick='self.location=\"$cmsfolder../$lastfolder#num1\"'></a>";
 		foreach($dat_array as $fileid){
 			$row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
 			$file = $row['name'];
@@ -286,16 +305,19 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			echo "<a class='buo ord' id='num".$idnum."' draggable='false' onclick=\"streamer(".$idnum.", '".$fileid."', '".$rawfile."', '".$folder."'); ";
 			//File
 			$sign = "ico-no";
-			if(file_exists($plugextension[$pext])){
-				require($plugextension[$pext]);
+			if(isset($fileextension->$pext)){
+				$fileextension->$pext($folder, $file);
 			}
+			if(isset($icon->$pext)){
+                                $sign = $icon->$pext();
+                        }
 	if($sign == "ico-no") {
 		echo "\">";
 		$sign = 'ico-down';
 	    }
 	    $lastfolder = $folder;
-            echo "<div class='bigfolder bigfile' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
-	    if ($isad('fileeditor') && $edit == 1) {
+            echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
+	    if ($isad('edit') && $edit == 1) {
 	       echo "draggable=true>";
             $extension = substr(strrchr($file, "."), 1);
             echo "</a>
@@ -324,6 +346,7 @@ if (!is_dir($folder) && $mode != 'dmyma'| $aleartred == 1){
 			$idnum = $idnum + 1;
 	}
     }
+echo "<a id='num$idnum'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
 echo "
 <script>
 function controlblock(){
@@ -333,13 +356,13 @@ window.controltimeout = setTimeout(function(){streamercontrol.style.display = 'n
 }
 </script>
 <div id='streamerfild' class='clear' style='display: none;'>
-<div id='streamermax'>
-<div id='streamerfile' onmousemove='controlblock();'></div>
-<div id='streamercontrol' onmousemove='controlblock();'>
-<span id='streamerfull' onclick='full();'>Full</span>
-</div>
-</div>
-<div id='streamertext' onmouseover='document.onkeydown = \"\";' onmouseout='document.onkeydown = window.keyuse;'></div>
+	<div id='streamermax'>
+		<div id='streamerfile' ondblclick='full();' onmousemove='controlblock();'></div>
+		<div id='streamercontrol' onmousemove='controlblock();'>
+			<span id='streamerfull' onclick='full();'>Full</span>
+		</div>
+	</div>
+	<div id='streamertext' onmouseover='document.onkeydown = \"\";' onmouseout='document.onkeydown = window.keyuse;'></div>
 </div>
 <script>window.lastnum = ";
 if(isset($idnum)):
@@ -347,18 +370,19 @@ if(isset($idnum)):
 else:
 	echo 0;
 endif;
-echo"</script>";
-if($isad('fileeditor') && $edit==1 && $mode=='fmyma'){
-    echo "<font class='".$color.", buttet' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</font><br>";
+echo"</script>
+<div style='display: table;'>";
+if($isad('edit') && $edit==1 && $mode=='fmyma'){
+    echo "<span style='display: table-row;' class='".$color." btn' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</span>";
 echo "
-<div class='fileUpload btn btn-primary'>
-    <span>Upload</span>
-<input class='fileUpload' id='filebiup' multiple type='file'>
+<div style='display: table-row;' class='fileUpload btn btn-primary'>
+<input class='".$color." btn' class='fileUpload' id='filebiup' multiple type='file'>
 </div>
-<input id='fileupfolder' type='hidden' value='".$folder."'>
-<input id='fileupmode' type='hidden' value='fb'>
-<input class='".$color."' type=submit onclick=\"UploadFile('file')\"><br>
-<progress id='fileupg' value='0' max='100' style='margin-top:10px'></progress><br>
+<input style='display: table-row;' id='fileupfolder' type='hidden' value='".$folder."'>
+<input style='display: table-row;' id='fileupmode' type='hidden' value='fb'>
+<input style='display: table-row;' class='".$color."' type=submit onclick=\"UploadFile('file')\">
+<progress style='display: table-row;' id='fileupg' value='0' max='100' style='margin-top:10px'></progress>
+</div>
 <style>
 .fileUpload {
     position: relative;

@@ -1,5 +1,4 @@
 <?php
-include 'functions.php';
 $pluginfolder = ".plugins";
 $plugdir = scandir($pluginfolder);
 foreach($plugdir as $pfolder) {

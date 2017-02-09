@@ -15,18 +15,14 @@ $mode = "";
 #	echo 'Test';
 #	}
 #}
-$spsite = "Install";
-include '.data/all.php';
-include '.data/header.php';
 
 //Install Settings
 $settings->logo = "";
 
 //Destroy Session
-if(isset($_SESSION['loggedin'])){
-	$_SESSION['loggedin'] = false;
+if(isset($_SESSION['loggedin'])):
 	session_destroy();
-}
+endif;
 
 //Step 1 - Mode choose
 if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) && !file_exists('.settings/config.php')){

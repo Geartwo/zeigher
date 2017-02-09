@@ -5,53 +5,23 @@
 <html onload="resolution()">
 <link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
 <?php
-error_reporting();
-include 'functions.php';
+echo "<link rel='stylesheet' type='text/css' href='?x=main&file=/themes/".$theme."/format.css'>";
 $regist='';
 if (isset($_GET['login'])) $use = 'none';
 set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
 if (isset($https)) $https = "https"; else $https = "http";
-function workpath($a){
-if($a == "undefined"):
-        $a = ".";
-endif;
-$a = str_replace("%20", " ", $a);
-$b=split("/", $a);
-if($a[0] == "/"):
-        $c[]="";
-        $b = array_slice($b, 1);
+
+//Zeigher Settings
+if($cmsfolder == false):
+	$fourzerofour = true;
+	http_response_code (404);
 else:
-        $c=split("/", $_SESSION['workdir']);
-        $c = array_slice($c, 1);
+	http_response_code (200);
 endif;
-foreach($b as $d):
-        if($d == "."):
-                continue;
-        elseif($d == ".."):
-                $c = array_slice($c, 0, -1);
-        else:
-                $c[] = $d;
-        endif;
-endforeach;
-$e = implode("/", $c);
-if($e[0] != "/"):
-        $e = "/".$e;
-endif;
-if(file_exists(".".$e) == false):
-        $e = false;
-endif;
-if(substr($e, -1) != "/") $e = "$e/";
-return $e;
-}
-if(isset ($_GET['f'])):
-	$cmsfolder = workpath($_GET['f']);
-	$folder = ".".$cmsfolder;
-endif;
-if(!isset($folder)) {$folder ='/';}
+$folder = ".".$cmsfolder;
 $alarm = explode('/', $folder);
-$aleartred = in_array('..', $alarm);
 $name = ucfirst($_SERVER['HTTP_HOST']);
 $url = explode('.', $name);
 $url = implode('', array_slice($url, 0, 1));
@@ -67,6 +37,7 @@ $bsiter = $parts;
 $piczahl = 0;
 $picrow = 1;
 $dbfree = 2;
+
 //Destroy Session
 if(isset ($_GET['log'])){
 	$_SESSION['loggedin'] = false;
@@ -74,6 +45,7 @@ if(isset ($_GET['log'])){
 	echo "<script>self.location.href='$cmsfolder'</script>";
 }
 if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
+
 //Background
 $tgif = ".";
 $ugif = ".";
@@ -104,23 +76,23 @@ foreach($bsiter as $tsiter) {
 	$cgif = $ugif;
     }
 }
-if (isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
-if (isset ($endpic)) {
+if (isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(?watchfile=".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
+if (isset ($endpic)):
 	$_SESSION['lastpic'] = $endpic;
 	echo "
-	<img src='$endpic' id='dummy' style='display:none;' alt='' />
+	<img src='?watchfile=$endpic' id='dummy' style='display:none;' alt='' />
 	<style>body{margin: 0; background: white;}</style>
 	<div id='pic' style='display: inline-block;  z-index: -1; position: fixed; height:100%;width:100%;display:none; background: no-repeat center center fixed; background-size: cover;'></div>
 ";
 $rnt = "
 	<script>
 	$('#dummy').load(function() {
-    $('#pic').css('background-image','url(".$endpic.")');
+    $('#pic').css('background-image','url(?watchfile=$endpic)');
     $('#pic').fadeIn(1000);
 	});
 	</script>
 	";
-}
+endif;;
 
 //Real Header
 if(empty($settings->stitel)) $settings->stitel = $url;
@@ -132,57 +104,63 @@ if(isset($nnout)){
 }
 echo "
 <div style='display: inline-block;' id='key'></div>
-<div class='whole'>
-<div class='wrapper'>
+<div class='container'>
+<nav class='navbar navbar-inverse'>
 <div id='tbild' style='transition: max-width 0.5s linear 0s, margin 0.5s linear 0s; float: right; position: absolute; top: 5; right: 5; overflow: hidden; margin: 5px;'></div>
-<div class='logoe'>";
+<div class='navbar-header'>";
 if(!empty($settings->logo) && $settings->logo=='true'){
-	echo "<a href='.'><img class=\"logof\" src='.settings/".$settings->stitel."'></a>";
+	echo "<a href='/' class='navbar-brand'><img src='.settings/".$settings->stitel."'></a>";
 }elseif(!empty($settings->stitel)){
-	echo "<a class=\"logof f".$color."\" href='.'>".$settings->stitel."</a>";
+	echo "<a class='navbar-brand f$color' href='/'>".$settings->stitel."</a>";
 }else{
-	echo "<a class=\"logof f".$color."\" href='.'>".$hostname."</a>";
+	echo "<a class='navbar-brand f$color' href='/'>".$hostname."</a>";
 }
-if($_SESSION['loggedin'] == "true"){
-
-    if(isset($headerextension)){
-	   foreach($headerextension as $huex){
+echo "</div>
+<ul class='nav navbar-nav navbar-left'>";
+if($_SESSION['loggedin'] == "true"):
+    if(isset($headerextension)):
+	   foreach($headerextension as $huex):
             include($huex);
-	   }
-    }
-	if(isset($userpremium)) {$plus = "+";} else {$plus = "";}
-	if($settings->points == 'true') echo "<div class=\"logos f".$color."\" onclick=\"\">".$lang->points.": ".$userpoints.$plus.$userpremium."</div>";
-	echo "<div class=\"menuer\">
-	<div id=\"menu2\">
+	   endforeach;
+    endif;
+	if(isset($userpremium)):
+		$plus = "+";
+	else:
+		$plus = "";
+	endif;
+	if($settings->points == 'true') echo "<li $lang->points: $userpoints$plus$userpremium</div>";
+	echo "</ul>";
+	echo "<div class='dropdown'>
+	<div id='menu2'>
 	<ul>
-	<li class=\"usr2 f".$color."\">
-	<b><a class=\"ico-set\">".$username."</a></b>
+	<li class='usr2 f$color'>
+	<b><a class='ico-set'>$username</a></b>
 	<ul>
-	<li class=\"submenu2 f".$color."\"><b><a href=\"user.php?f=setting\">".$lang->settings."</a></b></li>
-	<li class=\"submenu2 f".$color."\"><b><a href=\"user.php?f=owndata\">".$lang->owndata."</a></b></li>";
-    if($isad) {
-        echo "<li class=\"submenu2\"><b><a href=\"admin.php\">".$lang->administration."</a></b></li>";
+	<li class='submenu2 f$color'><b><a href=\"?page=user&d=setting\">".$lang->settings."</a></b></li>
+	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\">".$lang->owndata."</a></b></li>";
+    if($isad('admside')) {
+        echo "<li class=\"submenu2\"><b><a href='?page=admin'>".$lang->administration."</a></b></li>";
     }
     if ($edit == 1) { $editn = '<b style="color: green;">'.$lang->on.'</b>'; $editu = 0; } else { $editn = '<b style="color: red;">'.$lang->off.'</b>'; $editu = 1; }
-    if($isad) {
-        echo "<li class=\"submenu2\"><b><a href='$cmsfolder&edit=$editu'>$lang->edit $editn</a></b></li>";
+    if($isad('edit')) {
+        echo "<li class='submenu2'><b><a href='$cmsfolder&edit=$editu'>$lang->edit $editn</a></b></li>";
     }
-    echo "<li class=\"submenu2 f".$color."\"><b><a href=\".?log=".$cmsfolder."\">".$lang->logoff."</a></b></li>
+    echo "<li class='submenu2 f$color'><b><a href=$cmsfolder?logoff>$lang->logoff</a></b></li>
     </ul></li></ul></div>
     </div>";
-} elseif (!isset($spsite)) {
+elseif(!isset($spsite)):
     echo "
-    <div class=\"menuer\">
-    <div id=\"menu2\">
+    <div class='dropdown'>
+    <div id='menu2'>
     <ul>
-    <li class=\"usr2 f".$color."\">
-    <b><a class=\"ico-set\" href='.?f=".$folder."&login'>" . $lang->login . "</a></b>
+    <li class='usr2 f$color'>
+    <b><a class='ico-set' href='$cmsfolder&login'>$lang->login</a></b>
     </li></ul></div></div>
     ";
-}
+endif;
 echo "
 </div class=\"logoe\">
-</div class=\"wrapper\">
+</nav>
 
 <div class=\"wholy\">
 ";
@@ -202,15 +180,15 @@ if($_SESSION['loggedin'] == true) {
 }
 if (isset($news)) {$news="newson";} else {$news="newsoff";}
 echo "
-<div class=\"main\">
-<div class=\"meune\">";
+<div class='main'>
+<div class='btn-group'>";
 if($mode != 'dmyma' && $cmsfolder != '/'){
-    echo "<a href='/'><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</b></a>";
+    echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</span></a>";
     $tgif = "";
     if (isset($spsite)) {
         if (!isset($spsiten)) $spsiten = $spsite;
         $hpsite = htmlentities($spsiten);
-        echo "<a href=\"". $spsite .".php\"><b class=\"sites buttet ".$color."\">".$hpsite."</b></a>";
+        echo "<a href=$spsite.php'><span class='sites btn $color'>$hpsite</span></a>";
     }
     foreach($siter as $tsiter) {
 	if($tsiter == "") continue;
@@ -219,22 +197,25 @@ if($mode != 'dmyma' && $cmsfolder != '/'){
             $tsiter = substr($tsiter, 1);
         }
         $tsiter = htmlentities($tsiter);
-        echo "<a href='$tgif'><b class=\"sites buttet ".$color."\" ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
+        echo "<a href='$tgif'><b class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
+    }
+    if (isset($_GET['page'])) {
+        echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
     }
     $mlastf = htmlentities($lastf);
-    //echo "<a href='$cmsfolder'><b class='lastsitese buttet $color'>$ulastf</b></a>
+    //echo "<a href='$cmsfolder'><b class='lastsitese btn $color'>$ulastf</b></a>
     //<title>".$mlastf."</title>";
 } elseif (isset($spsite)) {
     if (!isset($spsiten)) $spsiten = $spsite;
     $hpsite = htmlentities($spsiten);
-    echo "<a href='/'><b class=\"sites buttet ".$color."\">".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese buttet ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
+    echo "<a href='/'><b class='sites btn $color'>".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese btn ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
 } elseif($mode != 'dmyma') {
     echo "
-    <a href='/'><b class=\"lastsitese buttet ".$color."\">".$lang->home."</b></a>
+    <a href='/'><b class='lastsitese btn $color'>".$lang->home."</b></a>
     <title>".$lang->home."</title>";
 }
 
 echo "
-</div id=\"meune\">
+</div>
 <div id=\"list\">";
 ?>
