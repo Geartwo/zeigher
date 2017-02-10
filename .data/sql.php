@@ -21,7 +21,8 @@ if(isset($db) && $installed == true):
 	//Get Settings
 	$dbquery = $db->query("SELECT * FROM settings WHERE userid = '0'");
 	while ($row = $dbquery->fetch_assoc()):
-		$settings->$row['setting'] = $row['value'];
+		$setting = $row['setting'];
+		$settings->$setting = $row['value'];
 	endwhile;
 endif;
 ?>
