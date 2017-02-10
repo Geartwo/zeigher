@@ -1,8 +1,4 @@
 <?php
-//Check dependencys
-if(!function_exists('mysqli')):
-	echo "MYSQLI dont exist";
-endif;
 include '.settings/config.php';
 ini_set("session.cookie_lifetime", 2592000);
 ini_set("session.gc_maxlifetime", 2592000);
