@@ -1,9 +1,9 @@
 <?php
+//Check dependencys
+if(!function_exists('mysqli')):
+	echo "MYSQLI dont exist";
+endif;
 include '.settings/config.php';
-if (!isset($installed) || $installed == false) {
-	echo "<script>self.location.href='install.php'</script>";
-	exit;
-}
 ini_set("session.cookie_lifetime", 2592000);
 ini_set("session.gc_maxlifetime", 2592000);
 $settings = new stdClass();

@@ -4,6 +4,9 @@ $cmsfolder = workpath($_GET['f']);
 if(isset($_GET['x'])):
 	include ".data/ajax.php";
 	exit;
+elseif(!isset($installed) || $installed == false):
+        echo "<script>self.location.href='?x=main&file=install.php'</script>";
+        exit;
 elseif(isset($_GET['watchfile']) | is_file(".$cmsfolder")):
 	include ".data/stream.php";
 	exit;

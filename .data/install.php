@@ -40,7 +40,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 } elseif (isset($_GET['mode'])) {
     //Step 2 - Set Database
     echo "
-    <form action='install.php' method='post'>
+    <form action='?x=main&file=install.php' method='post'>
     <input type='hidden' name='mode' value='" . $_GET['mode'] . "'></input>";
     if ($_GET['mode'] == 'fmyma' | $_GET['mode'] == 'dmyma') {
     	echo $lang->dbuser .":<br>
@@ -85,12 +85,12 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	}
 	fwrite($datei, "?>\r\n");
 	fclose($datei);
-	echo "<script>self.location.href='install.php'</script>";
+	echo "<script>self.location.href='?x=main&file=install.php'</script>";
 
 } elseif (file_exists('.settings/config.php') && $installed != true && !isset($_GET['ready']) && !isset($_GET['settings']) && !isset($_POST['repass'])) {
 	//Step 4 - Set first User
 	echo "
-    <form action='install.php' method='post'>
+    <form action='?x=main&file=install.php' method='post'>
     " . $lang->user .":<br>
     <input name='user'></input><br>
 
@@ -220,11 +220,11 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 		$id = $db->query("SELECT id FROM user WHERE user='$username'")->fetch_object()->id;
 		$db->query("INSERT INTO tagparents (parent, type, objectid) VALUES ('1', 'user', '$id')");
     }
-    echo "<script> self.location.href='install.php?settings' </script>";
+    echo "<script> self.location.href='?x=main&file=install.php&settings' </script>";
     }
 } elseif (isset($_GET['settings']) && $_SERVER['REQUEST_METHOD'] != 'POST') {
   echo "
-    <form action='install.php?settings' method='post'>
+    <form action='?x=main&file=install.php&settings' method='post'>
     " . $lang->theme .":<br>
     <input name='theme' value='default'></input><br>
     
@@ -280,7 +280,7 @@ if (!isset($_GET['mode']) && !isset($_POST['dbuser']) && !isset($_POST['salt']) 
 	fwrite($datei, '$installed = true'.";\r\n");
 	fwrite($datei, '?>');
 	fclose($datei);
-	echo "<script> self.location.href='install.php?ready' </script>";
+	echo "<script> self.location.href='?x=main&file=install.php&ready' </script>";
 } elseif (isset($_GET['ready'])) {
     echo $lang->ready;
 } else {

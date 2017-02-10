@@ -5,7 +5,7 @@ function workpath($a){
     $a = ".";
   endif;
   $a = str_replace("%20", " ", $a);
-  $b=split("/", $a);
+  $b = explode("/", $a);
   if($a[0] == "/"):
     $c[]="";
     $b = array_slice($b, 1);
