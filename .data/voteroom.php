@@ -1,17 +1,6 @@
 <?php
-$pluginfolder = ".plugins";
-$plugdir = scandir($pluginfolder);
-foreach($plugdir as $pfolder) {
-	if($pfolder[0] == ".") continue;
-        if(file_exists($pluginfolder.$slash.$pfolder.$slash."voteroom.php")) {
-            $voteroomextension[$pfolder] = $pluginfolder.$slash.$pfolder.$slash."voteroom.php";
-        }
-}
-foreach($voteroomextension as $voex){
-	include($voex);
-}
-$fileid = $_GET['watchfile'];
-$folder = $_GET['folder'];
+$fileid = $db->real_escape_string($_GET['id']);
+$folder = workpath($_GET['f']);
 $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
 @$filedate = date("d.m.Y G:i", strtotime($row['date']));
 $upuserid = $row['userid'];
@@ -25,12 +14,11 @@ $row = $db->query("SELECT * FROM user WHERE id = '$upuserid'")->fetch_assoc();
 $upuser = $row['user'];
 echo $filename;
 $description = str_replace("<", htmlentities("<"), $description);
-$my_html = \Michelf\Markdown::defaultTransform($description);
-echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=".$folder."/".$filename."'></a><br>";
-echo $lang->uploaded.": ".$filedate."<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '".$fileid."', 'file');\">".$pro."</b><b class='vote'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '".$fileid."', 'file');\">".$con."</b><b class='vote'>-</b> ".$lang->user.": ".$upuser."<br>".
-$my_html."<br>";
-echo "<div class=\"comments\">";
-echo "<br><a name=\"comment\"><b style=\"font-size: 20px;\"><font class='ico-kom'></font>".$lang->comments.":</b></a><br>";
+echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=$folder/$filename'></a><br>";
+echo $lang->uploaded.": $filedate<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '$fileid', 'file');\">$pro</b><b class='vote'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '$fileid', 'file');\">$con</b><b class='vote'>-</b> ".$lang->user.": $upuser<br>
+$description<br>";
+echo "<div class='comments'>";
+echo "<br><a name='comment'><b style='font-size: 20px;'><font class='ico-kom'></font>".$lang->comments.":</b></a><br>";
 $dbro = $db->query("SELECT id FROM comments WHERE objectid = '$fileid' ORDER BY id ASC");
 while ($dbid = $dbro->fetch_array ()) {
     $folderid = $dbid[0];
@@ -46,7 +34,7 @@ while ($dbid = $dbro->fetch_array ()) {
         $comdate = date("d.m.Y - H:i", strToTime($comdate));
         if ($comid == $comsub) {
                         echo "<div name='coms' id='com".$comsub."' class=\"overcom ".$color."\">" . $folderid ." ". $comus . " <div class=\"datcom\">" . $comdate . " <a class='link' href=\"?f=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a>";
-		if ($isad >= 8 || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
+		if ($isad('comment') || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
                         echo "</div><div class=\"undercom\">" . $comcom . "</div></div>";
                         $nowid = $comid;
                 } else {

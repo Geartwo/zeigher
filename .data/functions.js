@@ -25,7 +25,7 @@ function resolution() {
     document.getElementById("outerY").innerHTML = h2;
 
 }
-function streamcontent(num, kk, folder){
+function streamcontent(num, id){
     var hash = location.hash.replace(/^.*?#/, '');
     var pairs = hash.split('&');
     hash = pairs[0];
@@ -38,7 +38,7 @@ function streamcontent(num, kk, folder){
                 streamertext.innerHTML=xmlhttp.responseText;
             }
         }
-        xmlhttp.open("GET","?x=main&file=voteroom.php&watchfile=" + kk + "&folder=" + folder,true);
+        xmlhttp.open("GET","?x=main&file=voteroom.php&id=" + id,true);
         xmlhttp.send();
     } else {
     history.pushState(null, null, ' ');
@@ -103,22 +103,16 @@ if("-80" >= window.touchX-e.touches[0].clientX){
 	window.touch = false;
 }
 }
-function streamer(num, kk, mpf, folder, userid){
+function streamer(num, fileid){
     if(streamerfild.style.display == 'none' || window.winfild != num){
         num = parseInt(num);
 	window.winfild = num;
         streamerfild.style.display = 'block';
         var real = (Math.ceil(window.winfild/window.winres))*window.winres;
-	var lastnum =  window.lastnum-1;
-	if(real > lastnum){
-	    real = lastnum
-	}
-        if(real != 0){
-            kind(real);
-	    window.keyuse = streamerCheckKey;
-	    document.onkeydown = window.keyuse;
-            streamcontent(num, kk, folder);
-	}
+        kind(real);
+	window.keyuse = streamerCheckKey;
+	document.onkeydown = window.keyuse;
+        streamcontent(num, fileid);
     }else{
         window.winfild = 0;
         streamerfild.style.display = 'none';

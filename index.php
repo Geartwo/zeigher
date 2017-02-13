@@ -306,7 +306,7 @@ if(isset($_GET['page'])){
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			$pext = substr(strrchr($file, "."), 1);
-			echo "<a class='buo ord' id='num".$idnum."' draggable='false' onclick=\"streamer(".$idnum.", '".$fileid."', '".$rawfile."', '".$folder."'); ";
+			echo "<a class='buo ord' id='num".$idnum."' draggable='false' onclick=\"streamer($idnum, $fileid); ";
 			//File
 			$sign = "ico-no";
 			if(isset($fileextension->$pext)){

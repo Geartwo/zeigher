@@ -1,5 +1,4 @@
 <?php
-include 'all.php';
 if(!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] != "true") exit;
 if ($_POST["mode"] == 'comment') {
         $date = date("Y-m-d H:i:s");
