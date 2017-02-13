@@ -1,5 +1,4 @@
 <?php
-if(isset($username))$dbquery = $db->query("SELECT * FROM user WHERE user = '$username'");
 if($isad()):
 	$key = "plugins";
 	echo "<input type='submit' class='btn $color' value='".$lang->$key."' onclick=\"self.location.href='";

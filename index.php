@@ -101,8 +101,9 @@ if(isset($mainextension)){
 echo "<div style='clear: right;'></div>";
 //Folder listing
 if(isset($_GET['page'])){
-	if(isset($page->$_GET['page'])){
-		$page->$_GET['page']();
+	$pageget = $_GET['page'];
+	if(isset($page->$pageget)){
+		$page->$pageget();
 	}else{
 		$fourzerofour = true;
 	}
