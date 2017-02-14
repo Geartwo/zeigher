@@ -5,7 +5,7 @@ if(isset($_COOKIE['Zeigher-ID']) && isset($_COOKIE['Zeigher-Token'])):
 	if($row['free'] == true && hash_equals($_COOKIE['Zeigher-Token'], crypt($row['user'].$row['mail'], $row['pass']))):
 		$_SESSION['loggedin'] = true;
 		$_SESSION['userid'] = $row['id'];
-		echo "<script>location.href='$cmsfolder'</script>";
+		echo "<script>location.href='.'</script>";
 	else:
 		echo "Cooky Error";
 	endif;
@@ -24,7 +24,7 @@ elseif (isset($_POST['cred']) && isset($_POST['password'])):
 			$_SESSION['userid'] = $row['id'];
 			setcookie('Zeigher-ID', $row['id'], time() + (86400 * 30), "/");
 			setcookie('Zeigher-Token', crypt($row['user'].$row['mail'], $row['pass']), time() + (86400 * 30), "/");
-			echo "<script>location.href='$cmsfolder'</script>";
+			echo "<script>location.href='.'</script>";
 		elseif(password_verify($_POST['password'], $row['pass']) == false):
 			echo $lang->wrongpass."<br>";
 			echo "<a href='?page=reset'>".$lang->resetpwd."</a><br><br>";

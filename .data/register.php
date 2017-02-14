@@ -57,6 +57,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     	'.$emassage;
     	$headers = "Content-type:text/plain;charset=utf-8" . "\n" . 'From: ' . $settings->mainmail . "\r\n" . 'Reply-To: ' . $settings->mainmail . "\r\n" . 'X-Mailer: PHP/' . phpversion();
     	mail($settings->mainmail, $subject, $message, $headers);
+	echo "<script>location.href='.'</script>";
     }
 }
 if(!isset($reg)){
