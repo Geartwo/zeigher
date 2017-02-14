@@ -136,7 +136,7 @@ padding: 5px;
 .udt { background-color: grey; }
 .ord:befor { content: "\00BB"; }
 
-#menu2 { background: #212121; padding: 5px; border-radius: 5px; position: absolute; margin-left: -165px; width: 155px; text-align: right; }
+#menu2 { background: #212121; padding: 10px; border-radius: 5px; position: absolute; text-align: center; }
 .clear { clear: both; }
 .block { display: block; }
 .none { display: none; }
@@ -144,12 +144,12 @@ h1, h2, h3, h4 h5, ul { margin: 0px; }
 #menu2 ul { list-style-type:none; list-style-image:none; margin:0px; padding:0px; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 #menu2 li.usr { }
 .usr2 a { text-align:right; margin-bottom: 5px; }
-.usr2 ul{ display:none; }
+.usr2 ul{ max-height: 0; z-index:500; overflow: hidden; }
 .submenu2 { padding-top: 7px; }
 .submenu2 a { }
 #menu2 a{ width:100%; }
 .submenu2 a:hover { color: #DCDCDC;}
-.usr2:hover ul { display:block; z-index:500; }
+.usr2:hover ul { max-height: 100%; }
 
 input[type="button"], input[type="submit"] {
 margin: 0 1 1 0;

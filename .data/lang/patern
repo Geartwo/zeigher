@@ -109,4 +109,5 @@ $lang->value = '';
 $lang->resetpwd = '';
 $lang->plugins = '';
 $lang->nopluginsfound = '';
+$lang->usernameoremail = '';
 ?>

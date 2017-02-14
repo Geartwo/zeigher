@@ -145,7 +145,7 @@ if($_SESSION['loggedin'] == "true"):
     if($isad('edit')) {
         echo "<li class='submenu2'><b><a href='$cmsfolder&edit=$editu'>$lang->edit $editn</a></b></li>";
     }
-    echo "<li class='submenu2 f$color'><b><a href=$cmsfolder?logoff>$lang->logoff</a></b></li>
+    echo "<li class='submenu2 f$color'><b><a href=".preg_replace('/ /', '+', $cmsfolder)."?logoff>$lang->logoff</a></b></li>
     </ul></li></ul></div>
     </div>";
 elseif(!isset($spsite)):

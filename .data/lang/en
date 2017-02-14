@@ -109,4 +109,5 @@ $lang->value = 'Value';
 $lang->resetpwd = 'Forgot password?';
 $lang->plugins = 'Plugins';
 $lang->nopluginsfound = 'No plugins found';
+$lang->usernameoremail = 'Username or E-Mail';
 ?>

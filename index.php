@@ -16,6 +16,8 @@ elseif(isset($_GET['upload'])):
 elseif(isset($_GET['logoff'])):
 	$_SESSION['loggedin'] = false;
         session_destroy();
+	setcookie("Zeigher-ID", "", time() - 3600);
+	setcookie("Zeigher-Token", "", time() - 3600);
         echo "<script>self.location.href='$cmsfolder'</script>";
 	exit;
 elseif(isset($_GET['api'])):
