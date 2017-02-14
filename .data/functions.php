@@ -202,7 +202,7 @@ $page->usersettings = function(){
 };
 $page->login = function(){
         global $db, $color, $lang, $settings, $_POST;
-        include '.data/register.php';
+        include '.data/login.php';
 };
 $page->register = function(){
 	global $db, $color, $lang, $settings, $_POST;
