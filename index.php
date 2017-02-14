@@ -42,27 +42,25 @@ window.onload = window.onresize = function(event) {
 </script>
 <?php
 include '.data/header.php';
+
+
+//Install redirect
 if (!isset($installed) || $installed == false):
         include ".data/install.php";
         exit;
 endif;
-if(!file_exists($folder."/.pic_.bintro.jpg.jpg") && file_exists($folder."/.bintro.jpg")){
-	pic_thumb($folder.'/.bintro.jpg', $folder.'/.pic_.bintro.jpg.jpg', '238', '150');
-}
+
+
+//Background picture thumbnail greator
+if(!file_exists(".$cmsfolder.pic_.bintro.jpg.jpg") && file_exists(".$cmsfolder.bintro.jpg")):
+	pic_thumb(".$cmsfolder.bintro.jpg", ".$cmsfolder.pic_.bintro.jpg.jpg", '238', '150');
+endif;
 $ufolder = implode('/', explode('%2F', rawurlencode($folder)));
-if(file_exists($folder ."/.intro.jpg")){
-	echo "<img class=\"tbild\" onmousedown=\"return false;\" src=\"".$ufolder."/.intro.jpg\" alt=\"mainpic\">";
-}
-//Login & Register
-if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['register']) && !isset($_GET['reset']) || isset($_GET['login'])){
-	include '.data/login.php';
-}
-if(isset($_GET['register'])){
-	include '.data/register.php';
-}
-if(isset($_GET['reset'])){
-        include '.data/reset.php';
-}
+if(file_exists("$folder/.intro.jpg")):
+	echo "<img class='tbild' onmousedown='return false;' src='$ufolder/.intro.jpg' alt='mainpic'>";
+endif;
+
+
 //Tag
 if($mode == 'dmyma'){
 	$notsort = "1";
@@ -83,40 +81,50 @@ if($mode == 'dmyma'){
 		}
 	}
 }
-if(file_exists($folder ."/.intro.txt")){
-echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
-        $docfile=fopen($folder . "/.intro.txt","r+");
-        while(!feof($docfile)) {
-                $line = htmlentities(fgets($docfile,1000));
-                echo $line."<br>";
-                $intro = $line."\n";
-        }
-        fclose($docfile);
-        echo "</div>";
-        $intro = 'true';
-}
-if(isset($mainextension)){
-    foreach($mainextension as $maex){
-        include($maex);
-    }
-}
 echo "<div style='clear: right;'></div>";
-//Folder listing
-if(isset($_GET['page'])){
+
+
+//Login redirect
+if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['page'])):
+	echo "<script>self.location.href='?page=login'</script>";
+endif;
+
+
+//Static page
+if(isset($_GET['page'])):
 	$pageget = $_GET['page'];
-	if(isset($page->$pageget)){
+	if(isset($page->$pageget)):
 		$page->$pageget();
-	}else{
+	else:
 		$fourzerofour = true;
-	}
-}elseif (isset($fourzerofour)){
+	endif;
+endif;
+
+
+//404 Error
+if (isset($fourzerofour)){
 	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>";
 	if($isad('edit') && $edit==1 && $mode=='fmyma'):
 		$newfolder = end(explode("/", $_GET['f']));
         	echo "<span class='$color btn' onclick=\"NF('.".$_GET['f']."/..', '$newfolder')\">$lang->newfolder</span>";
 	endif;
 	echo "<a class='$color btn' href=\"?f=".$tgif."\">".$lang->back."</a></div>";
-}elseif (!isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
+
+
+//Folder listing
+}elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
+	if(file_exists($folder ."/.intro.txt")){
+		echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
+        	$docfile=fopen($folder . "/.intro.txt","r+");
+        	while(!feof($docfile)) {
+        	        $line = htmlentities(fgets($docfile,1000));
+        	        echo $line."<br>";
+        	        $intro = $line."\n";
+        	}
+        	fclose($docfile);
+        	echo "</div>";
+        	$intro = 'true';
+	}
 	if ($mode != 'dmyma'){
 		$oph = opendir($folder);
 		while(($file = readdir($oph)) !== false){
@@ -159,6 +167,8 @@ if(isset($_GET['page'])){
             $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
             $file = $row['name'];
             if ($mode == 'dmyma')$folder = $row['folder'];
+
+
 			#Thumbnail Generate
 			$endthumb = "";
 			$zgif = urldecode($cgif);
@@ -379,14 +389,14 @@ endif;
 echo"</script>
 <div style='display: table;'>";
 if($isad('edit') && $edit==1 && $mode=='fmyma'){
-    echo "<span style='display: table-row;' class='".$color." btn' onclick=\"NF('".$folder."','".$lang->newfolder."')\">".$lang->newfolder."</span>";
+    echo "<span style='display: table-row;' class='$color btn' onclick=\"NF('.$cmsfolder','".$lang->newfolder."')\">".$lang->newfolder."</span>";
 echo "
 <div style='display: table-row;' class='fileUpload btn btn-primary'>
 <input class='".$color." btn' class='fileUpload' id='filebiup' multiple type='file'>
 </div>
-<input style='display: table-row;' id='fileupfolder' type='hidden' value='".$folder."'>
+<input style='display: table-row;' id='fileupfolder' type='hidden' value='.$cmsfolder'>
 <input style='display: table-row;' id='fileupmode' type='hidden' value='fb'>
-<input style='display: table-row;' class='".$color."' type=submit onclick=\"UploadFile('file')\">
+<input style='display: table-row;' class='$color' type=submit onclick=\"UploadFile('file')\">
 <progress style='display: table-row;' id='fileupg' value='0' max='100' style='margin-top:10px'></progress>
 </div>
 <style>

@@ -211,8 +211,11 @@ if($mode != 'dmyma' && $cmsfolder != '/'){
     echo "<a href='/'><b class='sites btn $color'>".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese btn ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
 } elseif($mode != 'dmyma') {
     echo "
-    <a href='/'><b class='lastsitese btn $color'>".$lang->home."</b></a>
+    <a href='/'><b class='btn $color'>".$lang->home."</b></a>
     <title>".$lang->home."</title>";
+    if (isset($_GET['page'])) {
+        echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
+    }
 }
 
 echo "

@@ -42,6 +42,6 @@ echo "<div class='login'>
 <div class='lt'>".$lang->usernameoremail.":</div><input name='cred'>
 <div class='lt'>".$lang->password.":</div><input type='password' name='password' autocomplete='off'>
 <br><input type='submit' class='btn ico-key $color' value='".$lang->login."' />";
-if($settings->regist == "true") echo "<br><a onclick=\"self.location.href='?page=register'\" class='buttet ico-edit $color'> ".$lang->register."</a>";
+if($settings->regist == "true") echo "<br><a onclick=\"self.location.href='?page=register'\" class='btn ico-edit $color'> ".$lang->register."</a>";
 echo "</form></div>";
 ?>

@@ -190,6 +190,7 @@ $hook->uninstall = function($a){
         include $this->get_folder($a)."uninstall.php";
 };
 
+//Page register
 $page = new ExtendClass();
 $page->admin = function(){
 	global $db, $isad, $lang, $color, $hook, $adminextension;
@@ -199,6 +200,19 @@ $page->usersettings = function(){
         global $db, $color, $isad, $lang, $userextension;
         include '.data/user.php';
 };
+$page->login = function(){
+        global $db, $color, $lang, $settings, $_POST;
+        include '.data/register.php';
+};
+$page->register = function(){
+	global $db, $color, $lang, $settings, $_POST;
+        include '.data/register.php';
+};
+$page->reset = function(){
+	global $db, $color, $lang, $settings, $_POST;
+        include '.data/reset.php';
+};
+
 $fileextension = new ExtendClass();
 $icon = new ExtendClass();
 $api = new ExtendClass();

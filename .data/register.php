@@ -42,7 +42,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
 		echo $lang->finreggo;
 	}else{
 	    $prompoints = 0;
-        $reg = 1;
+        	$reg = 1;
 		$free = 0;
 		$emassage = "Freischalten: http://".$name."/admin.php?f=randc";
 		echo $lang->finregwait;
@@ -60,15 +60,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     }
 }
 if(!isset($reg)){
-	echo "<div class=\"login\">
-	<form action=\"index.php?ordner=". $folder ."&register\" method=\"post\">
-	<div class=\"lt\">*".$lang->user.":</div><input type=\"text\" name=\"username\" />
-	<div class=\"lt\">*".$lang->password.":</div><input type=\"password\" name=\"password\" />
-	<div class=\"lt\">*".$lang->repass.":</div><input type=\"password\" name=\"wpassword\" />
-	<div class=\"lt\">*".$lang->email.":</div><input type=\"text\" name=\"mail\" />
-	<div class=\"lt\">".$lang->promotioncode.":</div><input type=\"text\" name=\"code\" />
-	<br><input type=\"submit\" class=\"buttet\" value=\"".$lang->register."\" />
+	echo "<div class='login'>
+	<form action='?page=register' method='post'>
+	<div class='lt'>*".$lang->user.":</div><input type='text' name='username'>
+	<div class='lt'>*".$lang->password.":</div><input type='password' name='password'>
+	<div class='lt'>*".$lang->repass.":</div><input type='password' name='wpassword'>
+	<div class='lt'>*".$lang->email.":</div><input type='text' name='mail'>
+	<div class='lt'>".$lang->promotioncode.":</div><input type='text' name='code'><br>
+	<input type='submit' class='btn $color' value='".$lang->register."'>
 	</form>
-	</div class=\"login\">";
+	</div>";
 }
 ?>
