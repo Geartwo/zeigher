@@ -54,6 +54,9 @@ function kind(num){
     if(typeof(video) != 'undefined' && video != null){
 	paused = video.paused;
     }
+    if(num > window.lastnum){
+	num = window.lastnum;
+    }
     insertAfter(streamerfild, document.getElementById('num'+num));
     if(paused == false){	
 	video.play();

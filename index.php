@@ -332,7 +332,7 @@ if (isset($fourzerofour)){
 			$idnum = $idnum + 1;
 	}
     }
-echo "<a id='num$idnum'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
+echo "<script>window.lastnum = $idnum;</script><a id='num$idnum'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
 echo "
 <script>
 function controlblock(){
