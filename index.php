@@ -10,7 +10,7 @@ elseif(!isset($installed) || $installed == false):
 elseif(isset($_GET['watchfile']) | is_file(".$cmsfolder")):
 	include ".data/stream.php";
 	exit;
-elseif(isset($_POST['upload'])):
+elseif(isset($_GET['upload'])):
         include ".data/upload.php";
         exit;
 elseif(isset($_GET['logoff'])):
