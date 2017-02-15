@@ -4,6 +4,7 @@ if (!isset($_SESSION['loggedin']) && !preg_match('/(\.pic|.bintro)*/', $cmsfolde
     exit;
 endif;
 if (preg_match("/\.pdf/", $cmsfolder)){header("Content-Type: application/pdf");
+} elseif (preg_match("/\.css/", $cmsfolder)){header("Content-Type: text/css");
 } elseif (preg_match("/\.mp4/", $cmsfolder)){header("Content-Type: video/mp4");
 header("X-Accel-Buffering: no");
 } elseif (preg_match("/\.mp3/", $cmsfolder)){header("Content-Type: audio/mp3");

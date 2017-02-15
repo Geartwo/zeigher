@@ -1,11 +1,26 @@
+<!DOCTYPE HTML>
+<html onload="resolution()">
 <head>
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<meta charset="utf-8" />
+	<link rel='stylesheet' type='text/css' href='?watchfile=/.data/themes/<?php echo $settings->theme ?>/format.css'>
 </head>
-<html onload="resolution()">
-<link rel="icon" type="image/vnd.microsoft.icon" href=".settings/favicon.ico">
+<body>
+<script>
+var res = Math.floor(window.innerWidth / 250);
+if (res == 1) res = 2;
+if (res >= 4) res = 4;
+var four = 0;
+window.onload = window.onresize = function(event) {
+        var winsize = window.innerWidth-1400;
+        if( winsize <= 0){
+                tbild.style.right = winsize; 
+        }else{
+                tbild.style.right = winsize/2;
+        }
+};
+</script>
 <?php
-echo "<link rel='stylesheet' type='text/css' href='?x=main&file=/themes/".$theme."/format.css'>";
 $regist='';
 if (isset($_GET['login'])) $use = 'none';
 set_time_limit(0);
@@ -103,7 +118,6 @@ if(isset($nnout)){
 	</style>";
 }
 echo "
-<div style='display: inline-block;' id='key'></div>
 <div class='container'>
 <nav class='navbar navbar-inverse'>
 <div id='tbild' style='transition: max-width 0.5s linear 0s, margin 0.5s linear 0s; float: right; position: absolute; top: 5; right: 5; overflow: hidden; margin: 5px;'></div>
@@ -159,7 +173,6 @@ elseif(!isset($spsite)):
     ";
 endif;
 echo "
-</div class=\"logoe\">
 </nav>
 
 <div class=\"wholy\">

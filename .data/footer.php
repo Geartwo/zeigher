@@ -1,14 +1,12 @@
 </div> <!-- class=list -->
 
 <div class="footer clear line">
-<a href="?page=inprint"
-><?php echo $lang->imprint; ?></a>
+<a href="?page=inprint"><?php echo $lang->imprint; ?></a>
 </div>
 <div class="footer">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
-<!--<script src="https://code.jquery.com/ui/1.8.21/jquery-ui.min.js"></script>-->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
 <script src="?x=main&file=functions.js"></script>
 <?php

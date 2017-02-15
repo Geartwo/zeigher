@@ -134,12 +134,28 @@ class ExtendClass
 {
     public function __call($method, $args)
     {
-        if (isset($this->$method)) {
+        if(isset($this->$method)):
             $func = $this->$method;
             return call_user_func_array($func, $args);
-        }
+	elseif(isset($this->standard)):
+            $func = $this->standard;
+            return call_user_func_array($func, $args);
+        endif;
     }
 }
+//Extend StdClass class
+class ExtendStdClass
+{
+    public function __call($method, $args)
+    {
+	if(isset($this->$method)):
+		return $this->$method;
+	elseif(isset($this->standard)):
+		return $this->standard;
+	endif;
+    }
+}
+
 //Define all classes
 $hook = new ExtendClass();
 $hook->get_folder = function($a){
@@ -214,7 +230,12 @@ $page->reset = function(){
 };
 
 $fileextension = new ExtendClass();
-$icon = new ExtendClass();
+$fileextension->standard = function(){
+};
+$icon = new ExtendStdClass();
+$icon->standard = "ico-no";
+$mimetype = new ExtendStdClass();
+$mimetype->standard = "text/plain";
 $api = new ExtendClass();
 //Set Language
 if(!isset($theme)) $theme = "default";

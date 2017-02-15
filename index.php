@@ -25,22 +25,7 @@ elseif(isset($_GET['api'])):
 	if(isset($api->$_GET['api'])) echo $api->$_GET['api']($cmsfolder);
 	exit;
 endif;
-?>
-<script>
-var res = Math.floor(window.innerWidth / 250);
-if (res == 1) res = 2;
-if (res >= 4) res = 4;
-var four = 0;
-window.onload = window.onresize = function(event) {
-	var winsize = window.innerWidth-1400;
-	if( winsize <= 0){
-		tbild.style.right = winsize; 
-	}else{
-		tbild.style.right = winsize/2;
-	}
-};
-</script>
-<?php
+
 include '.data/header.php';
 
 
@@ -310,27 +295,12 @@ if (isset($fourzerofour)){
 			$yesl = $yeslo;
 			if($orfile == 4) $yesl = "";
 			$yeslop = $folder . "/" . $mpz;
-			$simply = $db->query("SELECT value FROM settings WHERE setting = 'simply' AND userid = '$userid'");
-			$row = $simply->fetch_assoc();
-			$simply = $row['value'];
-			if($simply =="true")$onr = true;
 			if(isset($onr))echo"<script>res = 1;</script>";
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			$pext = substr(strrchr($file, "."), 1);
-			echo "<a class='buo ord' id='num".$idnum."' draggable='false' onclick=\"streamer($idnum, $fileid); ";
-			//File
-			$sign = "ico-no";
-			if(isset($fileextension->$pext)){
-				$fileextension->$pext($folder, $file);
-			}
-			if(isset($icon->$pext)){
-                                $sign = $icon->$pext();
-                        }
-	if($sign == "ico-no") {
-		echo "\">";
-		$sign = 'ico-down';
-	    }
+			echo "<a class='buo ord' id='num$idnum' draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
+                        $sign = $icon->$pext();
 	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('edit') && $edit == 1) {

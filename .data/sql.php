@@ -1,5 +1,4 @@
 <?php
-if(!isset($theme))$theme = "default";
 //SQL connect
 if ($mode == 'fmyma' | $mode == 'dmyma' && $installed == true) {
     $db = new mysqli($dbhost, $dbuser, $dbwd, $dbank);

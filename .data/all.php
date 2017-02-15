@@ -1,14 +1,12 @@
 <?php
 include '.settings/config.php';
-ini_set("session.cookie_lifetime", 2592000);
-ini_set("session.gc_maxlifetime", 2592000);
 $settings = new stdClass();
 $max_upload = (int)(ini_get('upload_max_filesize'));
 $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
 $upload_mb = min($max_upload, $max_post, $memory_limit);
 session_start();
-include 'sql.php';
+require 'sql.php';
 //Setting
 if (isset($_SESSION['userid'])) {$userid = $_SESSION['userid'];} else {$userid = '-1';}
 if (isset($_SESSION['edit'])) {$edit = $_SESSION['edit'];} else {$edit = 0;}
@@ -69,15 +67,12 @@ if(isset($db)):
 		if(file_exists($longpfolder."function.js")):
                         $functionsjsextension[$row['name']] = $longpfolder."function.js";
                 endif;
-                if(file_exists($longpfolder."main.php")):
-                        $mainextension[$row['name']] = $longpfolder."main.php";
-                endif;
                 if(file_exists($longpfolder."lang.php")):
                         $langextension[$row['name']] = $longpfolder."lang.php";
                 endif;
         endwhile;
 endif;
-include ".data/functions.php";
+require ".data/functions.php";
 if(isset($functionsextension)):
     foreach($functionsextension as $fuex):
         include($fuex);
