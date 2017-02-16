@@ -1,22 +1,26 @@
 <?php
 $fileid = $db->real_escape_string($_GET['id']);
-$folder = workpath($_GET['f']);
+$cmsfolder = workpath($_GET['f']);
 $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
 @$filedate = date("d.m.Y G:i", strtotime($row['date']));
 $upuserid = $row['userid'];
-$filename = $row['name'];
+$file = $row['name'];
 $pro = $row['pro'];
 $con = $row['con'];
 $view = $row['view'];
 $description = $row['description'];
-$row = $db->query("SELECT * FROM points WHERE type = 'user' AND objectid = '$userid'")->fetch_assoc();
-$row = $db->query("SELECT * FROM user WHERE id = '$upuserid'")->fetch_assoc();
-$upuser = $row['user'];
+if($upuserid == 0):
+	$upuser = "System";
+else:
+	$upuser = $db->query("SELECT user FROM user WHERE id = '$upuserid'")->fetch_object()->user;
+endif;
+$filename = explode('.', $file);
+$filename = htmlentities(implode('.',array_slice($filename, 0, count($filename) - 1)));
 echo $filename;
 $description = str_replace("<", htmlentities("<"), $description);
-echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=$folder/$filename'></a><br>";
-echo $lang->uploaded.": $filedate<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '$fileid', 'file');\">$pro</b><b class='vote'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '$fileid', 'file');\">$con</b><b class='vote'>-</b> ".$lang->user.": $upuser<br>
-$description<br>";
+echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=$cmsfolder/$file'></a><br>";
+echo $lang->uploaded.": $filedate<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '$fileid', 'file');\">$pro</b><b class='btn $color'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '$fileid', 'file');\">$con</b><b class='btn $color'>-</b> ".$lang->user.": $upuser<br>
+$description";
 echo "<div class='comments'>";
 echo "<br><a name='comment'><b style='font-size: 20px;'><font class='ico-kom'></font>".$lang->comments.":</b></a><br>";
 $dbro = $db->query("SELECT id FROM comments WHERE objectid = '$fileid' ORDER BY id ASC");
@@ -50,7 +54,6 @@ if($_SESSION['loggedin'] == true) {
     <input type=\"submit\" class=\"buttet, ".$color."\" value=\"".$lang->comment."\" onclick=\"com('file', '".$fileid."', 'comment');\"/>
 	</div>
         ";
-#'$userid', '$comment', '$folder', '$date', '$nextId', 'folder'
     echo "<input type=\"button\" style=\"clear: both;\" class=\"buttet ".$color."\" value=\"Kommentieren\" onclick=\"document.getElementById('newcom').style.display='block';\">";
 } elseif(isset ($_GET['comment']) && isset($_SESSION['loggedin'])) {
                         $sub = $_GET['comment'];

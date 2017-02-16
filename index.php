@@ -177,10 +177,10 @@ if (isset($fourzerofour)){
 			}
 			if($ord_array[0] != "xpvkleer"){
 				echo "<a draggable='false' id='$file-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>
-				<div class='bigfolder $color-2' id='".$file."k' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
+				<div class='bigfolder $color-2' id='".$file."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
                 if($isad('edit') && $edit == 1){
                     $fourpack = 1;
-					echo "</a><form style='display: inline-block;' onsubmit=\"SND('".$file."','".$folder."','".$folder."',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='".$file."'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('".$file."','".$folder."','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id=\"".$file."v\" class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>";
+					echo "</a><form style='display: inline-block;' onsubmit=\"SND('$file','$folder','$folder',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='$file'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('$file','$folder','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id='".$file."v' class='buo ord' value='$mpf'  href='$cmsfolder$file'>";
 				}
 				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
 				</div></a>";
@@ -192,8 +192,6 @@ if (isset($fourzerofour)){
 			$fileid = $row['id'];
 			$rawfolder = rawurlencode($folder);
 			$rawfile = rawurlencode($file);
-			$utf8file = utf8_encode($file);
-			$utf8folder = utf8_encode($folder);
 		}
 		echo "<div style=\"clear: left;\"></div>";
 	}
@@ -245,20 +243,17 @@ if (isset($fourzerofour)){
 		$nowfolder = explode("/", explode(workpath("$cmsfolder.."), $cmsfolder)[1])[0];
 		$underfolder = scandir(".".workpath("$cmsfolder.."));
 		$nowfolderkey = array_search($nowfolder, $underfolder);
-		$lastfolderkey = $nowfolderkey-1;
-		$nextfolderkey = $nowfolderkey+1;
-		$lastfolder = $underfolder[$lastfolderkey];
-		$nextfolder = $underfolder[$nextfolderkey];
+		$lastfolder = $underfolder[$nowfolderkey-1];
+		$nextfolder = $underfolder[$nowfolderkey+1];
 		echo "<a id='num0'  onclick='self.location=\"$cmsfolder../$lastfolder#num1\"'></a>";
 		foreach($dat_array as $fileid){
-			$row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
+			$row = $db->query("SELECT name, orfile, folder FROM files WHERE id = '$fileid'")->fetch_assoc();
 			$file = $row['name'];
+			$orfile = $row['orfile'];
 			//$folder = $row['folder'];
 			if($mode == 'dmyma') $folder = addcslashes($row['folder'], "'");
 			$rawfolder = rawurlencode($folder);
 			$rawfile = rawurlencode($file);
-			$utf8file = utf8_encode($file);
-			$utf8folder = utf8_encode($folder);
 			if(!isset($fileid)){
 				$mysqltime = date("Y-m-d H:i:s");
 				$dbfile = $db->real_escape_string($file);
@@ -266,8 +261,6 @@ if (isset($fourzerofour)){
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
 			}
-			$orfile = $row['orfile'];
-			if($orfile == 4) $rawfile = ".bintro.jpg";
 			#Thumbnail Generate
 			$singlbackground = "";
 			if(file_exists("./.pic_.bintro.jpg.jpg") && $mode=='dmyma'){
@@ -287,29 +280,19 @@ if (isset($fourzerofour)){
 			}else{
 				$singlbackground = $rawfolder."/.pic_".$rawfile.".jpg";
 			}
-			$yeslo = implode('/', explode('%2F', rawurlencode($folder . "/" . $file)));
-			$mpf = explode('.', $file);
-			$mpz = count($mpf);
-			if($mpz == 1) $mpr = $file;
-			$mpz = implode('.',array_slice($mpf, 0, $mpz - 1));
-			$mpf = htmlentities($mpz);
-			$yesl = $yeslo;
-			if($orfile == 4) $yesl = "";
-			$yeslop = $folder . "/" . $mpz;
-			if(isset($onr))echo"<script>res = 1;</script>";
+			$filename = explode('.', $file);
+			$filename = htmlentities(implode('.',array_slice($filename, 0, count($filename) - 1)));
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			$pext = substr(strrchr($file, "."), 1);
 			echo "<a class='buo ord' id='num$idnum' draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
                         $sign = $icon->$pext();
-	    $lastfolder = $folder;
             echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('edit') && $edit == 1) {
 	       echo "draggable=true>";
-            $extension = substr(strrchr($file, "."), 1);
             echo "</a>
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
-            <input type='hidden' id='".$rawfile."r' value='".$htmlescfile."' draggable='false'>
+            <input type='hidden' id='".$rawfile."r' value='$htmlescfile' draggable='false'>
             </form>
             <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
             <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
@@ -318,17 +301,8 @@ if (isset($fourzerofour)){
 	    }else{
 		echo ">";
 	    }
-	    echo "<font id='".$rawfile."z' class='bigback bigfileback'><font class='".$sign."'></font>" . $mpf . "</font>";
-	    if ($orfile == 5) {
-                echo "<a id='".$mpf."d' href=\".data/downloader.php?file=.".$yesl."\" class='ico-down'></a>";
-            }
+	    echo "<font id='".$rawfile."z' class='bigback bigfileback'><font class='".$sign."'></font>" . $filename . "</font>";
 			echo "</div></a>";
-		        if(isset($onr)){
-			echo"<style>
-			.bigfile { width: 100% !important; max-width: 100% !important; height: auto !important; background: transparent !important; margin-bottom: 2px !important; }
-			.bigfileback { height: auto !important; }
-			</style>
-			<br class='clear'>";}
 			$four = $four + 1;
 			$idnum = $idnum + 1;
 	}

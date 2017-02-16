@@ -1,17 +1,16 @@
 <?php
-include 'all.php';
-if($_POST['updown']=='up'){
+if($_GET['updown']=='up'){
     $updown = 1;
     $conpro = 'pro';
     $cpother = 'con';
-}elseif($_POST['updown']=='down'){
+}elseif($_GET['updown']=='down'){
     $updown = -1;
     $conpro = 'con';
     $cpother = 'pro';
 }
 $downup = $updown * -1;
-$objectid = $_POST['objectid'];
-$type = $_POST['type'];
+$objectid = $_GET['objectid'];
+$type = $_GET['type'];
 
 $dbquery = $db->query("SELECT * FROM votes WHERE userid = '$userid' AND objectid = '$objectid' AND type = '$type'");
 if($dbquery->num_rows >= 1) {
