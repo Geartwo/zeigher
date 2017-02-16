@@ -22,7 +22,8 @@ elseif(isset($_GET['logoff'])):
 	exit;
 elseif(isset($_GET['api'])):
 	include ".data/api.php";
-	if(isset($api->$_GET['api'])) echo $api->$_GET['api']($cmsfolder);
+	$apiget = $_GET['api'];
+	echo $api->$apiget($cmsfolder);
 	exit;
 endif;
 

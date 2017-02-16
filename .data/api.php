@@ -3,6 +3,9 @@ if($_SESSION['loggedin'] == false):
 	echo "unauthenticated";
 	exit;
 endif;
+$api->standard = function(){
+        return "undefined_command";
+};
 $api->ping = function(){
 	return "pong";
 };
