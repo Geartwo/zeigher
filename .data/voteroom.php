@@ -19,7 +19,7 @@ $filename = htmlentities(implode('.',array_slice($filename, 0, count($filename) 
 echo $filename;
 $description = str_replace("<", htmlentities("<"), $description);
 echo "<a class='ico-down' href='ajax.php?x=main&file=downloader.php&downfile=$cmsfolder/$file'></a><br>";
-echo $lang->uploaded.": $filedate<b class='vote' id='fileup' onclick=\"conpro('up', 'files', '$fileid', 'file');\">$pro</b><b class='btn $color'>+</b> <b class='vote' id='filedown' onclick=\"conpro('down', 'files', '$fileid', 'file');\">$con</b><b class='btn $color'>-</b> ".$lang->user.": $upuser<br>
+echo $lang->uploaded.": $filedate<span class='btn $color'><span class='vote' id='fileup' onclick=\"conpro('up', 'files', '$fileid', 'file');\">$pro</span>+</span><span class='btn $color'><span class='vote' id='filedown' onclick=\"conpro('down', 'files', '$fileid', 'file');\">$con</span>-</span> ".$lang->user.": $upuser<br>
 $description";
 echo "<div class='comments'>";
 echo "<br><a name='comment'><b style='font-size: 20px;'><font class='ico-kom'></font>".$lang->comments.":</b></a><br>";
