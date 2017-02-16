@@ -12,7 +12,7 @@ $api->ping = function(){
 $api->ls = function($cmsfolder){
 	$dir = scandir(".$cmsfolder");
 	foreach($dir as $key):
-		if(preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file) | $key[0] == ".") continue;
+		if(preg_match("/\.php\z/i", $key) | preg_match("/\.md\z/i", $key) | preg_match("/\.html\z/i", $key) | $key[0] == ".") continue;
 		if(is_dir(".$cmsfolder$key")):
 			$return['folder'][] = $key;
 		else:
