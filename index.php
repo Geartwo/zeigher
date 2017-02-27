@@ -285,6 +285,8 @@ if (isset($fourzerofour)){
 			$htmlescfile = str_replace("'", "&#39;", $file);
 			//Singles
 			$pext = substr(strrchr($file, "."), 1);
+			if(!$pext) $pext = "standard";
+                        if(!$filename) $filename = $file;
 			echo "<a class='buo ord' id='num$idnum' draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
                         $sign = $icon->$pext();
             echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";

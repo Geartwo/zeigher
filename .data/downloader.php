@@ -1,5 +1,4 @@
 <?php
-if($_GET['type'])
 if ($_SESSION['loggedin'] == false && $use == 'none') {
     exit();
 }
@@ -15,7 +14,7 @@ if($_GET['type'] == 'zip'):
 	$yeslo = explode('/', $_GET['downfile']);
 	$yeslo = implode('', array_slice($yeslo, -1)).'.zip';
 else:
-	$file = $_GET['downfile'];
+	$file = workpath($_GET['downfile']);
 	$yeslo = explode('/', $file);
 	$yeslo = implode('', array_slice($yeslo, -1));
 endif;
@@ -26,7 +25,7 @@ elseif($_GET['type'] == 'zip'):
 	header("Content-Type: application/zip");
 endif;
 header('Content-disposition: attachment; filename='.$yeslo.';');
-header('Content-Length: '.filesize($file));
-readfile($file);
+header('Content-Length: '.filesize(".$file"));
+readfile(".$file");
 exit;
 ?>
