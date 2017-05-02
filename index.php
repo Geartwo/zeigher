@@ -16,9 +16,9 @@ elseif(isset($_GET['upload'])):
 elseif(isset($_GET['logoff'])):
 	$_SESSION['loggedin'] = false;
         session_destroy();
-	setcookie("Zeigher-ID", "", time() - 3600);
-	setcookie("Zeigher-Token", "", time() - 3600);
-        echo "<script>self.location.href='$cmsfolder'</script>";
+	setcookie("Zeigher-ID", "", time() - 3600, "/");
+	setcookie("Zeigher-Token", "", time() - 3600, "/");
+        echo "<script>self.location.href='.'</script>";
 	exit;
 elseif(isset($_GET['api'])):
 	include ".data/api.php";
@@ -182,6 +182,7 @@ if (isset($fourzerofour)){
                     $fourpack = 1;
 					echo "</a><form style='display: inline-block;' onsubmit=\"SND('$file','$folder','$folder',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='$file'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('$file','$folder','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id='".$file."v' class='buo ord' value='$mpf'  href='$cmsfolder$file'>";
 				}
+				echo "<form style='display: inline;' onsubmit=\"SND('$file','$folder','$folder',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='$file'></form>";
 				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
 				</div></a>";
 			}
@@ -291,18 +292,19 @@ if (isset($fourzerofour)){
                         $sign = $icon->$pext();
             echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('edit') && $edit == 1) {
-	       echo "draggable=true>";
+	       echo "draggable=true>
+		<a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
+                <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
+                ";
+	    }else{
+                echo ">";
+            }
             echo "</a>
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
             <input type='hidden' id='".$rawfile."r' value='$htmlescfile' draggable='false'>
             </form>
-            <a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
-            <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
-            <a draggable='false' onclick=\"streamer(".$idnum.", '".$fileid."', '".$rawfile."', '".$folder."');\" >
+            <a draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\" >
             ";
-	    }else{
-		echo ">";
-	    }
 	    echo "<font id='".$rawfile."z' class='bigback bigfileback'><font class='".$sign."'></font>" . $filename . "</font>";
 			echo "</div></a>";
 			$four = $four + 1;
@@ -339,7 +341,9 @@ if($isad('edit') && $edit==1 && $mode=='fmyma'){
     echo "<span style='display: table-row;' class='$color btn' onclick=\"NF('.$cmsfolder','".$lang->newfolder."')\">".$lang->newfolder."</span>";
 echo "
 <div style='display: table-row;' class='fileUpload btn btn-primary'>
-<input class='".$color." btn' class='fileUpload' id='filebiup' multiple type='file'>
+<input class='".$color." btn' class='fileUpload' id='filebiup' multiple type='file' onchange=\"CheckFile(this.files[0].name);\">
+<div id='upload-addon'>
+</div>
 </div>
 <input style='display: table-row;' id='fileupfolder' type='hidden' value='.$cmsfolder'>
 <input style='display: table-row;' id='fileupmode' type='hidden' value='fb'>

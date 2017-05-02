@@ -150,7 +150,7 @@ if($_SESSION['loggedin'] == "true"):
 	<li class='usr2 f$color'>
 	<b><a class='ico-set'>$username</a></b>
 	<ul>
-	<li class='submenu2 f$color'><b><a href=\"?page=user&d=setting\">".$lang->settings."</a></b></li>
+	<li class='submenu2 f$color'><b><a href=\"?page=usersettings\">".$lang->settings."</a></b></li>
 	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\">".$lang->owndata."</a></b></li>";
     if($isad('admside')) {
         echo "<li class=\"submenu2\"><b><a href='?page=admin'>".$lang->administration."</a></b></li>";

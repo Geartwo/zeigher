@@ -354,13 +354,13 @@ xmlhttp.open("GET","?x=main&file=plugin.php&check="+ check +"&name="+ name,true)
 xmlhttp.send();
 }
 function SN (kk, cc, id) {
-    var ok = document.getElementById(kk + "o")
-    var no = document.getElementById(kk + "n")
-    var str = document.getElementById(kk + "r")
-    var stk = document.getElementById(kk + "k")
-    var stb = document.getElementById(kk + "z")
-        var sty = document.getElementById("num"+ id)
-    if(str.type != "hidden") {
+    var ok = document.getElementById(kk + "o");
+    var no = document.getElementById(kk + "n");
+    var str = document.getElementById(kk + "r");
+    var stk = document.getElementById(kk + "k");
+    var stb = document.getElementById(kk + "z");
+        var sty = document.getElementById("num"+ id);
+    if(stb.style.display == "none") {
     stk.draggable=true;
         str.type = "hidden";
     stb.style.display = "inline-block";
@@ -380,7 +380,7 @@ function SND (kk, cc, newcc, id, nodir, dr) {
     var no = document.getElementById(kk + "n")
     var str = document.getElementById(kk + "r")
     var z = document.getElementById(kk + "z")
-    if(str.type != "hidden" || dr=='d') {
+    if(z.style.display == "none" || dr=='d') {
     xmlhttp=new XMLHttpRequest();
         xmlhttp.onreadystatechange=function() {
                 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
@@ -458,11 +458,24 @@ function UploadFile(upid) {
                         }
                 }
     xhr.onerror = function(e) {
-        alert("onError");
+        alert("UploadError");
     };
         xhr.open("POST", '?upload='+folder, true);
         xhr.setRequestHeader('Cache-Control','no-cache');
         xhr.send(data);
+}
+function CheckFile(name) {
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange=function() {
+        if (xhr.readyState==4 && xhr.status==200) {
+            document.getElementById('upload-addon').innerHTML = xhr.responseText;
+                        }
+    }
+    xhr.onerror = function(e) {
+        alert("CheckError");
+    };
+    xhr.open("GET", '?upload&check='+name, true);
+    xhr.send();
 }
 function showFileSize(mompoints) {
     var input, file, point, returner, ok;

@@ -14,7 +14,7 @@ elseif (isset($_POST['cred']) && isset($_POST['password'])):
 	$password = $db->real_escape_string($_POST['password']);
 	$hostname = $_SERVER['HTTP_HOST'];
 	$path = dirname($_SERVER['PHP_SELF']);
-	$dbnum = $db->query("SELECT user FROM user WHERE user = '$cred' OR email= '$email'")->num_rows;
+	$dbnum = $db->query("SELECT user FROM user WHERE user = '$cred' OR email= '$cred'")->num_rows;
 	if($dbnum != 1):
         	echo $lang->wrongpass;
 	else:

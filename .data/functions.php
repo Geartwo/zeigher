@@ -236,6 +236,7 @@ $icon = new ExtendStdClass();
 $icon->standard = "ico-no";
 $mimetype = new ExtendStdClass();
 $mimetype->standard = "text/plain";
+$uploadcheck = new ExtendStdClass();
 $api = new ExtendClass();
 //Set Language
 if(!isset($theme)) $theme = "default";

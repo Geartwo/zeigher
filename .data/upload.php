@@ -1,5 +1,9 @@
 <?php
 //if($_SESSION['logedin'] != true) exit;
+if(isset($_GET['check'])):
+	echo "Test";
+	exit;
+endif;
 $fn = (isset($_SERVER['HTTP_X_FILENAME']) ? $_SERVER['HTTP_X_FILENAME'] : false);
 if($_POST['mode'] == "bintro") {
 	$bintro = true;
