@@ -13,7 +13,7 @@
 .ico-pap:before { font-family: ico2, ico; content: "\e004"; }
 .ico-film:before { font-family: ico2, ico; content: "\e005"; }
 .ico-down:before { font-family: ico2, ico; content: "\e006"; }
-.ico-down { font-size: 30; }
+.ico-down { font-size: 50; }
 .ico-search:before { font-family: ico2, ico; content: "\e007"; }
 .ico-mail:before { font-family: ico2, ico; content: "\e008"; }
 .ico-music:before { font-family: ico2, ico; content: "\e009"; }
@@ -236,4 +236,4 @@ p { margin: 0; }
 #streamervolume{position: absolute; bottom: 0; right: 0; background: grey;}
 #streamercontrol:hover{display: block;}
 //#streamerfile:hover + #streamercontrol{display: block;}
-.vote { font-size: 50px; cursor: pointer; }
+.vote { cursor: pointer; }

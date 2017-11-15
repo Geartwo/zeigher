@@ -96,18 +96,19 @@ if (isset ($endpic)):
 	$_SESSION['lastpic'] = $endpic;
 	echo "
 	<img src='?watchfile=$endpic' id='dummy' style='display:none;' alt='' />
-	<style>body{margin: 0; background: white;}</style>
-	<div id='pic' style='display: inline-block;  z-index: -1; position: fixed; height:100%;width:100%;display:none; background: no-repeat center center fixed; background-size: cover;'></div>
-";
-$rnt = "
+	<!--<style>body{margin: 0; background: white;}</style>-->
+	<div id='pic' style='display: inline-block;  z-index: -1; display: none; position: fixed; height:100%;width:100%; background: no-repeat center center fixed; background-size: cover;'></div>
 	<script>
+	document.getElementById('dummy').onload = function(){
+	$('#pic').css('background-image','url(?watchfile=$endpic)');
+        $('#pic').fadeIn(1000);
+	};
 	$('#dummy').load(function() {
-    $('#pic').css('background-image','url(?watchfile=$endpic)');
-    $('#pic').fadeIn(1000);
+		$('#pic').css('background-image','url(?watchfile=$endpic)');
+		$('#pic').fadeIn(1000);
 	});
-	</script>
-	";
-endif;;
+	</script>";
+endif;
 
 //Real Header
 if(empty($settings->stitel)) $settings->stitel = $url;
