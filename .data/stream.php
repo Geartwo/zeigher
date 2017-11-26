@@ -13,5 +13,6 @@ header("X-Accel-Buffering: no");
 }
 header("X-Accel-Redirect:$cmsfolder");
 header("Cache-Control: max-age=2592000");
+header('Access-Control-Allow-Origin: *'); 
 exit;
 ?>

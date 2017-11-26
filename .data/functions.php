@@ -1,6 +1,6 @@
 <?php
 //Get a Real Path
-function workpath($a){
+function workpath($a, $pre = false){
   if($a == "undefined"):
     $a = ".";
   endif;
@@ -31,6 +31,7 @@ function workpath($a){
   elseif(!is_file(".".$e)):
     if(substr($e, -1) != "/") $e = "$e/";
   endif;
+  if($pre) $e = $pre.$e;
   return $e;
 }
 function checkEmailAdress($email_address) {
@@ -162,7 +163,11 @@ $hook->get_folder = function($a){
         return ".plugins".DIRECTORY_SEPARATOR.$a.DIRECTORY_SEPARATOR;
 };
 $hook->get_info = function($a, $b){
-        include get_folder($a)."info.php";
+	global $hook;
+	if(file_exists($hook->get_folder($a)."info.php")):
+        	include $hook->get_folder($a)."info.php";
+		if(isset($$b)) return $$b;
+	endif;
 };
 $hook->install = function($a){
 	global $db;

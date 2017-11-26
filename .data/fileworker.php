@@ -30,4 +30,16 @@ if(isset ($_GET['renold']) && isset ($_GET['rennew'])){
         rmdir(".$folder$del");
 	$db->query("DELETE FROM files WHERE folder = '$folder' AND name='$del'");
 }
+
+//Create a File
+function createfile($path, $filename, $force){
+	if(file_exists(workpath($path)."/".$filename) && $force != true) exit("File exist use force");;
+	
+}
+
+//Create a Folder
+function createfolder($path, $foldername, $force){
+        if(file_exists(workpath($path, ".")."/".$foldername) && $force != true) exit("Folder exist use force");;
+	mkdir(workpath($path, ".")."/".$foldername);
+}
 ?>

@@ -20,11 +20,9 @@ if($isad()):
 				$dbquery = $db->query("SELECT * FROM plugins WHERE name = '$pfolder'");
 			endif;
 			$row = $dbquery->fetch_assoc();
-			//echo $row['name'];
-			//$hook->get_info($row['name'], 'all');
-			//exit;
+			if(!$pluginname = $hook->get_info($row['name'], 'name')) $pluginname = $row['name'];
 			echo "<div class='boxrow'>
-			<div class='boxl boxn'>".$row['name']."</div><div class='boxl'><input id='check-".$row['name']."' type='checkbox' onclick=\"activatePlugin('".$row['name']."')\"";
+			<div class='boxl boxn'>$pluginname</div><div class='boxl'><input id='check-".$row['name']."' type='checkbox' onclick=\"activatePlugin('".$row['name']."')\"";
 			if($row['active'] == 1) echo "checked";
 			echo "></div>
 			</div>";
