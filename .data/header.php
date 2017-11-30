@@ -27,7 +27,11 @@ set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
 if (isset($https)) $https = "https"; else $https = "http";
-
+function icon($svg, $path = false){
+	global $settings;
+	if(!$path) $path = ".data/themes/".$settings->theme."/icons/";
+	include($path.$svg);
+}
 //Zeigher Settings
 if($cmsfolder == false):
 	$fourzerofour = true;
@@ -130,9 +134,11 @@ if(!empty($settings->logo) && $settings->logo=='true'){
 }else{
 	echo "<a class='navbar-brand f$color' href='/'>".$hostname."</a>";
 }
-echo "</div>
-<ul class='nav navbar-nav navbar-left'>";
+echo "</div>";
 if($_SESSION['loggedin'] == "true"):
+	echo "<span id='burger-logo' class='usr2 f$color' onclick='menu();'>";
+        icon("menu.svg");
+        echo "</span>";
     if(isset($headerextension)):
 	   foreach($headerextension as $huex):
             include($huex);
@@ -144,13 +150,9 @@ if($_SESSION['loggedin'] == "true"):
 		$plus = "";
 	endif;
 	if($settings->points == 'true') echo "<li $lang->points: $userpoints$plus$userpremium</div>";
-	echo "</ul>";
-	echo "<div class='dropdown'>
-	<div id='menu2'>
-	<ul>
-	<li class='usr2 f$color'>
-	<b><a class='ico-set'>$username</a></b>
-	<ul>
+	echo "
+	<div id='menu3' style='display: none;'>";
+	echo "<ul>
 	<li class='submenu2 f$color'><b><a href=\"?page=usersettings\">".$lang->settings."</a></b></li>
 	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\">".$lang->owndata."</a></b></li>";
     if($isad('admside')) {
@@ -163,15 +165,6 @@ if($_SESSION['loggedin'] == "true"):
     echo "<li class='submenu2 f$color'><b><a href=".preg_replace('/ /', '+', $cmsfolder)."?logoff>$lang->logoff</a></b></li>
     </ul></li></ul></div>
     </div>";
-elseif(!isset($spsite)):
-    echo "
-    <div class='dropdown'>
-    <div id='menu2'>
-    <ul>
-    <li class='usr2 f$color'>
-    <b><a class='ico-set' href='$cmsfolder&login'>$lang->login</a></b>
-    </li></ul></div></div>
-    ";
 endif;
 echo "
 </nav>
@@ -211,7 +204,7 @@ if($mode != 'dmyma' && $cmsfolder != '/'){
             $tsiter = substr($tsiter, 1);
         }
         $tsiter = htmlentities($tsiter);
-        echo "<a href='$tgif'><b class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
+        echo "<a href='$tgif/'><b class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
     }
     if (isset($_GET['page'])) {
         echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";

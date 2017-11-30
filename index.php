@@ -75,6 +75,19 @@ if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['p
 	echo "<script>self.location.href='?page=login'</script>";
 endif;
 
+//Get IDs of all Folders
+$cmsfolder_array = explode("/", $cmsfolder);
+array_pop($cmsfolder_array);
+foreach($cmsfolder_array as $folder):
+        if($folder == ""):
+                $lastfolderid = 1;
+        else:
+                $dbFolder = $db->real_escape_string($folder);
+                $lastfolderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id
+                or die ("cmsfolderid ERROR");
+        endif;
+        $cmsFolderId[] = $lastfolderid;
+endforeach;
 
 //Static page
 if(isset($_GET['page'])):
@@ -96,9 +109,9 @@ if (isset($fourzerofour)){
 	endif;
 	echo "<a class='$color btn' href=\"?f=".$tgif."\">".$lang->back."</a></div>";
 
+}elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 
 //Folder listing
-}elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 	if(file_exists($folder ."/.intro.txt")){
 		echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
         	$docfile=fopen($folder . "/.intro.txt","r+");
@@ -112,31 +125,30 @@ if (isset($fourzerofour)){
         	$intro = 'true';
 	}
 	if ($mode != 'dmyma'){
-		$oph = opendir($folder);
-		while(($file = readdir($oph)) !== false){
-			if($file[0] == '.') continue;
-			if(!is_dir($folder . "/" . $file)) continue;
-            $datnf_array[] = $file;
+		$oph = opendir(".$cmsfolder");
+		while(($folder = readdir($oph)) !== false){
+			if($folder[0] == '.') continue;
+			if(!is_dir(".$cmsfolder$folder")) continue;
+            $folder_array[] = $folder;
         }
-        if(isset($datnf_array)){
-            natsort($datnf_array);
-            foreach($datnf_array as $file){
-			$dbfile = $db->real_escape_string($file);
-			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
-			$fileid = $row['id'];
-			if(!isset($fileid)){
-				$mysqltime = date("Y-m-d H:i:s");
-				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('1', '$folder', '$mysqltime', '$dbfile', 1)");
-				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
-				$fileid = $row['id'];
+
+        if(isset($folder_array)){
+            natsort($folder_array);
+            foreach($folder_array as $folder){
+			$dbFolder = $db->real_escape_string($folder);
+			$folderId = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id;
+			if(!isset($folderId)){
+				$db->query("INSERT INTO folder (name, parentfolderid) VALUES ('$dbFolder', '$lastfolderid')")
+				or die("SQL Folder Initialisation ERROR");
+				$folderId = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id;
 			}
-			if(is_dir($folder . "/" . $file)) $ord_array[] = $fileid;
+			$ord_array[] = $folderId;
             }
         }
 		if($isad('edit') && $edit == 1){
-			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$folder."');\">";
-			if(file_exists($folder ."/intro.txt")){
-				$docfile=fopen($folder . "/intro.txt","r+");
+			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$cmsfolder."');\">";
+			if(file_exists(".$cmsfolder"."intro.txt")){
+				$docfile=fopen(".$cmsfolder"."intro.txt","r+");
 				while(!feof($docfile)){
 					$zeile = htmlentities(fgets($docfile));
 					echo $zeile."\n";
@@ -145,29 +157,28 @@ if (isset($fourzerofour)){
 			}
 			echo "</textarea>
 <a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
-			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('".$folder."');\"></a><div/>";
+			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('".$cmsfolder."');\"></a><div/>";
 		}
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
 		$realfirst = "";
-		foreach($ord_array as $fileid){
-            $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
-            $file = $row['name'];
-            if ($mode == 'dmyma')$folder = $row['folder'];
+		foreach($ord_array as $folderId){
+            $row = $db->query("SELECT * FROM folder WHERE id = '$folderId'")->fetch_assoc();
+            $folder = $row['name'];
 
 
 			#Thumbnail Generate
 			$endthumb = "";
 			$zgif = urldecode($cgif);
-			if($mode != 'dmyma' && !file_exists($folder."/".$file."/.pic_.bintro.jpg.jpg") && file_exists($folder."/".$file."/.bintro.jpg")){
-				pic_thumb($folder."/".$file.'/.bintro.jpg', $folder."/".$file.'/.pic_.bintro.jpg.jpg', '238', '150');
-				$endthumb = $folder."/".$file;
-			}elseif($mode != 'dmyma' && file_exists($folder.$file."/.pic_.bintro.jpg.jpg")){
-				$endthumb = rawurlencode($folder.$file);
-			}elseif(file_exists(urldecode($cgif.'/.pic_.bintro.jpg.jpg'))){
+			if($mode != 'dmyma' && !file_exists(".$cmsfolder$folder/.pic_.bintro.jpg.jpg") && file_exists(".$cmsfolder$folder/.bintro.jpg")){
+				pic_thumb(".$cmsfolder$folder/.bintro.jpg", ".$cmsfolder$folder/.pic_.bintro.jpg.jpg", '238', '150');
+				$endthumb = ".$cmsfolder$folder";
+			}elseif($mode != 'dmyma' && file_exists(".$cmsfolder$folder/.pic_.bintro.jpg.jpg")){
+				$endthumb = rawurlencode(".$cmsfolder$folder");
+			}elseif(file_exists(urldecode("$cgif/.pic_.bintro.jpg.jpg"))){
 				$endthumb = $cgif;
 			}
-				$filename = $file;
-				$mpf = htmlentities($filename);
+				$foldername = $folder;
+				$mpf = htmlentities($foldername);
 			if (isset($alpha) && $alpha == "ja"){
 				$firstChr = $file[0];
 				if($firstChr != $realfirst){
@@ -176,30 +187,36 @@ if (isset($fourzerofour)){
 				}
 			}
 			if($ord_array[0] != "xpvkleer"){
-				echo "<a draggable='false' id='$file-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$file'>
-				<div class='bigfolder $color-2' id='".$file."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$file."','".$folder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$file."','".$folder."','')\">";
+				echo "<a draggable='false' id='$folder-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$folder/'>
+				<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$folder."','".$cmsfolder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$folder."','".$cmsfolder."','')\">";
                 if($isad('edit') && $edit == 1){
                     $fourpack = 1;
-					echo "</a><form style='display: inline-block;' onsubmit=\"SND('$file','$folder','$folder',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='$file'><input  style='display: none' type='submit'></form><a id='".$file."o' class='ico-edit' onclick=\"SN('$file','$folder','');\"></a><a id='".$file."n' class='ico-no' onclick=\"SND('".$file."','".$folder."','".$folder."','".$fourpack."');\"></a><a draggable='false' id='".$file."v' class='buo ord' value='$mpf'  href='$cmsfolder$file'>";
+					echo "</a>
+<form style='display: inline-block;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\">
+<input type='hidden' id='".$folder."r' value='$folder'>
+<input  style='display: none' type='submit'></form>
+<a id='".$folder."o' onclick=\"SN('$folder','$cmsfolder','');\">";
+					icon("tag.svg");
+					echo "</a><a id='".$file."n' onclick=\"SND('".$folder."','".$cmsfolder."','".$cmsfolder."','".$fourpack."');\">";
+                                        icon("trash.svg");
+                                        echo "</a><a draggable='false' id='".$folder."v' class='buo ord' value='$mpf'  href='$cmsfolder$folder/'>";
 				}
-				echo "<form style='display: inline;' onsubmit=\"SND('$file','$folder','$folder',''); event.preventDefault();\"><input type='hidden' id='".$file."r' value='$file'></form>";
-				echo "<font class='bigback' id='".$mpf."z'><font class=\"ico-dokfull\"></font> ".$mpf."</font>
-				</div></a>";
+				echo "<form style='display: inline;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\"><input type='hidden' id='".$folder."r' value='$folder'></form>";
+				echo "<font class='bigback' id='".$mpf."z'>";
+				icon("folder.svg");
+				echo " $mpf</font></div></a>";
 			}
-			$dbfile = $db->real_escape_string($file);
-			$dbquery = $db->query("SELECT * FROM files WHERE name = '$dbfile' AND folder = '$ufolder'");
-			$row = $dbquery->fetch_assoc();
-			$fileid = "";
-			$fileid = $row['id'];
-			$rawfolder = rawurlencode($folder);
-			$rawfile = rawurlencode($file);
 		}
 		echo "<div style=\"clear: left;\"></div>";
 	}
+//ToDO
+$folder = $cmsfolder;
+
+
 	//Rename
 	if(isset($_POST['desc'])){
 		if($isad('description')){
-			$file = fopen($folder."intro.txt","w");
+			$file = fopen($cmsfolder."intro.txt","w");
 			echo fwrite($file, $_POST['desc'],0);
 			fclose($file);
 		}
@@ -209,9 +226,9 @@ if (isset($fourzerofour)){
 	$thereAreFiles = false;
 	$file = "";
 	if($mode != 'dmyma'){
-		$opf = opendir($folder);
+		$opf = opendir(".$cmsfolder");
 		while(($file = readdir($opf)) !== false){
-			if(is_dir($folder."/".$file) | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
+			if(is_dir(".$cmsfolder$file") | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
 			$datn_array[] = $file;
 		}
         if(isset($datn_array)){
@@ -288,14 +305,16 @@ if (isset($fourzerofour)){
 			$pext = substr(strrchr($file, "."), 1);
 			if(!$pext) $pext = "standard";
                         if(!$filename) $filename = $file;
-			echo "<a class='buo ord' id='num$idnum' draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
+			echo "<a class='buo ord' id='num$idnum' draggable='false' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
                         $sign = $icon->$pext();
             echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('edit') && $edit == 1) {
 	       echo "draggable=true>
-		<a id='".$rawfile."o' class='ico-edit' onclick=\"SN('".$rawfile."','".$folder."');\"></a>
-                <a id='".$rawfile."n' class='ico-no' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\"></a>
-                ";
+		<a id='".$rawfile."o' onclick=\"SN('".$rawfile."','".$folder."');\">";
+		icon("tag.svg");
+		echo "</a><a id='".$rawfile."n' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">";
+		icon("trash.svg");
+		echo "</a>";
 	    }else{
                 echo ">";
             }
@@ -303,10 +322,11 @@ if (isset($fourzerofour)){
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
             <input type='hidden' id='".$rawfile."r' value='$htmlescfile' draggable='false'>
             </form>
-            <a draggable='false' onclick=\"streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\" >
+            <a draggable='false' target='popup' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\" >
             ";
-	    echo "<font id='".$rawfile."z' class='bigback bigfileback'><font class='".$sign."'></font>" . $filename . "</font>";
-			echo "</div></a>";
+	    echo "<font id='".$rawfile."z' class='bigback bigfileback'>";
+	    icon($icon->$pext);
+			echo "$filename</font></div></a>";
 			$four = $four + 1;
 			$idnum = $idnum + 1;
 	}
@@ -366,8 +386,34 @@ echo "
     cursor: pointer;
     opacity: 0;
     filter: alpha(opacity=0);
+}
 </style>
 ";
+//Tag
+echo "<h2>Tags:</h2>";
+$dbquery = $db->query("SELECT tagid FROM tag_folder WHERE folderid='$lastfolderid'");
+while($row = $dbquery->fetch_assoc()):
+	$row2 = $db->query("SELECT * FROM tag_name WHERE id=".$row['tagid']."")->fetch_assoc();
+        echo "<a class='btn $color' href='?page=tag&id=".$row2['id']."'>".$row2['name']."</a>";
+        if($isad("upload")):
+        	echo "<a class='btn $color' href='?page=tag&untag=".$row2['id']."'>";
+                icon("untag.svg");
+                echo "</a>";
+        endif;
+	$usedTags[] = $row2['id'];
+        echo "<br>";
+endwhile;
+$dbquery = $db->query("SELECT * FROM tag_name WHERE id NOT IN ('".implode($usedTags, "', '")."')");
+if($dbquery->num_rows > 0):
+	echo "<select class='btn $color' id='tagchoice'>";
+	while($row = $dbquery->fetch_assoc()):
+		echo "<option value='".$row['id']."'>".$row['name']."</option>";
+	endwhile;
+	echo "</select>
+	<a class='btn $color' onclick=\"location.href='?page=tag&tag='+document.getElementById('tagchoice').value\"";
+	icon("tag.svg");
+	echo "</a>";
+endif;
 }
     if ($mode != 'dmyma') {
 		closedir($oph);

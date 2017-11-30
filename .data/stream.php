@@ -10,6 +10,7 @@ header("X-Accel-Buffering: no");
 } elseif (preg_match("/\.mp3/", $cmsfolder)){header("Content-Type: audio/mp3");
 } elseif (preg_match("/\.jpg/", $cmsfolder)){header("Content-Type: image/jpeg");
 } elseif (preg_match("/\.epub/", $cmsfolder)){header("Content-Type: application/epub+zip");
+} elseif (preg_match("/\.svg/", $cmsfolder)){header("Content-Type: image/svg+xml");
 }
 header("X-Accel-Redirect:$cmsfolder");
 header("Cache-Control: max-age=2592000");

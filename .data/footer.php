@@ -55,6 +55,16 @@ if(real != 0){
 }
 }
 </script>
+<script>
+var elements = document.getElementsByTagName('a');
+for(var i = 0, len = elements.length; i < len; i++) {
+    elements[i].addEventListener("click", function () {
+	console.log("Click");
+        //event.preventDefault();
+	//console.log(elements[i]);
+    }, false);
+}
+</script>
 <!-- 
 Der Kopierschutz obliegt Geartwo 
 E-Mail: geartwo@chrometech.at 

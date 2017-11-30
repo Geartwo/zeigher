@@ -7,7 +7,8 @@ if(isset($_COOKIE['Zeigher-ID']) && isset($_COOKIE['Zeigher-Token'])):
 		$_SESSION['userid'] = $row['id'];
 		echo "<script>location.href='.'</script>";
 	else:
-		echo "Cooky Error";
+		echo "<script>document.cookie = 'Zeigher-Token=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';</script>";
+		echo "Cookie Error";
 	endif;
 elseif (isset($_POST['cred']) && isset($_POST['password'])):
 	$cred = $db->real_escape_string($_POST['cred']);

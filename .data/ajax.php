@@ -1,11 +1,11 @@
 <?php
-if(isset($_GET['x']) && isset($_GET['file'])):
-	if(preg_match("/\.\.\z/i", $_GET['x'])) exit;
-	if($_GET['x'] == 'main'):
-		include '.data/'.$_GET['file'];
-	elseif($_GET['x'] == 'plugin'):
-		include '.plugins/'.$_GET['file'];
-	elseif($_GET['x'] == 'setting'):
-                include '.settings/'.$_GET['file'];
+if(isset($_REQUEST['x']) && isset($_REQUEST['file'])):
+	if(preg_match("/\.\.\z/i", $_REQUEST['x'])) exit;
+	if($_REQUEST['x'] == 'main'):
+		include '.data/'.$_REQUEST['file'];
+	elseif($_REQUEST['x'] == 'plugin'):
+		include '.plugins/'.$_REQUEST['file'];
+	elseif($_REQUEST['x'] == 'setting'):
+                include '.settings/'.$_REQUEST['file'];
 	endif;
 endif;

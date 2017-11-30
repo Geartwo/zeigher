@@ -30,14 +30,12 @@ while ($dbid = $dbro->fetch_array ()) {
         $comid = $row['id'];
         $comcom = $row['comment'];
         $comusid = $row['userid'];
-	$comus = $db->query("SELECT user FROM user WHERE id = '$comusid'")->fetch_object()->user;
-        $comdate = $row['date'];
-        $comsub = $row['sub'];
+	$commentUser = $db->query("SELECT user FROM user WHERE id = '$comusid'")->fetch_object()->user;
     $usercom = $username;
     if (isset($comid)) {
         $comdate = date("d.m.Y - H:i", strToTime($comdate));
-        if ($comid == $comsub) {
-                        echo "<div name='coms' id='com".$comsub."' class=\"overcom ".$color."\">" . $folderid ." ". $comus . " <div class=\"datcom\">" . $comdate . " <a class='link' href=\"?f=".$folder."&comment=" . $comsub . "#comment\">".$lang->answer."</a>";
+        if($row['sub'] =! 0){
+                        echo "<div name='coms' id='com".$row['sub']."' class='overcom $color'>$commentUser<div class='datcom'>".$row['date']." <a class='link' href='?f=".$folder."&comment=" . $comsub . "#comment'>".$lang->answer."</a>";
 		if ($isad('comment') || $usercom == $comus ) echo " | <a class='link' onclick=\"com('file', '".$fileid."', 'cl', '".$comsub."');\">".$lang->del."</a>";
                         echo "</div><div class=\"undercom\">" . $comcom . "</div></div>";
                         $nowid = $comid;

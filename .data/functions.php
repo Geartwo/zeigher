@@ -153,8 +153,25 @@ class ExtendStdClass
 		return $this->$method;
 	elseif(isset($this->standard)):
 		return $this->standard;
+	else:
+		return "NoDefault";
 	endif;
     }
+}
+
+//Extend StdClass class
+class ExExtendStdClass
+{
+    public function __call($method, $args)
+    {
+                return "$methode NoDefault";
+    }
+}
+
+//Mysqli simple POST Escape
+function escape($req){
+	global $_REQUEST, $db;
+	return $db->real_escape_string($_REQUEST[$req]);
 }
 
 //Define all classes
@@ -233,12 +250,18 @@ $page->reset = function(){
 	global $db, $color, $lang, $settings, $_POST;
         include '.data/reset.php';
 };
+$page->tag = function(){
+        global $db, $isad, $color, $lang, $lastfolderid, $_POST;
+        include '.data/tag.php';
+};
 
 $fileextension = new ExtendClass();
 $fileextension->standard = function(){
 };
 $icon = new ExtendStdClass();
-$icon->standard = "ico-no";
+$icon->standard = "bug.svg";
+#$test = new ExExtendStdClass();
+#echo $test->standart;
 $mimetype = new ExtendStdClass();
 $mimetype->standard = "text/plain";
 $uploadcheck = new ExtendStdClass();

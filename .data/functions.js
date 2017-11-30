@@ -536,3 +536,12 @@ $(function() {
         effect : "fadeIn"
     });
 });
+
+//Menü
+function menu(){
+if(menu3.style.display == "block"){
+	menu3.style.display = "none";
+} else {
+	menu3.style.display = "block";
+}
+}

@@ -1,7 +1,8 @@
 <?php
-$lang = new stdClass();
+$lang = new ExtendStdClass();
 
 //For the Credits
+$lang->standard = 'Übersetzung wurde nicht gefunden';
 $lang->translator = 'Geartwo';
 
 $lang->translated = 'H5Extend wurde auf Deutsch &Uml;bersetzt von';
@@ -110,4 +111,6 @@ $lang->resetpwd = 'Passwort vergessen?';
 $lang->plugins = 'Erweiterungen';
 $lang->nopluginsfound = 'Keine Plugins gefunden';
 $lang->usernameoremail = 'Username oder E-Mail';
+$lang->tag = 'Tags';
+$lang->newtag = 'Neuer Tag';
 ?>
