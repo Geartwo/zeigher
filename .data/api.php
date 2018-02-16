@@ -1,15 +1,23 @@
 <?php
 if($_SESSION['loggedin'] == false):
-	echo "unauthenticated";
+	$return['error'] = true;
+	$return['descriptor'] = "unauthenticated";
+	return $return = json_encode($return);
 	exit;
 endif;
+header('Content-Type: application/json');
 $api->standard = function(){
-        return "undefined_command";
+        $return['error'] = true;
+	$return['descriptor'] = "Undefined Command";
+	return $return;
 };
 $api->ping = function(){
-	return "pong";
+	$return['error'] = false;
+	$return['descriptor'] = "Page Works";
+	return $return;
 };
 $api->ls = function($cmsfolder){
+	$return['error'] = false;
 	$dir = scandir(".$cmsfolder");
 	foreach($dir as $key):
 		if(preg_match("/\.php\z/i", $key) | preg_match("/\.md\z/i", $key) | preg_match("/\.html\z/i", $key) | $key[0] == ".") continue;
@@ -19,10 +27,8 @@ $api->ls = function($cmsfolder){
 			$return['file'][] = $key;
 		endif;
 	endforeach;
-	$return = json_encode($return);
-        return $return;
+	return $return;
 };
-$api->show = function($cmsfolder){
-	include '.data/streamer.php';
-};
+echo json_encode($api->$_REQUEST['api']($cmsfolder));
+exit;
 ?>

@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-<script src="?x=main&file=functions.js"></script>
+<script src="?x=main&file=functions.js&v1.0"></script>
 <?php
 if(isset($functionsjsextension)):
     foreach($functionsjsextension as $fjex):
@@ -42,7 +42,7 @@ if(window.location.hash) {
     } else {
         playtime = 0;
     }
-    document.getElementById(hash).click();
+    document.getElementById(hash+'-a').click();
 }
 window.onresize = function(event){
 var res = Math.floor(window.innerWidth / 250);

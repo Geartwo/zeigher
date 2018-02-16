@@ -22,9 +22,6 @@ elseif(isset($_GET['logoff'])):
 	exit;
 elseif(isset($_GET['api'])):
 	include ".data/api.php";
-	$apiget = $_GET['api'];
-	echo $api->$apiget($cmsfolder);
-	exit;
 endif;
 
 include '.data/header.php';
@@ -187,30 +184,30 @@ if (isset($fourzerofour)){
 				}
 			}
 			if($ord_array[0] != "xpvkleer"){
-				echo "<a draggable='false' id='$folder-v' class=\"buo ord\" value=\"".$mpf."\"  href='$cmsfolder$folder/'>
-				<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$folder."','".$cmsfolder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$folder."','".$cmsfolder."','')\">";
+				echo "<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$folder."','".$cmsfolder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$folder."','".$cmsfolder."','')\">";
                 if($isad('edit') && $edit == 1){
                     $fourpack = 1;
 					echo "</a>
 <form style='display: inline-block;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\">
 <input type='hidden' id='".$folder."r' value='$folder'>
 <input  style='display: none' type='submit'></form>
-<a id='".$folder."o' onclick=\"SN('$folder','$cmsfolder','');\">";
-					icon("tag.svg");
-					echo "</a><a id='".$file."n' onclick=\"SND('".$folder."','".$cmsfolder."','".$cmsfolder."','".$fourpack."');\">";
-                                        icon("trash.svg");
-                                        echo "</a><a draggable='false' id='".$folder."v' class='buo ord' value='$mpf'  href='$cmsfolder$folder/'>";
+<a id='".$folder."o' class='btn $color' onclick=\"SN('$folder','$cmsfolder','');\">";
+					echo icon("pencil.svg");
+					echo "</a><a id='".$file."n' class='btn $color' onclick=\"deletefolder('$folderId');\">";
+                                        echo icon("trash.svg");
+                                        echo "</a>";
 				}
 				echo "<form style='display: inline;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\"><input type='hidden' id='".$folder."r' value='$folder'></form>";
-				echo "<font class='bigback' id='".$mpf."z'>";
-				icon("folder.svg");
+				echo "<a draggable='false' id='".$folder."v' class='buo ord' value='$mpf'  href='$cmsfolder$folder/'>
+				<font class='bigback' id='".$mpf."z'>";
+				echo icon("folder.svg");
 				echo " $mpf</font></div></a>";
 			}
 		}
 		echo "<div style=\"clear: left;\"></div>";
 	}
 //ToDO
-$folder = $cmsfolder;
+$folder = ".$cmsfolder";
 
 
 	//Rename
@@ -263,7 +260,7 @@ $folder = $cmsfolder;
 		$nowfolderkey = array_search($nowfolder, $underfolder);
 		$lastfolder = $underfolder[$nowfolderkey-1];
 		$nextfolder = $underfolder[$nowfolderkey+1];
-		echo "<a id='num0'  onclick='self.location=\"$cmsfolder../$lastfolder#num1\"'></a>";
+		echo "<a id='num0-a'  onclick='self.location=\"$cmsfolder../$lastfolder#num1\"'></a>";
 		foreach($dat_array as $fileid){
 			$row = $db->query("SELECT name, orfile, folder FROM files WHERE id = '$fileid'")->fetch_assoc();
 			$file = $row['name'];
@@ -305,33 +302,30 @@ $folder = $cmsfolder;
 			$pext = substr(strrchr($file, "."), 1);
 			if(!$pext) $pext = "standard";
                         if(!$filename) $filename = $file;
-			echo "<a class='buo ord' id='num$idnum' draggable='false' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">";
-                        $sign = $icon->$pext();
-            echo "<div class='bigfolder bigfile $color-2' id='".$rawfile."k' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
+            echo "<div class='bigfolder bigfile $color-2' id='num$idnum' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
 	    if ($isad('edit') && $edit == 1) {
 	       echo "draggable=true>
-		<a id='".$rawfile."o' onclick=\"SN('".$rawfile."','".$folder."');\">";
-		icon("tag.svg");
-		echo "</a><a id='".$rawfile."n' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">";
-		icon("trash.svg");
+		<a id='".$rawfile."o' class='btn $color' onclick=\"SN('".$rawfile."','".$folder."');\">";
+		echo icon("tag.svg");
+		echo "</a><a id='".$rawfile."n' class='btn $color' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">";
+		echo icon("trash.svg");
 		echo "</a>";
 	    }else{
                 echo ">";
             }
-            echo "</a>
+            echo "<a class='buo ord' id='num$idnum-a' draggable='false' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
             <input type='hidden' id='".$rawfile."r' value='$htmlescfile' draggable='false'>
-            </form>
-            <a draggable='false' target='popup' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\" >
-            ";
+            </form>";
 	    echo "<font id='".$rawfile."z' class='bigback bigfileback'>";
-	    icon($icon->$pext);
-			echo "$filename</font></div></a>";
+	    echo icon($icon->$pext);
+			echo "$filename</font></a></div>";
 			$four = $four + 1;
 			$idnum = $idnum + 1;
 	}
     }
-echo "<script>window.lastnum = $idnum;</script><a id='num$idnum'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
+echo "<div id='num$idnum' style='clear: both;'></div>
+<script>window.lastnum = $idnum;</script><a id='num$idnum-a'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
 echo "
 <script>
 function controlblock(){
@@ -389,32 +383,34 @@ echo "
 }
 </style>
 ";
+}
 //Tag
-echo "<h2>Tags:</h2>";
 $dbquery = $db->query("SELECT tagid FROM tag_folder WHERE folderid='$lastfolderid'");
+if($dbquery->num_rows) echo "<h2>Tags:</h2>";
 while($row = $dbquery->fetch_assoc()):
 	$row2 = $db->query("SELECT * FROM tag_name WHERE id=".$row['tagid']."")->fetch_assoc();
         echo "<a class='btn $color' href='?page=tag&id=".$row2['id']."'>".$row2['name']."</a>";
-        if($isad("upload")):
+        if($isad("edit")):
         	echo "<a class='btn $color' href='?page=tag&untag=".$row2['id']."'>";
-                icon("untag.svg");
+                echo icon("untag.svg");
                 echo "</a>";
         endif;
 	$usedTags[] = $row2['id'];
         echo "<br>";
 endwhile;
-$dbquery = $db->query("SELECT * FROM tag_name WHERE id NOT IN ('".implode($usedTags, "', '")."')");
-if($dbquery->num_rows > 0):
-	echo "<select class='btn $color' id='tagchoice'>";
-	while($row = $dbquery->fetch_assoc()):
-		echo "<option value='".$row['id']."'>".$row['name']."</option>";
-	endwhile;
-	echo "</select>
-	<a class='btn $color' onclick=\"location.href='?page=tag&tag='+document.getElementById('tagchoice').value\"";
-	icon("tag.svg");
-	echo "</a>";
+if($isad("edit")):
+	$dbquery = $db->query("SELECT * FROM tag_name WHERE id NOT IN ('".implode($usedTags, "', '")."')");
+	if($dbquery->num_rows > 0):
+		echo "<select class='btn $color' id='tagchoice'>";
+		while($row = $dbquery->fetch_assoc()):
+			echo "<option value='".$row['id']."'>".$row['name']."</option>";
+		endwhile;
+		echo "</select>
+		<a class='btn $color' onclick=\"location.href='?page=tag&tag='+document.getElementById('tagchoice').value\"";
+		echo icon("tag.svg");
+		echo "</a>";
+	endif;
 endif;
-}
     if ($mode != 'dmyma') {
 		closedir($oph);
 	}

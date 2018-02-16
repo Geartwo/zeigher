@@ -15,7 +15,7 @@ if(isset($_REQUEST['id'])):
 		echo "<a draggable='false' class='buo ord' value='$name'  href='$folder/'>
                 <div class='bigfolder $color-2' id='".$name."k' draggable='true' style=\"background: url('?watchfile=$endthumb') no-repeat; background-size: 100% 100%;\">";
 		echo "<font class='bigback'>";
-		icon("folder.svg");
+		echo icon("folder.svg");
                 echo " $name</font></div></a>";
 		unset($foldersearch);
 	endwhile;
@@ -40,7 +40,7 @@ else:
 		echo "<a class='btn $color' href='?page=tag&id=".$row['id']."'>".$row['name']."</a>";
 		if($isad("edit")):
 			echo "<a class='btn $color' href='?page=tag&delete=".$row['id']."'>";
-			icon("trash.svg");
+			echo icon("trash.svg");
 			echo "</a>";
 		endif;
 		echo "<br>";

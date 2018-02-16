@@ -78,5 +78,13 @@ if(isset($functionsextension)):
         include($fuex);
     endforeach;
 endif;
+if(!$_SESSION['loggedin'] && isset($_COOKIE['Zeigher-ID']) && isset($_COOKIE['Zeigher-Token'])):
+        $id = $db->real_escape_string($_COOKIE['Zeigher-ID']);
+        $row = $db->query("SELECT id, user, pass, free FROM user WHERE id = '$id'")->fetch_assoc();
+        if($row['free'] == true && hash_equals($_COOKIE['Zeigher-Token'], crypt($row['user'].$row['mail'], $row['pass']))):
+                $_SESSION['loggedin'] = true;
+                $_SESSION['userid'] = $row['id'];
+        endif;
+endif;
 if (!isset($color)) $color = "green";
 ?>

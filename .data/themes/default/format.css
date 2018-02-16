@@ -40,7 +40,7 @@ cursor: pointer;
 .ordif { float: left; }
 #livesearch > hl > li:hover {-webkit-filter: invert(100%); filter: invert(100%);}
 .bigfolder { cursor: pointer; word-wrap: break-word; overflow: hidden; float: left; color: rgba(0, 0, 0, 1); height: 150px; width: 48.5%; max-width: 245px; margin: 2.5px; display: inline-block; font-family: 'Open Sans Condensed',"Trebuchet MS","Helvetica CY",sans-serif; font-size: 22px; line-height: 30px; font-weight: bold; }
-.bigfolder:hover > .bigback { height: 100%; color: black; background: rgba(255, 255, 255, 0.75);}
+.bigfolder:hover > a > .bigback { height: 100%; color: black; background: rgba(255, 255, 255, 0.75);}
 .bigback { color: rgba(255, 255, 255, 1); padding: 3px; width: 100%; background: rgba(0, 0, 0, 0.75); display: inline-block; vertical-align: top;}
 .main { width:100%; background-color: rgba(255, 255, 255, 0.5); float:left;}
 .newson { width: 79%; max-width: 795px; margin-left: 1%; }
@@ -116,7 +116,7 @@ h1, h2, h3, h4 h5, ul { margin: 0px; }
 .usr2:hover ul { max-height: 100%; }
 
 #burger-logo svg { float: right; width: 40px;}
-#menu3 { background: #212121; padding: 10px; position: absolute; right: 0; top: 40px; text-align: center; }
+#menu3 { background: #212121; border-radius: 5px; padding: 6px; position: relative; margin: 0px -40px -2000px -30px; top: 35px; text-align: center; float: right; z-index: 1000;}
 #menu3 ul { list-style-type:none; list-style-image:none; margin:0px; padding:0px; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 
 
@@ -167,6 +167,7 @@ input[type="button"].heart:hover, input[type="submit"].heart:hover{ background: 
 .fheart a { color: #7241B6; }
 
 
+.votebox {float: right;}
 .datal { max-width: 600px; clear: both; }
 .wholy {  margin: 0 auto 0; max-width: 1000px;}
 .news {  top: 43px; float:left; max-width: 200px; width: 20%; overflow: hidden; background: rgba(255, 255, 255, 0.5);}
@@ -200,7 +201,7 @@ p { margin: 0; }
 .singles { display: inline-block; width: 50%; max-width: 250px; height: 150px; overflow: hidden; }
 
 #zeighervideo{width: 100%; max-height: 100%; background: black; position: relative; vertical-align: middle;}
-.video-js .vjs-tech{position: unset !important; height: auto !important;}
+.video-js .vjs-tech{position: unset !important; height: 100% !important; min-height: 150px;}
 .zeighervideo-dimensions{height: auto;}
 
 #streamerfile{vertical-align: middle; max-height: 100%; width: 100%;}

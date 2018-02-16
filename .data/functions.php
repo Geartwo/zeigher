@@ -174,6 +174,29 @@ function escape($req){
 	return $db->real_escape_string($_REQUEST[$req]);
 }
 
+//Icon Function
+function icon($svg, $path = false){
+        global $settings;
+        if(!$path) $path = ".data/themes/".$settings->theme."/icons/";
+        return file_get_contents($path.$svg);
+}
+
+//Get Folderpath by ID
+function folderpath($id){
+	global $db;
+	$row = $db->query("SELECT name, id, parentfolderid FROM folder WHERE id='$id'")->fetch_assoc()
+	or die("Unknown folderId");
+        $name = $row['name'];
+        $foldersearch[] = $row['name'];
+	$i = 0;
+        while($row['parentfolderid'] != 1 && $i <= 50):
+        	$row = $db->query("SELECT * FROM folder WHERE id='".$row['parentfolderid']."'")->fetch_assoc();
+                $foldersearch[] = $row['name'];
+		$i++;
+       endwhile;
+       $foldersearch[] = "";
+       return implode(array_reverse($foldersearch), "/");
+}
 //Define all classes
 $hook = new ExtendClass();
 $hook->get_folder = function($a){
@@ -252,7 +275,7 @@ $page->reset = function(){
 };
 $page->tag = function(){
         global $db, $isad, $color, $lang, $lastfolderid, $_POST;
-        include '.data/tag.php';
+	if($_SESSION['loggedin']) include '.data/tag.php';
 };
 
 $fileextension = new ExtendClass();

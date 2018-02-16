@@ -79,11 +79,11 @@ function streamerCheckKey(e) {
     var num = window.winfild;
     if (e.keyCode == '37'|e.keyCode == '412') {
         num = num-1;
-        document.getElementById('num'+num).click();
+        document.getElementById('num'+num+'-a').click();
     }
     else if (e.keyCode == '39'|e.keyCode == '417') {
         num = num+1;
-        document.getElementById('num'+num).click();
+        document.getElementById('num'+num+'-a').click();
     }
 }
 streamerfile.ontouchstart = function (e) {
@@ -96,12 +96,12 @@ if(window.touch == false){
 }
 if("-80" >= window.touchX-e.touches[0].clientX){
 	num = window.winfild-1;
-	document.getElementById('num'+num).click()
+	document.getElementById('num'+num+'-a').click()
 	streamerfile.scrollIntoView(true);
 	window.touch = false;
 }else if("80" <= window.touchX-e.touches[0].clientX){
         num = window.winfild+1;
-        document.getElementById('num'+num).click();
+        document.getElementById('num'+num+'-a').click();
 	streamerfile.scrollIntoView(true);
 	window.touch = false;
 }
@@ -364,15 +364,23 @@ function SN (kk, cc, id) {
     stk.draggable=true;
         str.type = "hidden";
     stb.style.display = "inline-block";
-        ok.className = "ico-edit";
-        no.className = "ico-no";
     } else {
     stk.draggable=false;
         str.type = "";
     stb.style.display = "none";
-        ok.className = "ico-no";
-        no.className = "ico-ok";
     }
+}
+function deletefolder(id){
+	if (confirm("Willst du diesen Ordner wirklich Löschen?")) {
+		xmlhttp=new XMLHttpRequest();
+		xmlhttp.onreadystatechange=function() {
+			if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+				//location.reload();
+			}
+		}
+	}
+	xmlhttp.open("GET","?x=main&file=fileworker.php&deldir="+ id,true);
+	xmlhttp.send();
 }
 function SND (kk, cc, newcc, id, nodir, dr) {
     var sty = document.getElementById("num"+ id)
@@ -539,9 +547,9 @@ $(function() {
 
 //Menü
 function menu(){
-if(menu3.style.display == "block"){
+if(menu3.style.display == "inline-block"){
 	menu3.style.display = "none";
 } else {
-	menu3.style.display = "block";
+	menu3.style.display = "inline-block";
 }
 }

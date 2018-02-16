@@ -3,7 +3,7 @@
 <head>
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<meta charset="utf-8" />
-	<link rel='stylesheet' type='text/css' href='?watchfile=/.data/themes/<?php echo $settings->theme ?>/format.css'>
+	<link rel='stylesheet' type='text/css' href='?watchfile=/.data/themes/<?php echo $settings->theme ?>/format.css&v1.0.1'>
 </head>
 <body>
 <script>
@@ -27,11 +27,6 @@ set_time_limit(0);
 $hostname = $_SERVER['HTTP_HOST'];
 $path = dirname($_SERVER['PHP_SELF']);
 if (isset($https)) $https = "https"; else $https = "http";
-function icon($svg, $path = false){
-	global $settings;
-	if(!$path) $path = ".data/themes/".$settings->theme."/icons/";
-	include($path.$svg);
-}
 //Zeigher Settings
 if($cmsfolder == false):
 	$fourzerofour = true;
@@ -137,13 +132,8 @@ if(!empty($settings->logo) && $settings->logo=='true'){
 echo "</div>";
 if($_SESSION['loggedin'] == "true"):
 	echo "<span id='burger-logo' class='usr2 f$color' onclick='menu();'>";
-        icon("menu.svg");
+        echo icon("menu.svg");
         echo "</span>";
-    if(isset($headerextension)):
-	   foreach($headerextension as $huex):
-            include($huex);
-	   endforeach;
-    endif;
 	if(isset($userpremium)):
 		$plus = "+";
 	else:
@@ -153,18 +143,26 @@ if($_SESSION['loggedin'] == "true"):
 	echo "
 	<div id='menu3' style='display: none;'>";
 	echo "<ul>
-	<li class='submenu2 f$color'><b><a href=\"?page=usersettings\">".$lang->settings."</a></b></li>
-	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\">".$lang->owndata."</a></b></li>";
+	<li class='submenu2 f$color'><b><a href=\"?page=tag\"  title='$lang->tag'>".icon('tag.svg')."</a></b></li>
+	<li class='submenu2 f$color'><b><a href=\"?page=usersettings\"  title='$lang->settings'>".icon('tools.svg')."</a></b></li>
+	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\" title='$lang->owndata'>".icon('cloud.svg')."</a></b></li>";
     if($isad('admside')) {
-        echo "<li class=\"submenu2\"><b><a href='?page=admin'>".$lang->administration."</a></b></li>";
+        echo "<li class=\"submenu2 f$color\"><b><a href='?page=admin' title='$lang->administration'>".icon('shield.svg')."</a></b></li>";
     }
-    if ($edit == 1) { $editn = '<b style="color: green;">'.$lang->on.'</b>'; $editu = 0; } else { $editn = '<b style="color: red;">'.$lang->off.'</b>'; $editu = 1; }
+    if ($edit == 0) { $editn = "<b class='f$color'>".icon('eye.svg')."</b>"; $editu = 1; } else { $editn = "<b style='color: red;'>".icon('eye-with-line.svg')."</b>"; $editu = 0; }
     if($isad('edit')) {
-        echo "<li class='submenu2'><b><a href='$cmsfolder&edit=$editu'>$lang->edit $editn</a></b></li>";
+        echo "<li class='submenu2'><b><a href='$cmsfolder&edit=$editu' title='$lang->edit'> $editn</a></b></li>";
     }
-    echo "<li class='submenu2 f$color'><b><a href=".preg_replace('/ /', '+', $cmsfolder)."?logoff>$lang->logoff</a></b></li>
-    </ul></li></ul></div>
-    </div>";
+    echo "<li class='submenu2 f$color'><a href='".preg_replace('/ /', '+', $cmsfolder)."?logoff'  title='".$lang->logoff."'>".icon('log-out.svg')."</a></li>
+    </ul></li></ul></div>";
+    if(isset($headerextension)):
+           foreach($headerextension as $huex):
+            include($huex);
+           endforeach;
+    endif;
+    echo "</div>";
+else:
+	echo "<span id='burger-logo' class='usr2 f$color' onclick='location.href=\".\";'>".icon("lock.svg")."</span>";
 endif;
 echo "
 </nav>
@@ -204,28 +202,24 @@ if($mode != 'dmyma' && $cmsfolder != '/'){
             $tsiter = substr($tsiter, 1);
         }
         $tsiter = htmlentities($tsiter);
-        echo "<a href='$tgif/'><b class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</b></a>";
+        echo "<a href='$tgif/'><span class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</span></a>";
     }
     if (isset($_GET['page'])) {
         echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
     }
     $mlastf = htmlentities($lastf);
-    //echo "<a href='$cmsfolder'><b class='lastsitese btn $color'>$ulastf</b></a>
-    //<title>".$mlastf."</title>";
 } elseif (isset($spsite)) {
     if (!isset($spsiten)) $spsiten = $spsite;
     $hpsite = htmlentities($spsiten);
     echo "<a href='/'><b class='sites btn $color'>".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese btn ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
 } elseif($mode != 'dmyma') {
-    echo "
-    <a href='/'><b class='btn $color'>".$lang->home."</b></a>
+    echo "<a href='/'><b class='btn $color'>".$lang->home."</b></a>
     <title>".$lang->home."</title>";
     if (isset($_GET['page'])) {
         echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
     }
 }
 
-echo "
-</div>
+echo "</div>
 <div id=\"list\">";
 ?>
