@@ -1,2 +1,3 @@
-/.settings/config.php
-/.plugins
+data/*
+config.php
+plugins

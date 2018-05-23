@@ -1,17 +1,17 @@
 <?php
-include '.data/all.php';
+require_once 'all.php';
 $cmsfolder = workpath($_GET['f']);
 if(isset($_GET['x'])):
-	include ".data/ajax.php";
+	include "ajax.php";
 	exit;
 elseif(!isset($installed) || $installed == false):
         echo "<script>self.location.href='?x=main&file=install.php'</script>";
         exit;
 elseif(isset($_GET['watchfile']) | is_file(".$cmsfolder")):
-	include ".data/stream.php";
+	include "stream.php";
 	exit;
 elseif(isset($_GET['upload'])):
-        include ".data/upload.php";
+        include "upload.php";
         exit;
 elseif(isset($_GET['logoff'])):
 	$_SESSION['loggedin'] = false;
@@ -21,22 +21,21 @@ elseif(isset($_GET['logoff'])):
         echo "<script>self.location.href='.'</script>";
 	exit;
 elseif(isset($_GET['api'])):
-	include ".data/api.php";
+	include "api.php";
 endif;
 
-include '.data/header.php';
-
+require_once 'header.php';
 
 //Install redirect
 if (!isset($installed) || $installed == false):
-        include ".data/install.php";
+        require_once "install.php";
         exit;
 endif;
 
 
 //Background picture thumbnail greator
-if(!file_exists(".$cmsfolder.pic_.bintro.jpg.jpg") && file_exists(".$cmsfolder.bintro.jpg")):
-	pic_thumb(".$cmsfolder.bintro.jpg", ".$cmsfolder.pic_.bintro.jpg.jpg", '238', '150');
+if(!file_exists("..$cmsfolder.pic_.bintro.jpg.jpg") && file_exists("..$cmsfolder.bintro.jpg")):
+	pic_thumb("..$cmsfolder.bintro.jpg", "..$cmsfolder.pic_.bintro.jpg.jpg", '238', '150');
 endif;
 $ufolder = implode('/', explode('%2F', rawurlencode($folder)));
 if(file_exists("$folder/.intro.jpg")):
@@ -109,7 +108,8 @@ if (isset($fourzerofour)){
 }elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
 
 //Folder listing
-	if(file_exists($folder ."/.intro.txt")){
+	$hook->include('intro.php');
+	if(file_exists($folder ."/.intro.txt")):
 		echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
         	$docfile=fopen($folder . "/.intro.txt","r+");
         	while(!feof($docfile)) {
@@ -120,12 +120,12 @@ if (isset($fourzerofour)){
         	fclose($docfile);
         	echo "</div>";
         	$intro = 'true';
-	}
+	endif;
 	if ($mode != 'dmyma'){
-		$oph = opendir(".$cmsfolder");
+		$oph = opendir("..$cmsfolder");
 		while(($folder = readdir($oph)) !== false){
 			if($folder[0] == '.') continue;
-			if(!is_dir(".$cmsfolder$folder")) continue;
+			if(!is_dir("..$cmsfolder$folder")) continue;
             $folder_array[] = $folder;
         }
 
@@ -143,9 +143,9 @@ if (isset($fourzerofour)){
             }
         }
 		if($isad('edit') && $edit == 1){
-			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('".$cmsfolder."');\">";
-			if(file_exists(".$cmsfolder"."intro.txt")){
-				$docfile=fopen(".$cmsfolder"."intro.txt","r+");
+			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('$cmsfolder');\">";
+			if(file_exists("..$cmsfolder"."intro.txt")){
+				$docfile=fopen("..$cmsfolder"."intro.txt","r+");
 				while(!feof($docfile)){
 					$zeile = htmlentities(fgets($docfile));
 					echo $zeile."\n";
@@ -154,7 +154,7 @@ if (isset($fourzerofour)){
 			}
 			echo "</textarea>
 <a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
-			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('".$cmsfolder."');\"></a><div/>";
+			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('$cmsfolder');\"></a><div/>";
 		}
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
 		$realfirst = "";
@@ -166,11 +166,11 @@ if (isset($fourzerofour)){
 			#Thumbnail Generate
 			$endthumb = "";
 			$zgif = urldecode($cgif);
-			if($mode != 'dmyma' && !file_exists(".$cmsfolder$folder/.pic_.bintro.jpg.jpg") && file_exists(".$cmsfolder$folder/.bintro.jpg")){
-				pic_thumb(".$cmsfolder$folder/.bintro.jpg", ".$cmsfolder$folder/.pic_.bintro.jpg.jpg", '238', '150');
-				$endthumb = ".$cmsfolder$folder";
-			}elseif($mode != 'dmyma' && file_exists(".$cmsfolder$folder/.pic_.bintro.jpg.jpg")){
-				$endthumb = rawurlencode(".$cmsfolder$folder");
+			if($mode != 'dmyma' && !file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg") && file_exists("..$cmsfolder$folder/.bintro.jpg")){
+				pic_thumb("..$cmsfolder$folder/.bintro.jpg", "..$cmsfolder$folder/.pic_.bintro.jpg.jpg", '238', '150');
+				$endthumb = "..$cmsfolder$folder";
+			}elseif($mode != 'dmyma' && file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg")){
+				$endthumb = rawurlencode("..$cmsfolder$folder");
 			}elseif(file_exists(urldecode("$cgif/.pic_.bintro.jpg.jpg"))){
 				$endthumb = $cgif;
 			}
@@ -184,7 +184,7 @@ if (isset($fourzerofour)){
 				}
 			}
 			if($ord_array[0] != "xpvkleer"){
-				echo "<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '".$folder."','".$cmsfolder."','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '".$folder."','".$cmsfolder."','')\">";
+				echo "<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '$folder','$cmsfolder','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '$folder','$cmsfolder','')\">";
                 if($isad('edit') && $edit == 1){
                     $fourpack = 1;
 					echo "</a>
@@ -207,7 +207,7 @@ if (isset($fourzerofour)){
 		echo "<div style=\"clear: left;\"></div>";
 	}
 //ToDO
-$folder = ".$cmsfolder";
+$folder = "..$cmsfolder";
 
 
 	//Rename
@@ -222,12 +222,11 @@ $folder = ".$cmsfolder";
 	//File listing
 	$thereAreFiles = false;
 	$file = "";
-	if($mode != 'dmyma'){
-		$opf = opendir(".$cmsfolder");
-		while(($file = readdir($opf)) !== false){
-			if(is_dir(".$cmsfolder$file") | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
-			$datn_array[] = $file;
-		}
+	$opf = opendir("..$cmsfolder");
+	while(($file = readdir($opf)) !== false){
+		if(is_dir("..$cmsfolder$file") | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
+		$datn_array[] = $file;
+	}
         if(isset($datn_array)){
             natsort($datn_array);
 		foreach($datn_array as $file){
@@ -243,7 +242,6 @@ $folder = ".$cmsfolder";
 			$dat_array[] = $fileid;
 		}
         }
-	}
 	if(empty($dat_array)){
 		if(!isset($intro) && empty($ord_array)){
 			echo"<b>".$lang->empty."</b>";
@@ -352,14 +350,14 @@ endif;
 echo"</script>
 <div style='display: table;'>";
 if($isad('edit') && $edit==1 && $mode=='fmyma'){
-    echo "<span style='display: table-row;' class='$color btn' onclick=\"NF('.$cmsfolder','".$lang->newfolder."')\">".$lang->newfolder."</span>";
+    echo "<span style='display: table-row;' class='$color btn' onclick=\"NF('..$cmsfolder','".$lang->newfolder."')\">".$lang->newfolder."</span>";
 echo "
 <div style='display: table-row;' class='fileUpload btn btn-primary'>
 <input class='".$color." btn' class='fileUpload' id='filebiup' multiple type='file' onchange=\"CheckFile(this.files[0].name);\">
 <div id='upload-addon'>
 </div>
 </div>
-<input style='display: table-row;' id='fileupfolder' type='hidden' value='.$cmsfolder'>
+<input style='display: table-row;' id='fileupfolder' type='hidden' value='..$cmsfolder'>
 <input style='display: table-row;' id='fileupmode' type='hidden' value='fb'>
 <input style='display: table-row;' class='$color' type=submit onclick=\"UploadFile('file')\">
 <progress style='display: table-row;' id='fileupg' value='0' max='100' style='margin-top:10px'></progress>
@@ -415,5 +413,5 @@ endif;
 		closedir($oph);
 	}
 }
-include '.data/footer.php';
+include 'footer.php';
 ?>
