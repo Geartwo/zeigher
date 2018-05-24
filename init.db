@@ -1,0 +1,56 @@
+-- Settings
+CREATE TABLE `settings` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `value` varchar(50) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `pluginid` int(11) NOT NULL,
+  `userid` varchar(25) NOT NULL
+);
+ALTER TABLE `settings`
+  ADD PRIMARY KEY (`id`);
+
+-- Users
+CREATE TABLE `user` (
+  `id` int(11) NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  `email` varchar(50) NOT NULL,
+  `free` int(1) DEFAULT '0',
+  `admin` int(1) NOT NULL
+);
+ALTER TABLE `user`
+  ADD PRIMARY KEY (`id`);
+
+-- Plugins
+CREATE TABLE `plugins` (
+  `id` int(11) NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `active` int(1) DEFAULT NULL
+);
+ALTER TABLE `plugins`
+  ADD PRIMARY KEY (`id`);
+
+-- File
+CREATE TABLE `file` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `folderid` int(11) NOT NULL
+);
+ALTER TABLE `file`
+  ADD PRIMARY KEY (`id`);
+
+-- Folder
+CREATE TABLE `folder` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `parentfolderid` int(11) NOT NULL
+);
+ALTER TABLE `folder`
+  ADD PRIMARY KEY (`id`);
+
+INSERT INTO settings (name, value) VALUES ('theme', 'default');
+INSERT INTO settings (name, value) VALUES ('use', 1);
+INSERT INTO settings (name, value) VALUES ('systemmail', 'zeigher@localhost');
+INSERT INTO settings (name, value) VALUES ('color', 'green');
+INSERT INTO settings (name, value) VALUES ('stitel', 'Zeigher');
+INSERT INTO settings (name, value) VALUES ('logo', '');

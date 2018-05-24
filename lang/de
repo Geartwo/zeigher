@@ -113,4 +113,7 @@ $lang->nopluginsfound = 'Keine Plugins gefunden';
 $lang->usernameoremail = 'Username oder E-Mail';
 $lang->tag = 'Tags';
 $lang->newtag = 'Neuer Tag';
+$lang->check = 'Testen';
+$lang->continue = 'Fortfahren';
+$lang->notchanged = 'Ungewechselt';
 ?>

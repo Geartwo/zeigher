@@ -1,12 +1,16 @@
 <?php
+if(file_exists("config.php")) include "config.php";
+//Install redirect
+if(!isset($installed) || $installed == false):
+        include "install.php";
+        exit;
+endif;
+
 require_once 'all.php';
 $cmsfolder = workpath($_GET['f']);
 if(isset($_GET['x'])):
 	include "ajax.php";
 	exit;
-elseif(!isset($installed) || $installed == false):
-        echo "<script>self.location.href='?x=main&file=install.php'</script>";
-        exit;
 elseif(isset($_GET['watchfile']) | is_file(".$cmsfolder")):
 	include "stream.php";
 	exit;
@@ -25,12 +29,6 @@ elseif(isset($_GET['api'])):
 endif;
 
 require_once 'header.php';
-
-//Install redirect
-if (!isset($installed) || $installed == false):
-        require_once "install.php";
-        exit;
-endif;
 
 
 //Background picture thumbnail greator
