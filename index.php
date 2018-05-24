@@ -122,8 +122,7 @@ if (isset($fourzerofour)){
 	if ($mode != 'dmyma'){
 		$oph = opendir("..$cmsfolder");
 		while(($folder = readdir($oph)) !== false){
-			if($folder[0] == '.') continue;
-			if(!is_dir("..$cmsfolder$folder")) continue;
+			if($folder[0] == '.' | $folder == 'zeigher' | !is_dir("..$cmsfolder$folder")) continue;
             $folder_array[] = $folder;
         }
 
