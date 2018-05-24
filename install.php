@@ -30,14 +30,18 @@ endif;
 if(isset($_SESSION['loggedin'])):
 	session_destroy();
 endif;
+
+// Set Steps
 unset($_GET['f']);
 if(empty($_GET)) echo "<script>self.location.href='?step=1'</script>";
-$step = $_GET['step'];
+if(isset($_GET['step'])) $step = $_GET['step'];
 if(file_exists("config.php")):
 	include "config.php";
+	include "sql.php";
 else:
 	$step = 1;
 endif;
+if($step > 2 && !$db->query("SELECT 1 FROM settings LIMIT 1;")) echo "<script>self.location.href='?step=2'</script>";
 
 // Write config file
 if(isset($_GET['dbhost']) && isset($_GET['dbuser']) && isset($_GET['dbwd'])):
@@ -63,11 +67,10 @@ endif;
 
 // Add first user
 if(isset($_GET['username']) && isset($_GET['password'])):
-        include "sql.php";
-        if(!$db->query("SELECT 1 FROM user LIMIT 1;")):
-		$username = $db->real_escape(strtolower($_GET['username']));
+        if(!$db->query("SELECT 1 FROM user LIMIT 1;")->num_rows):
+		$username = $db->real_escape_string(strtolower($_GET['username']));
 		$password = password_hash($_GET['password'], PASSWORD_DEFAULT);
-		$db->query("INSERT INTO user (user, pass, isad, free) VALUES ('$username', '$password', 1, 1)");
+		$db->query("INSERT INTO user (username, password, admin, free) VALUES ('$username', '$password', 1, 1)");
 		if($db->error):
 			echo "<b style='color: red'>Fatal Error: User creation failed - $db->error</b>";
 		else:
@@ -124,11 +127,17 @@ case "1": //Step 1 - Set Database
 
 
 case "2": //Step 2 - Init Database
-	include "sql.php";
 	if(!file_exists("data/trash")) mkdir("data/trash", 0700);
 	if(!$db->query("SELECT 1 FROM settings LIMIT 1;")):
-		$db->query(file_get_contents('init.db'));
-		echo "<b>Info: DB Initialized</b><br>";
+		$db->multi_query(file_get_contents('init.db'));
+		$error = $db->error; //TODO - Clean error
+		if(!$db->query("SELECT 1 FROM settings LIMIT 1;")):
+			echo "<b style='color: red'>Fatal Error: Initialisation failed - $error</b><br>";
+			echo "<input type='submit' class='$color' value='$lang->retry' onclick=\"self.location.href='?step=2';\"></input></script>";
+			exit;
+		else:
+			echo "<b>Info: DB Initialized</b><br>";
+		endif;
 	else:
 		echo "<b>Info: DB already Initialized, nothing to do.<br>";
 	endif;
@@ -137,11 +146,10 @@ case "2": //Step 2 - Init Database
 
 
 case "3": //Step 3 - First User
-	include "sql.php";
-        if(!$db->query("SELECT 1 FROM user LIMIT 1;")):
+        if(!$db->query("SELECT 1 FROM user LIMIT 1;")->num_rows):
 		echo "$lang->user: <input id='user'></input><br>
 		$lang->password: <input id='password' type='password'></input><br>
-    		<input type='submit' class='$color' value='$lang->continue'></input>";
+    		<input type='submit' class='$color' value='$lang->continue' onclick='adduser();'></input><span id='userresult'></span>";
 		?>
 		<script>
 		function adduser () {
@@ -151,11 +159,11 @@ case "3": //Step 3 - First User
 	                	if(xmlhttp.response == "1"){
 	                        	self.location.href='?step=4';
 	                        } else {
-	                        	dbresult.innerHTML = xmlhttp.response;
+	                        	userresult.innerHTML = xmlhttp.response;
 	                        }
 	                }
 	        }
-	        xmlhttp.open("GET","?user="+ user.value + "&password=" + password.value,true);
+	        xmlhttp.open("GET","?username="+ user.value + "&password=" + password.value,true);
 	        xmlhttp.send();
 	        }
 		</script>

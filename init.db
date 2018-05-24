@@ -8,6 +8,8 @@ CREATE TABLE `settings` (
 );
 ALTER TABLE `settings`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `settings`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- Users
 CREATE TABLE `user` (
@@ -20,6 +22,8 @@ CREATE TABLE `user` (
 );
 ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `user`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- Plugins
 CREATE TABLE `plugins` (
@@ -29,6 +33,8 @@ CREATE TABLE `plugins` (
 );
 ALTER TABLE `plugins`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `plugins`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- File
 CREATE TABLE `file` (
@@ -38,6 +44,8 @@ CREATE TABLE `file` (
 );
 ALTER TABLE `file`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `file`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- Folder
 CREATE TABLE `folder` (
@@ -47,6 +55,8 @@ CREATE TABLE `folder` (
 );
 ALTER TABLE `folder`
   ADD PRIMARY KEY (`id`);
+ALTER TABLE `folder`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 INSERT INTO settings (name, value) VALUES ('theme', 'default');
 INSERT INTO settings (name, value) VALUES ('use', 1);

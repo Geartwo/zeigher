@@ -25,9 +25,9 @@ else:
 	$themeid = 0;
 endif;
 $theme = $db->query("SELECT value FROM settings WHERE name = 'theme' AND userid = '$themeid'")->fetch_object()->value;
-$username = $db->query("SELECT user FROM user WHERE id = '$userid'")->fetch_object()->user;
+$username = $db->query("SELECT username FROM user WHERE id = '$userid'")->fetch_object()->user;
 $isadbol = false;
-$isadbol = $db->query("SELECT isad FROM user WHERE id = '$userid'")->fetch_object()->isad;
+$isadbol = $db->query("SELECT admin FROM user WHERE id = '$userid'")->fetch_object()->isad;
 $isad = function($isadright){
 	global $isadbol;
 	return $isadbol;
