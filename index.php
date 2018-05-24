@@ -106,8 +106,9 @@ elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] =
 	endif;
 		$oph = opendir("..$cmsfolder");
 		while(($folder = readdir($oph)) !== false):
-			if($folder[0] == '.' | $folder == 'zeigher' | !is_dir("..$cmsfolder$folder")) continue;
-            $folder_array[] = $folder;
+			if($folder[0] == '.' || $folder == 'zeigher' || !is_dir("..$cmsfolder$folder")) continue;
+            		$folder_array[] = $folder;
+		endwhile;
 
         if(isset($folder_array)):
             natsort($folder_array);
@@ -185,7 +186,6 @@ elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] =
 			endif;
 		endforeach;
 		echo "<div style=\"clear: left;\"></div>";
-	endwhile;
 //ToDO
 $folder = "..$cmsfolder";
 
@@ -361,33 +361,7 @@ echo "
 </style>
 ";
 endif;
-//Tag
-$dbquery = $db->query("SELECT tagid FROM tag_folder WHERE folderid='$lastfolderid'");
-if($dbquery->num_rows) echo "<h2>Tags:</h2>";
-while($row = $dbquery->fetch_assoc()):
-	$row2 = $db->query("SELECT * FROM tag_name WHERE id=".$row['tagid']."")->fetch_assoc();
-        echo "<a class='btn $color' href='?page=tag&id=".$row2['id']."'>".$row2['name']."</a>";
-        if($isad("edit")):
-        	echo "<a class='btn $color' href='?page=tag&untag=".$row2['id']."'>";
-                echo icon("untag.svg");
-                echo "</a>";
-        endif;
-	$usedTags[] = $row2['id'];
-        echo "<br>";
-endwhile;
-if($isad("edit")):
-	$dbquery = $db->query("SELECT * FROM tag_name WHERE id NOT IN ('".implode($usedTags, "', '")."')");
-	if($dbquery->num_rows > 0):
-		echo "<select class='btn $color' id='tagchoice'>";
-		while($row = $dbquery->fetch_assoc()):
-			echo "<option value='".$row['id']."'>".$row['name']."</option>";
-		endwhile;
-		echo "</select>
-		<a class='btn $color' onclick=\"location.href='?page=tag&tag='+document.getElementById('tagchoice').value\"";
-		echo icon("tag.svg");
-		echo "</a>";
-	endif;
-endif;
+$hook->include('intro.php');
 closedir($oph);
 endif;
 include 'footer.php';
