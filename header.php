@@ -187,7 +187,7 @@ if (isset($news)) {$news="newson";} else {$news="newsoff";}
 echo "
 <div class='main'>
 <div class='btn-group'>";
-if($mode != 'dmyma' && $cmsfolder != '/'){
+if($cmsfolder != '/'){
     echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</span></a>";
     $tgif = "";
     if (isset($spsite)) {
@@ -212,7 +212,7 @@ if($mode != 'dmyma' && $cmsfolder != '/'){
     if (!isset($spsiten)) $spsiten = $spsite;
     $hpsite = htmlentities($spsiten);
     echo "<a href='/'><b class='sites btn $color'>".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese btn ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
-} elseif($mode != 'dmyma') {
+} else {
     echo "<a href='/'><b class='btn $color'>".$lang->home."</b></a>
     <title>".$lang->home."</title>";
     if (isset($_GET['page'])) {

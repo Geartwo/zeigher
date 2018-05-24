@@ -41,26 +41,6 @@ if(file_exists("$folder/.intro.jpg")):
 endif;
 
 
-//Tag
-if($mode == 'dmyma'){
-	$notsort = "1";
-	if(isset($_GET['f'])){
-		$file = $_GET['f'];
-		$dbquery = $db->query("SELECT *, (pro * 5) - ( con * 5 ) + view as pcv FROM files WHERE name LIKE '%$file%' ORDER BY pcv DESC, date LIMIT 100");
-		$tago = $dbquery->fetch_object();
-		while ($row = $dbquery->fetch_assoc()){
-			$fileid = $row['id'];
-			$dat_array[] = $fileid;
-		}
-	}else{
-		echo "<br>". $lang->newfiles .":<br>";
-		$dbquery = $db->query("SELECT * FROM files WHERE orfile = 1 ORDER BY id DESC LIMIT 30");
-		while ($row = $dbquery->fetch_assoc()){
-			$fileid = $row['id'];
-			$dat_array[] = $fileid;
-		}
-	}
-}
 echo "<div style='clear: right;'></div>";
 
 
@@ -70,6 +50,12 @@ if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['p
 endif;
 
 //Get IDs of all Folders
+if($cmsfolder == "/"):
+	if(!$db->query("SELECT id FROM folder WHERE id = '1'")->num_rows):
+		$db->query("INSERT INTO folder (id, name, parentfolderid) VALUES (1, 'root', 0)")
+		or die("SQL Folder Initialisation ERROR");
+	endif;
+endif;
 $cmsfolder_array = explode("/", $cmsfolder);
 array_pop($cmsfolder_array);
 foreach($cmsfolder_array as $folder):
@@ -93,9 +79,8 @@ if(isset($_GET['page'])):
 	endif;
 endif;
 
-
 //404 Error
-if (isset($fourzerofour)){
+if (isset($fourzerofour)):
 	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>";
 	if($isad('edit') && $edit==1 && $mode=='fmyma'):
 		$newfolder = end(explode("/", $_GET['f']));
@@ -103,59 +88,57 @@ if (isset($fourzerofour)){
 	endif;
 	echo "<a class='$color btn' href=\"?f=".$tgif."\">".$lang->back."</a></div>";
 
-}elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == true || $settings->use == 'all'){
+elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == 1 || $settings->use == 1):
 
 //Folder listing
 	$hook->include('intro.php');
 	if(file_exists($folder ."/.intro.txt")):
 		echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
         	$docfile=fopen($folder . "/.intro.txt","r+");
-        	while(!feof($docfile)) {
+        	while(!feof($docfile)):
         	        $line = htmlentities(fgets($docfile,1000));
         	        echo $line."<br>";
         	        $intro = $line."\n";
-        	}
+        	endwhile;
         	fclose($docfile);
         	echo "</div>";
         	$intro = 'true';
 	endif;
-	if ($mode != 'dmyma'){
 		$oph = opendir("..$cmsfolder");
-		while(($folder = readdir($oph)) !== false){
+		while(($folder = readdir($oph)) !== false):
 			if($folder[0] == '.' | $folder == 'zeigher' | !is_dir("..$cmsfolder$folder")) continue;
             $folder_array[] = $folder;
-        }
 
-        if(isset($folder_array)){
+        if(isset($folder_array)):
             natsort($folder_array);
-            foreach($folder_array as $folder){
+            foreach($folder_array as $folder):
 			$dbFolder = $db->real_escape_string($folder);
 			$folderId = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id;
-			if(!isset($folderId)){
+			if(!isset($folderId)):
 				$db->query("INSERT INTO folder (name, parentfolderid) VALUES ('$dbFolder', '$lastfolderid')")
 				or die("SQL Folder Initialisation ERROR");
 				$folderId = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id;
-			}
+			endif;
 			$ord_array[] = $folderId;
-            }
-        }
-		if($isad('edit') && $edit == 1){
+            endforeach;
+        endif;
+		if($isad('edit') && $edit == 1):
 			echo "<textarea style='display: none;' id='descbox' onsubmit=\"SetNameOrd('$cmsfolder');\">";
-			if(file_exists("..$cmsfolder"."intro.txt")){
+			if(file_exists("..$cmsfolder"."intro.txt")):
 				$docfile=fopen("..$cmsfolder"."intro.txt","r+");
-				while(!feof($docfile)){
+				while(!feof($docfile)):
 					$zeile = htmlentities(fgets($docfile));
 					echo $zeile."\n";
-				}
+				endwhile;
 				fclose($docfile);
-			}
+			endif;
 			echo "</textarea>
 <a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
 			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('$cmsfolder');\"></a><div/>";
-		}
+		endif;
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
 		$realfirst = "";
-		foreach($ord_array as $folderId){
+		foreach($ord_array as $folderId):
             $row = $db->query("SELECT * FROM folder WHERE id = '$folderId'")->fetch_assoc();
             $folder = $row['name'];
 
@@ -163,26 +146,26 @@ if (isset($fourzerofour)){
 			#Thumbnail Generate
 			$endthumb = "";
 			$zgif = urldecode($cgif);
-			if($mode != 'dmyma' && !file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg") && file_exists("..$cmsfolder$folder/.bintro.jpg")){
+			if(!file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg") && file_exists("..$cmsfolder$folder/.bintro.jpg")):
 				pic_thumb("..$cmsfolder$folder/.bintro.jpg", "..$cmsfolder$folder/.pic_.bintro.jpg.jpg", '238', '150');
 				$endthumb = "..$cmsfolder$folder";
-			}elseif($mode != 'dmyma' && file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg")){
+			elseif(file_exists("..$cmsfolder$folder/.pic_.bintro.jpg.jpg")):
 				$endthumb = rawurlencode("..$cmsfolder$folder");
-			}elseif(file_exists(urldecode("$cgif/.pic_.bintro.jpg.jpg"))){
+			elseif(file_exists(urldecode("$cgif/.pic_.bintro.jpg.jpg"))):
 				$endthumb = $cgif;
-			}
+			endif;
 				$foldername = $folder;
 				$mpf = htmlentities($foldername);
-			if (isset($alpha) && $alpha == "ja"){
+			if (isset($alpha) && $alpha == "ja"):
 				$firstChr = $file[0];
-				if($firstChr != $realfirst){
+				if($firstChr != $realfirst):
 					echo "<div class=\"alpha clear\">".$firstChr."</div>";
 					$realfirst = $firstChr;
-				}
-			}
-			if($ord_array[0] != "xpvkleer"){
+				endif;
+			endif;
+			if($ord_array[0] != "xpvkleer"):
 				echo "<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '$folder','$cmsfolder','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '$folder','$cmsfolder','')\">";
-                if($isad('edit') && $edit == 1){
+                if($isad('edit') && $edit == 1):
                     $fourpack = 1;
 					echo "</a>
 <form style='display: inline-block;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\">
@@ -193,57 +176,57 @@ if (isset($fourzerofour)){
 					echo "</a><a id='".$file."n' class='btn $color' onclick=\"deletefolder('$folderId');\">";
                                         echo icon("trash.svg");
                                         echo "</a>";
-				}
+				endif;
 				echo "<form style='display: inline;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\"><input type='hidden' id='".$folder."r' value='$folder'></form>";
 				echo "<a draggable='false' id='".$folder."v' class='buo ord' value='$mpf'  href='$cmsfolder$folder/'>
 				<font class='bigback' id='".$mpf."z'>";
 				echo icon("folder.svg");
 				echo " $mpf</font></div></a>";
-			}
-		}
+			endif;
+		endforeach;
 		echo "<div style=\"clear: left;\"></div>";
-	}
+	endwhile;
 //ToDO
 $folder = "..$cmsfolder";
 
 
 	//Rename
-	if(isset($_POST['desc'])){
-		if($isad('description')){
+	if(isset($_POST['desc'])):
+		if($isad('description')):
 			$file = fopen($cmsfolder."intro.txt","w");
 			echo fwrite($file, $_POST['desc'],0);
 			fclose($file);
-		}
+		endif;
 		echo "<script>self.location.href='$cmsfolder'</script>";
-	}
+	endif;
 	//File listing
 	$thereAreFiles = false;
 	$file = "";
 	$opf = opendir("..$cmsfolder");
-	while(($file = readdir($opf)) !== false){
+	while(($file = readdir($opf)) !== false):
 		if(is_dir("..$cmsfolder$file") | $file == "" | $file[0] == "." | preg_match("/\.php\z/i", $file) | preg_match("/\.md\z/i", $file) | preg_match("/\.html\z/i", $file)) continue;
 		$datn_array[] = $file;
-	}
-        if(isset($datn_array)){
+	endwhile;
+        if(isset($datn_array)):
             natsort($datn_array);
-		foreach($datn_array as $file){
+		foreach($datn_array as $file):
 			$dbfile = $db->real_escape_string($file);
 			$row = $db->query("SELECT id FROM files WHERE name = '$dbfile'")->fetch_assoc();
 			$fileid = $row['id'];
-			if(!isset($fileid)){
+			if(!isset($fileid)):
 				$mysqltime = date("Y-m-d H:i:s");
 				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 0)");
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
-			}
+			endif;
 			$dat_array[] = $fileid;
-		}
-        }
-	if(empty($dat_array)){
-		if(!isset($intro) && empty($ord_array)){
-			echo"<b>".$lang->empty."</b>";
-		}
-	}else{
+		endforeach;
+        endif;
+	if(empty($dat_array)):
+		if(!isset($intro) && empty($ord_array)):
+			echo "<b>$lang->empty</b>";
+		endif;
+	else:
 		$four = 0;
 		$fourpack = 1;
 		$idnum = 1;
@@ -256,7 +239,7 @@ $folder = "..$cmsfolder";
 		$lastfolder = $underfolder[$nowfolderkey-1];
 		$nextfolder = $underfolder[$nowfolderkey+1];
 		echo "<a id='num0-a'  onclick='self.location=\"$cmsfolder../$lastfolder#num1\"'></a>";
-		foreach($dat_array as $fileid){
+		foreach($dat_array as $fileid):
 			$row = $db->query("SELECT name, orfile, folder FROM files WHERE id = '$fileid'")->fetch_assoc();
 			$file = $row['name'];
 			$orfile = $row['orfile'];
@@ -264,32 +247,31 @@ $folder = "..$cmsfolder";
 			if($mode == 'dmyma') $folder = addcslashes($row['folder'], "'");
 			$rawfolder = rawurlencode($folder);
 			$rawfile = rawurlencode($file);
-			if(!isset($fileid)){
+			if(!isset($fileid)):
 				$mysqltime = date("Y-m-d H:i:s");
 				$dbfile = $db->real_escape_string($file);
 				$entry = $db->query("INSERT INTO files (userid, folder, date, name, orfile) VALUES ('0', '$folder', '$mysqltime', '$dbfile', 1)");
 				$row = $db->query("SELECT * FROM files WHERE name = '$dbfile'")->fetch_assoc();
 				$fileid = $row['id'];
-			}
+			endif;
 			#Thumbnail Generate
 			$singlbackground = "";
-			if(file_exists("./.pic_.bintro.jpg.jpg") && $mode=='dmyma'){
-				$endthumb = ".";
-			}
-			if(!file_exists($folder."/.pic_".$file.".jpg")){
-				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)){
+			if(file_exists("./.pic_.bintro.jpg.jpg") && $mode=='dmyma') $endthumb = ".";
+			
+			if(!file_exists($folder."/.pic_".$file.".jpg")):
+				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)):
 					exec('ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');
-				}elseif(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)){
+				elseif(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)):
 					pic_thumb($folder.'/'.$file, $folder.'/.pic_'.$file.'.jpg', '238', '150');
-				}elseif(preg_match('/\.mp3\z/i', $file) || preg_match('/\.aac\z/i', $file) || preg_match('/\.rdio\z/i', $file)){
+				elseif(preg_match('/\.mp3\z/i', $file) || preg_match('/\.aac\z/i', $file) || preg_match('/\.rdio\z/i', $file)):
 					if(file_exists($folder."/.art_".$file.".jpg")) pic_thumb($folder.'/.art_'.$file.'.jpg', $folder.'/.pic_'.$file.'.jpg', '238', '150');
-				}
-				if(!file_exists($folder."/.pic_".$file.".jpg")){
+				endif;
+				if(!file_exists($folder."/.pic_$file.jpg")):
 					$singlbackground = $endthumb."/.pic_.bintro.jpg.jpg";
-				}
-			}else{
+				endif;
+			else:
 				$singlbackground = $rawfolder."/.pic_".$rawfile.".jpg";
-			}
+			endif;
 			$filename = explode('.', $file);
 			$filename = htmlentities(implode('.',array_slice($filename, 0, count($filename) - 1)));
 			$htmlescfile = str_replace("'", "&#39;", $file);
@@ -298,16 +280,16 @@ $folder = "..$cmsfolder";
 			if(!$pext) $pext = "standard";
                         if(!$filename) $filename = $file;
             echo "<div class='bigfolder bigfile $color-2' id='num$idnum' style=\"background: url('?watchfile=$singlbackground') no-repeat; background-size: 100% 100%;\" ondragstart=\"drag(event, '".$rawfile."','".$folder."','')\"";
-	    if ($isad('edit') && $edit == 1) {
+	    if ($isad('edit') && $edit == 1):
 	       echo "draggable=true>
 		<a id='".$rawfile."o' class='btn $color' onclick=\"SN('".$rawfile."','".$folder."');\">";
 		echo icon("tag.svg");
 		echo "</a><a id='".$rawfile."n' class='btn $color' onclick=\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">";
 		echo icon("trash.svg");
 		echo "</a>";
-	    }else{
+	    else:
                 echo ">";
-            }
+            endif;
             echo "<a class='buo ord' id='num$idnum-a' draggable='false' href='$cmsfolder$file' onclick=\"event.preventDefault(); streamer($idnum, $fileid); ".$fileextension->$pext($cmsfolder, $file)."\">
             <form style='display: inline; margin: 0;' onsubmit='\"SND('".$rawfile."','".$folder."','".$folder."','".$fourpack."',1);\">
             <input type='hidden' id='".$rawfile."r' value='$htmlescfile' draggable='false'>
@@ -317,8 +299,8 @@ $folder = "..$cmsfolder";
 			echo "$filename</font></a></div>";
 			$four = $four + 1;
 			$idnum = $idnum + 1;
-	}
-    }
+	endforeach;
+    endif;
 echo "<div id='num$idnum' style='clear: both;'></div>
 <script>window.lastnum = $idnum;</script><a id='num$idnum-a'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
 echo "
@@ -346,7 +328,7 @@ else:
 endif;
 echo"</script>
 <div style='display: table;'>";
-if($isad('edit') && $edit==1 && $mode=='fmyma'){
+if($isad('edit') && $edit==1):
     echo "<span style='display: table-row;' class='$color btn' onclick=\"NF('..$cmsfolder','".$lang->newfolder."')\">".$lang->newfolder."</span>";
 echo "
 <div style='display: table-row;' class='fileUpload btn btn-primary'>
@@ -378,7 +360,7 @@ echo "
 }
 </style>
 ";
-}
+endif;
 //Tag
 $dbquery = $db->query("SELECT tagid FROM tag_folder WHERE folderid='$lastfolderid'");
 if($dbquery->num_rows) echo "<h2>Tags:</h2>";
@@ -406,9 +388,7 @@ if($isad("edit")):
 		echo "</a>";
 	endif;
 endif;
-    if ($mode != 'dmyma') {
-		closedir($oph);
-	}
-}
+closedir($oph);
+endif;
 include 'footer.php';
 ?>
