@@ -133,21 +133,14 @@ echo "</div>";
 if($_SESSION['loggedin'] == "true"):
 	echo "<span id='burger-logo' class='usr2 f$color' onclick='menu();'>";
         echo icon("menu.svg");
-        echo "</span>";
-	if(isset($userpremium)):
-		$plus = "+";
-	else:
-		$plus = "";
-	endif;
-	if($settings->points == 'true') echo "<li $lang->points: $userpoints$plus$userpremium</div>";
-	echo "
-	<div id='menu3' style='display: none;'>";
-	echo "<ul>
+        echo "</span>
+	<div id='menu3' style='display: none;'>
+	<ul>
 	<li class='submenu2 f$color'><b><a href=\"?page=tag\"  title='$lang->tag'>".icon('tag.svg')."</a></b></li>
 	<li class='submenu2 f$color'><b><a href=\"?page=usersettings\"  title='$lang->settings'>".icon('tools.svg')."</a></b></li>
 	<li class=\"submenu2 f".$color."\"><b><a href=\"?page=user&d=owndata\" title='$lang->owndata'>".icon('cloud.svg')."</a></b></li>";
     if($isad('admside')) {
-        echo "<li class=\"submenu2 f$color\"><b><a href='?page=admin' title='$lang->administration'>".icon('shield.svg')."</a></b></li>";
+        echo "<li class=\"submenu2 f$color\"><b><a href='?page=admin' title='$lang->admin'>".icon('shield.svg')."</a></b></li>";
     }
     if ($edit == 0) { $editn = "<b class='f$color'>".icon('eye.svg')."</b>"; $editu = 1; } else { $editn = "<b style='color: red;'>".icon('eye-with-line.svg')."</b>"; $editu = 0; }
     if($isad('edit')) {
@@ -155,20 +148,12 @@ if($_SESSION['loggedin'] == "true"):
     }
     echo "<li class='submenu2 f$color'><a href='".preg_replace('/ /', '+', $cmsfolder)."?logoff'  title='".$lang->logoff."'>".icon('log-out.svg')."</a></li>
     </ul></li></ul></div>";
-    if(isset($headerextension)):
-           foreach($headerextension as $huex):
-            include($huex);
-           endforeach;
-    endif;
+    $hook->include('header.php');
     echo "</div>";
 else:
-	echo "<span id='burger-logo' class='usr2 f$color' onclick='location.href=\".\";'>".icon("lock.svg")."</span>";
+	echo "<span id='burger-logo' class='usr2 f$color' onclick='location.href=\"?page=login\";'>".icon("lock.svg")."</span>";
 endif;
-echo "
-</nav>
-
-<div class=\"wholy\">
-";
+echo "</nav><div class='wholy'>";
 if($_SESSION['loggedin'] == true) {
     echo "<div class=\"news\">";
     if (file_exists("news.txt") && isset($news)){
@@ -187,39 +172,19 @@ if (isset($news)) {$news="newson";} else {$news="newsoff";}
 echo "
 <div class='main'>
 <div class='btn-group'>";
-if($cmsfolder != '/'){
-    echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>".$lang->home."</span></a>";
+echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>$lang->home</span></a>";
+if($cmsfolder != '/'):
     $tgif = "";
-    if (isset($spsite)) {
-        if (!isset($spsiten)) $spsiten = $spsite;
-        $hpsite = htmlentities($spsiten);
-        echo "<a href=$spsite.php'><span class='sites btn $color'>$hpsite</span></a>";
-    }
-    foreach($siter as $tsiter) {
+    foreach($siter as $tsiter):
 	if($tsiter == "") continue;
         $tgif = $tgif . "/" . $tsiter;
-        if ($tsiter[0] == "-") {
-            $tsiter = substr($tsiter, 1);
-        }
+        if($tsiter[0] == "-") $tsiter = substr($tsiter, 1);
         $tsiter = htmlentities($tsiter);
         echo "<a href='$tgif/'><span class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</span></a>";
-    }
-    if (isset($_GET['page'])) {
-        echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
-    }
+    endforeach;
     $mlastf = htmlentities($lastf);
-} elseif (isset($spsite)) {
-    if (!isset($spsiten)) $spsiten = $spsite;
-    $hpsite = htmlentities($spsiten);
-    echo "<a href='/'><b class='sites btn $color'>".$lang->home."</b></a><a href=\"". $spsite .".php\"><b class=\"lastsitese btn ".$color."\">".$hpsite."</b></a><title>".htmlentities($spsite)."</title>";
-} else {
-    echo "<a href='/'><b class='btn $color'>".$lang->home."</b></a>
-    <title>".$lang->home."</title>";
-    if (isset($_GET['page'])) {
-        echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
-    }
-}
-
-echo "</div>
-<div id=\"list\">";
+endif;
+echo "<title>$settings->stitel</title>";
+if(isset($_GET['page'])) echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";
+echo "</div><div id='list'>";
 ?>

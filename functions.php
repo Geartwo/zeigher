@@ -23,6 +23,7 @@ function workpath($a, $pre = false){
     endswitch;
   endforeach;
   $e = implode("/", $c);
+  if(empty($e)) $e = "/";
   if($e[0] != "/"):
     $e = "/".$e;
   endif;
@@ -131,8 +132,7 @@ function pic_thumb($image, $target, $max_width, $max_height) {
     }
 }
 //Extension class
-class ExtendClass
-{
+class ExtendClass {
     public function __call($method, $args)
     {
         if(isset($this->$method)):
@@ -145,19 +145,23 @@ class ExtendClass
     }
 }
 //Extend StdClass class
-class ExtendStdClass
-{
-    public function __call($method, $args)
+class ExtendStdClass {
+    public function __call($name, $args)
     {
-	if(isset($this->$method)):
-		return $this->$method;
-	elseif(isset($this->standard)):
-		return $this->standard;
-	else:
-		return "NoDefault";
-	endif;
+    echo "Rufe die Objektmethode '$name' "
+             . implode(', ', $arguments). "\n";
     }
+#	if(isset($this->$method)):
+#		return $this->$method;
+#	elseif(isset($this->standard)):
+#		return $this->standard;
+#	else:
+#		return "NoDefault";
+#	endif;
+#    }
 }
+$test = new ExtendStdClass;
+$test->test;
 
 //Extend StdClass class
 class ExExtendStdClass
@@ -292,8 +296,6 @@ $fileextension->standard = function(){
 };
 $icon = new ExtendStdClass();
 $icon->standard = "bug.svg";
-#$test = new ExExtendStdClass();
-#echo $test->standart;
 $mimetype = new ExtendStdClass();
 $mimetype->standard = "text/plain";
 $uploadcheck = new ExtendStdClass();

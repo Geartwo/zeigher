@@ -38,7 +38,7 @@ function streamcontent(num, id){
                 streamertext.innerHTML=xmlhttp.responseText;
             }
         }
-        xmlhttp.open("GET","?x=main&file=voteroom.php&id=" + id,true);
+        //xmlhttp.open("GET","?x=main&file=voteroom.php&id=" + id,true);
         xmlhttp.send();
     } else {
     history.pushState(null, null, ' ');

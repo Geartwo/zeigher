@@ -27,8 +27,8 @@ endif;
 $theme = $db->query("SELECT value FROM settings WHERE name = 'theme' AND userid = '$themeid'")->fetch_object()->value;
 if($userid > 0):
 	$isadbol = false;
-	$result = $db->query("SELECT username FROM user WHERE id = '$userid'")->fetch_object()->user;
-	$username = $result->user;
+	$result = $db->query("SELECT username, admin FROM user WHERE id = '$userid'")->fetch_object();
+	$username = $result->username;
 	$isadbol = $result->admin;
 else:
 	$isadbol = 0;
@@ -57,9 +57,6 @@ $dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
                 endif;
                 if(file_exists($longpfolder."extension.php")):
                         $plugextension[$row['name']] = $longpfolder."extension.php";
-                endif;
-                if(file_exists($longpfolder."header.php")):
-                        $headerextension[$row['name']] = $longpfolder."header.php";
                 endif;
                 if(file_exists($longpfolder."footer.php")):
                         $footerextension[$row['name']] = $longpfolder."footer.php";

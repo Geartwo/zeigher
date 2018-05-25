@@ -1,7 +1,7 @@
 </div> <!-- class=list -->
 
 <div class="footer clear line">
-<a href="?page=inprint"><?php echo $lang->imprint; ?></a>
+<a href="?page=imprint"><?php echo $lang->imprint; ?></a>
 </div>
 <div class="footer">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>

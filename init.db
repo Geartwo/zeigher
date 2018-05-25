@@ -29,7 +29,7 @@ ALTER TABLE `user`
 CREATE TABLE `plugins` (
   `id` int(11) NOT NULL,
   `name` varchar(150) NOT NULL,
-  `active` int(1) DEFAULT NULL
+  `active` int(1) NOT NULL
 );
 ALTER TABLE `plugins`
   ADD PRIMARY KEY (`id`);
@@ -37,14 +37,14 @@ ALTER TABLE `plugins`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- File
-CREATE TABLE `file` (
+CREATE TABLE `files` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `folderid` int(11) NOT NULL
 );
-ALTER TABLE `file`
+ALTER TABLE `files`
   ADD PRIMARY KEY (`id`);
-ALTER TABLE `file`
+ALTER TABLE `files`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- Folder

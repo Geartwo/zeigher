@@ -36,7 +36,6 @@ unset($_GET['f']);
 if(empty($_GET)) echo "<script>self.location.href='?step=1'</script>";
 if(isset($_GET['step'])) $step = $_GET['step'];
 if(file_exists("config.php")):
-	include "config.php";
 	include "sql.php";
 else:
 	$step = 1;
