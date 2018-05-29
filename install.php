@@ -127,6 +127,7 @@ case "1": //Step 1 - Set Database
 
 case "2": //Step 2 - Init Database
 	if(!file_exists("data/trash")) mkdir("data/trash", 0700);
+	if(!file_exists("plugins")) mkdir("plugins", 0700);
 	if(!$db->query("SELECT 1 FROM settings LIMIT 1;")):
 		$db->multi_query(file_get_contents('init.db'));
 		$error = $db->error; //TODO - Clean error

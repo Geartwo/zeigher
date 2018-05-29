@@ -24,14 +24,8 @@ function workpath($a, $pre = false){
   endforeach;
   $e = implode("/", $c);
   if(empty($e)) $e = "/";
-  if($e[0] != "/"):
-    $e = "/".$e;
-  endif;
-  if(file_exists("..".$e) == false):
-    $e = false;
-  elseif(!is_file("..".$e)):
-    if(substr($e, -1) != "/") $e = "$e/";
-  endif;
+  if($e[0] != "/") $e = "/".$e;
+  if(!is_file("..".$e)) if(substr($e, -1) != "/") $e = "$e/";
   if($pre) $e = $pre.$e;
   return $e;
 }
@@ -131,51 +125,14 @@ function pic_thumb($image, $target, $max_width, $max_height) {
     }
     }
 }
-//Extension class
-class ExtendClass {
-    public function __call($method, $args)
-    {
-        if(isset($this->$method)):
-            $func = $this->$method;
-            return call_user_func_array($func, $args);
-	elseif(isset($this->standard)):
-            $func = $this->standard;
-            return call_user_func_array($func, $args);
-        endif;
-    }
-}
-//Extend StdClass class
-class ExtendStdClass {
-    public function __call($name, $args)
-    {
-    echo "Rufe die Objektmethode '$name' "
-             . implode(', ', $arguments). "\n";
-    }
-#	if(isset($this->$method)):
-#		return $this->$method;
-#	elseif(isset($this->standard)):
-#		return $this->standard;
-#	else:
-#		return "NoDefault";
-#	endif;
-#    }
-}
-$test = new ExtendStdClass;
-$test->test;
 
-//Extend StdClass class
-class ExExtendStdClass
-{
-    public function __call($method, $args)
-    {
-                return "$methode NoDefault";
-    }
-}
 
 //Mysqli simple POST Escape
-function escape($req){
+function escape($req, $key=false){
 	global $_REQUEST, $db;
-	return $db->real_escape_string($_REQUEST[$req]);
+	if($key): return $db->real_escape_string($req);
+	else: return $db->real_escape_string($_REQUEST[$req]);
+	endif;
 }
 
 //Icon Function
@@ -188,18 +145,37 @@ function icon($svg, $path = false){
 //Get Folderpath by ID
 function folderpath($id){
 	global $db;
-	$row = $db->query("SELECT name, id, parentfolderid FROM folder WHERE id='$id'")->fetch_assoc()
+	$dbquerry = $db->query("SELECT name, parentfolderid FROM folder WHERE id='$id'")->fetch_object()
 	or die("Unknown folderId");
-        $name = $row['name'];
-        $foldersearch[] = $row['name'];
+        $foldersearch[] = $dbquerry->name;
 	$i = 0;
-        while($row['parentfolderid'] != 1 && $i <= 50):
-        	$row = $db->query("SELECT * FROM folder WHERE id='".$row['parentfolderid']."'")->fetch_assoc();
-                $foldersearch[] = $row['name'];
+        while($dbquerry->parentfolderid != 1 && $i <= 50):
+        	$dbquerry = $db->query("SELECT name, parentfolderid FROM folder WHERE id='$dbquerry->parentfolderid'")->fetch_object()
+		or die("Path fail");
+                $foldersearch[] = $dbquerry->name;
 		$i++;
        endwhile;
        $foldersearch[] = "";
        return implode(array_reverse($foldersearch), "/");
+}
+//Get ID by Folderpatch
+function allfolderids($path){
+	global $db;
+	$path_array = explode("/", $path);
+        array_pop($path_array);
+        foreach($path_array as $folder):
+                if($folder == ""):
+                        $folderid = 1;
+                else:
+                        $dbFolder = $db->real_escape_string($folder);
+                        $folderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$folderid'")->fetch_object()->id;
+                endif;
+		$folderids[] = $folderid;
+        endforeach;
+	return $folderids;
+}
+function folderid($path){
+	return array_pop(allfolderids($path));
 }
 //Define all classes
 $hook = new ExtendClass();
@@ -214,7 +190,7 @@ $hook->get_info = function($a, $b){
 	endif;
 };
 $hook->install = function($a){
-	global $db;
+	global $db, $hook, $zeigher_version;
         include $hook->get_folder($a)."info.php";
 	$plugversion = $version;
 	foreach($requirements as $key => $require):
@@ -224,12 +200,11 @@ $hook->install = function($a){
                 	 continue;
         	elseif($key == "core"):
                 	echo "Error: Zeigher version $zeigher_version is not compatible with the required version $require";
-                	$error = 1;
-                	continue;
+                	exit;
         	endif;
-		$dbkey = $db->real_escape_string($key);
-        	$dbquery = $db->query("SELECT active FROM plugins WHERE name = '$dbkey' AND active = 1");
         	if(file_exists($hook->get_folder($key)."info.php")):
+			$dbkey = escape($key, true);
+        		$dbquery = $db->query("SELECT active FROM plugins WHERE name = '$dbkey' AND active = 1");
                 	include $hook->get_folder($key)."info.php";
                 	if(version_compare($version, $require, $compare) == false):
                         	echo "Error: Required plugin $key $version is not compatible with $key $compare$require";
@@ -244,15 +219,17 @@ $hook->install = function($a){
         	endif;
 	endforeach;
 	if(isset($error)) exit;
-        $name = $db->real_escape_string($a);
-        $db->query("UPDATE plugins SET active = false WHERE name = '$name'");
+        $name = escape($a, true);
+        $db->query("UPDATE plugins SET active = 1 WHERE name = '$name'");
         include $hook->get_folder($a)."install.php";
+	echo "OK";
 };
 $hook->uninstall = function($a){
-	global $db;
+	global $db, $hook;
         $name = $db->real_escape_string($a);
-        $db->query("UPDATE plugins SET active = false WHERE name = '$name'");
-        include $this->get_folder($a)."uninstall.php";
+        $db->query("UPDATE plugins SET active = 0 WHERE name = '$name'");
+        include $hook->get_folder($a)."uninstall.php";
+	echo "OK";
 };
 $hook->include = function($a){
 	global $db, $hook;
@@ -296,8 +273,12 @@ $fileextension->standard = function(){
 };
 $icon = new ExtendStdClass();
 $icon->standard = "bug.svg";
+
+//Set mimetypes
 $mimetype = new ExtendStdClass();
 $mimetype->standard = "text/plain";
+$mimetype->css = "text/css";
+
 $uploadcheck = new ExtendStdClass();
 $api = new ExtendClass();
 //Set Language

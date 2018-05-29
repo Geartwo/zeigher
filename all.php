@@ -1,5 +1,5 @@
 <?php
-$settings = new stdClass();
+$settings = new ExtendStdClass;
 $max_upload = (int)(ini_get('upload_max_filesize'));
 $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
@@ -33,7 +33,7 @@ if($userid > 0):
 else:
 	$isadbol = 0;
 endif;
-$isad = function($isadright){
+$isad = function(){
 	global $isadbol;
 	return $isadbol;
 };
@@ -55,38 +55,16 @@ $dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
                 if(file_exists($longpfolder."admin.php")):
                         $adminextension[$row['name']] = $longpfolder."admin.php";
                 endif;
-                if(file_exists($longpfolder."extension.php")):
-                        $plugextension[$row['name']] = $longpfolder."extension.php";
-                endif;
-                if(file_exists($longpfolder."footer.php")):
-                        $footerextension[$row['name']] = $longpfolder."footer.php";
-                endif;
-                if(file_exists($longpfolder."voteroom.php")):
-                        $voteroomextension[$row['name']] = $longpfolder."voteroom.php";
-                endif;
-                if(file_exists($longpfolder."function.php")):
-                        $functionsextension[$row['name']] = $longpfolder."function.php";
-                endif;
-		if(file_exists($longpfolder."function.js")):
-                        $functionsjsextension[$row['name']] = $longpfolder."function.js";
-                endif;
-                if(file_exists($longpfolder."lang.php")):
-                        $langextension[$row['name']] = $longpfolder."lang.php";
-                endif;
         endwhile;
-require "functions.php";
-if(isset($functionsextension)):
-    foreach($functionsextension as $fuex):
-        include($fuex);
-    endforeach;
-endif;
 // TODO END
+require "functions.php";
+$hook->include("function.php");
 
-
+if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
 if(!$_SESSION['loggedin'] && isset($_COOKIE['Zeigher-ID']) && isset($_COOKIE['Zeigher-Token'])):
         $id = $db->real_escape_string($_COOKIE['Zeigher-ID']);
-        $row = $db->query("SELECT id, user, password, free FROM user WHERE id = '$id'")->fetch_assoc();
-        if($row['free'] == true && hash_equals($_COOKIE['Zeigher-Token'], crypt($row['user'].$row['mail'], $row['password']))):
+        $row = $db->query("SELECT id, username, password, free, email FROM user WHERE id = '$id'")->fetch_assoc();
+        if($row['free'] == true && hash_equals($_COOKIE['Zeigher-Token'], crypt($row['username'].$row['email'], $row['password']))):
                 $_SESSION['loggedin'] = true;
                 $_SESSION['userid'] = $row['id'];
         endif;

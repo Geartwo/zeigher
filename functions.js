@@ -39,6 +39,7 @@ function streamcontent(num, id){
             }
         }
         //xmlhttp.open("GET","?x=main&file=voteroom.php&id=" + id,true);
+        xmlhttp.open("GET",".?x=fileinfo&id=" + id,true);
         xmlhttp.send();
     } else {
     history.pushState(null, null, ' ');
@@ -336,8 +337,8 @@ xmlhttp=new XMLHttpRequest();
         xmlhttp.open("GET","?x=main&file=fileworker.php&f="+ cc +"&newfolder="+ name,true);
         xmlhttp.send();
 }
-function activatePlugin (name) {
-var check = document.getElementById("check-" + name).checked;
+function activatePlugin(id) {
+var check = document.getElementById("check-" + id).checked;
 xmlhttp=new XMLHttpRequest();
 if(check == false) {
 	window.confirm("Data could be get lost. Are you sure?");
@@ -345,12 +346,12 @@ if(check == false) {
 xmlhttp.onreadystatechange=function() {
 if (xmlhttp.readyState==4 && xmlhttp.status==200) {
 	if(xmlhttp.responseText != 'OK'){
-		document.getElementById("check-" + name).checked = !check;
+		document.getElementById("check-" + id).checked = !check;
 	}
 	document.getElementById('pluginresponse').innerHTML = xmlhttp.responseText;
 }
 }
-xmlhttp.open("GET","?x=main&file=plugin.php&check="+ check +"&name="+ name,true);
+xmlhttp.open("GET","?x=plugin&activate="+ check +"&id="+ id,true);
 xmlhttp.send();
 }
 function SN (kk, cc, id) {
@@ -360,14 +361,15 @@ function SN (kk, cc, id) {
     var stk = document.getElementById(kk + "k");
     var stb = document.getElementById(kk + "z");
         var sty = document.getElementById("num"+ id);
+    var changenameform = document.getElementById(kk + "-changenameform");
     if(stb.style.display == "none") {
     stk.draggable=true;
-        str.type = "hidden";
     stb.style.display = "inline-block";
+    changenameform.style.display = 'none';
     } else {
     stk.draggable=false;
-        str.type = "";
     stb.style.display = "none";
+    changenameform.style.display = 'block';
     }
 }
 function deletefolder(id){

@@ -1,11 +1,11 @@
 <?php
-if(isset($_REQUEST['x']) && isset($_REQUEST['file'])):
-	if(preg_match("/\.\.\z/i", $_REQUEST['file'])) exit;
-	if($_REQUEST['x'] === 'main'):
-		include $_REQUEST['file'];
-	elseif($_REQUEST['x'] === 'plugin'):
-		include 'plugins/'.$_REQUEST['file'];
-	elseif($_REQUEST['x'] === 'setting'):
-                include $_REQUEST['file'];
-	endif;
+if(isset($_REQUEST['x'])):
+	switch($_REQUEST['x']):
+	case "plugin":
+		include "plugin.php";
+		break;
+	case "fileinfo":
+                include "fileinfo.php";
+                break;
+        endswitch;
 endif;

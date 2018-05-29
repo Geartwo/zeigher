@@ -120,6 +120,9 @@ h1, h2, h3, h4 h5, ul { margin: 0px; }
 .usr2:hover ul { max-height: 100%; }
 
 #burger-logo svg { float: right; width: 40px;}
+#unlock { display: none; }
+#burger-logo:hover>#unlock { display: block; }
+#burger-logo:hover>#lock { display: none; }
 #menu3 { background: #212121; border-radius: 5px; padding: 6px; position: relative; margin: 0px -40px -2000px -30px; top: 35px; text-align: center; float: right; z-index: 1000;}
 #menu3 ul { list-style-type:none; list-style-image:none; margin:0px; padding:0px; -ms-user-select: none; -webkit-user-select: none; -moz-user-select: none; user-select: none; }
 

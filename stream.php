@@ -1,21 +1,36 @@
 <?php
-if(isset($_GET['watchfile'])) $cmsfolder = workpath($_GET['watchfile']);
-if (!isset($_SESSION['loggedin']) && !preg_match('/(\.pic|.bintro)*/', $cmsfolder)):
-    exit;
+if(isset($_GET['watchfile'])):
+	$file = workpath($_GET['watchfile']);
+else:
+	$file = $cmsfolder;
 endif;
-header("Cache-Control: max-age=2592000");
-if (preg_match("/\.pdf/", $cmsfolder)){header("Content-Type: application/pdf");
-} elseif (preg_match("/\.css/", $cmsfolder)){header("Content-Type: text/css");
-	header("Cache-Control: max-age=0");
-} elseif (preg_match("/\.mp4/", $cmsfolder)){header("Content-Type: video/mp4");
-header("X-Accel-Buffering: no");
-} elseif (preg_match("/\.mp3/", $cmsfolder)){header("Content-Type: audio/mp3");
-} elseif (preg_match("/\.png/", $cmsfolder)){header("Content-Type: image/png");
-} elseif (preg_match("/\.jpg/", $cmsfolder)){header("Content-Type: image/jpeg");
-} elseif (preg_match("/\.epub/", $cmsfolder)){header("Content-Type: application/epub+zip");
-} elseif (preg_match("/\.svg/", $cmsfolder)){header("Content-Type: image/svg+xml");
-}
-header("X-Accel-Redirect:$cmsfolder");
-header('Access-Control-Allow-Origin: *'); 
+if(is_file("..$file")):
+	$filenametype = array_pop(explode(".", $file));
+	if($mimetype->$filenametype === mime_content_type("..$file")):
+		$mimeok = 1;
+	else:
+		switch($mimetype->$filenametype):
+		case("text/css"):
+			$mimeok = 1;
+			break;
+		default:
+			$mimeok = 0;
+		endswitch;
+	endif;
+	if($mimeok):
+		header("Cache-Control: max-age=2592000");
+		header("Content-Type: ".$mimetype->$filenametype);
+		header("X-Accel-Redirect:$file");
+		header('Access-Control-Allow-Origin: *'); 
+		exit;
+	else:
+		$fourzerofour = 1;
+	endif;
+		
+else:
+	$fourzerofour = 1;
+endif;
+
+echo $mimetype->$filenametype.mime_content_type("..$file");
 exit;
 ?>

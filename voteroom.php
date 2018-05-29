@@ -1,6 +1,5 @@
 <?php
 $fileid = $db->real_escape_string($_GET['id']);
-$cmsfolder = workpath($_GET['f']);
 $row = $db->query("SELECT * FROM files WHERE id = '$fileid'")->fetch_assoc();
 @$filedate = date("d.m.Y G:i", strtotime($row['date']));
 $upuserid = $row['userid'];

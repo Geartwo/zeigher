@@ -34,76 +34,31 @@ if($cmsfolder == false):
 else:
 	http_response_code (200);
 endif;
-$folder = ".".$cmsfolder;
-$alarm = explode('/', $folder);
-$name = ucfirst($_SERVER['HTTP_HOST']);
-$url = explode('.', $name);
-$url = implode('', array_slice($url, 0, 1));
-$parts = explode('/', $cmsfolder);
-if($parts[0] == "") unset($parts[0]);
-$partz = count($parts);
-$f = implode(' ', array_slice($parts, 1, $partz -2));
-$lastf = implode('', array_slice($parts, -1, $partz));
-$older = implode('/', array_slice($parts, 0, $partz - 1));
-$ulastf = htmlentities($lastf);
-$siter = $parts;
-$bsiter = $parts;
-$piczahl = 0;
-$picrow = 1;
-$dbfree = 2;
-
-//Destroy Session
-if(isset ($_GET['log'])){
-	$_SESSION['loggedin'] = false;
-	session_destroy();
-	echo "<script>self.location.href='$cmsfolder'</script>";
-}
-if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
 
 //Background
-$tgif = ".";
-$ugif = ".";
-$cgif = "";
-$bfooter = "";
-if (file_exists($tgif ."/.bintro.jpg")){
-    $endgif = $ugif;
-    if (file_exists($tgif ."/.bintro.html")){
-        $bfooter = $lang->backgroundimage.": ".@file_get_contents($tgif .".bintro.html");
-        $endpic = $ugif . '/.bintro.jpg';
-    } else {
-        $bfooter = "";
-        $endpic = "$ugif./bintro.jpg";
-    }
-}
-foreach($bsiter as $tsiter) {
-    if($tsiter == "") continue;
-    $tgif = $tgif . "/" . $tsiter;
-    $ugif = $ugif . "/" . rawurlencode ($tsiter);
-    if (file_exists($tgif ."/.bintro.jpg")){
-        $endgif = $ugif;
-        if (file_exists($tgif ."/.bintro.html")){
-            $bfooter = $lang->backgroundimage.": ".@file_get_contents($tgif ."/.bintro.html");
-        } else {
-            $bfooter = "";
-        }
-	$endpic = substr("$ugif/.bintro.jpg", 1);
-	$cgif = $ugif;
-    }
-}
-if (isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(?watchfile=".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
-if (isset ($endpic)):
-	$_SESSION['lastpic'] = $endpic;
-	echo "
-	<img src='?watchfile=$endpic' id='dummy' style='display:none;' alt='' />
-	<!--<style>body{margin: 0; background: white;}</style>-->
+$folderids = allfolderids($cmsfolder);
+$bgfolderids = $folderids;
+$bg = 0;
+$i = 0;
+while(!$bg && $i < 50):
+	$bgfolderid = array_pop($bgfolderids);
+	if(file_exists("data/backgrounds/$bgfolderid.jpg")): 
+		$bg = "/zeigher/data/backgrounds/$bgfolderid.jpg";
+	endif;
+	$i++;
+endwhile;
+if(isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
+if($bg && $bg != $_SESSION['lastpic']):
+	$_SESSION['lastpic'] = $bg;
+	echo "<img src='$bg' id='dummy' style='display:none;' alt='' />
 	<div id='pic' style='display: inline-block;  z-index: -1; display: none; position: fixed; height:100%;width:100%; background: no-repeat center center fixed; background-size: cover;'></div>
 	<script>
 	document.getElementById('dummy').onload = function(){
-	$('#pic').css('background-image','url(?watchfile=$endpic)');
+	$('#pic').css('background-image','url($bg)');
         $('#pic').fadeIn(1000);
 	};
 	$('#dummy').load(function() {
-		$('#pic').css('background-image','url(?watchfile=$endpic)');
+		$('#pic').css('background-image','url($bg)');
 		$('#pic').fadeIn(1000);
 	});
 	</script>";
@@ -111,19 +66,12 @@ endif;
 
 //Real Header
 if(empty($settings->stitel)) $settings->stitel = $url;
-if(isset($nnout)){
-	echo "<style>
-	.wrapper { display: none; }
-	.meune { display: none; }
-	</style>";
-}
-echo "
-<div class='container'>
+echo "<div class='container'>
 <nav class='navbar navbar-inverse'>
 <div id='tbild' style='transition: max-width 0.5s linear 0s, margin 0.5s linear 0s; float: right; position: absolute; top: 5; right: 5; overflow: hidden; margin: 5px;'></div>
 <div class='navbar-header'>";
 if(!empty($settings->logo) && $settings->logo!=='false'){
-	echo "<a href='/' class='navbar-brand'><img class='navbar-brand' src='?watchfile=/zeigher/data/".$settings->logo."'></a>";
+	echo "<a href='/' class='navbar-brand'><img class='navbar-brand' src='/zeigher/data/".$settings->logo."'></a>";
 }elseif(!empty($settings->stitel)){
 	echo "<a class='navbar-brand f$color' href='/'>".$settings->stitel."</a>";
 }else{
@@ -142,16 +90,14 @@ if($_SESSION['loggedin'] == "true"):
     if($isad('admside')) {
         echo "<li class=\"submenu2 f$color\"><b><a href='?page=admin' title='$lang->admin'>".icon('shield.svg')."</a></b></li>";
     }
-    if ($edit == 0) { $editn = "<b class='f$color'>".icon('eye.svg')."</b>"; $editu = 1; } else { $editn = "<b style='color: red;'>".icon('eye-with-line.svg')."</b>"; $editu = 0; }
-    if($isad('edit')) {
-        echo "<li class='submenu2'><b><a href='$cmsfolder&edit=$editu' title='$lang->edit'> $editn</a></b></li>";
-    }
-    echo "<li class='submenu2 f$color'><a href='".preg_replace('/ /', '+', $cmsfolder)."?logoff'  title='".$lang->logoff."'>".icon('log-out.svg')."</a></li>
+    if($edit == 0): $editn = "<b class='f$color'>".icon('eye.svg')."</b>"; $editu = 1; else: $editn = "<b style='color: red;'>".icon('eye-with-line.svg')."</b>"; $editu = 0; endif;
+    if($isad('edit')) echo "<li class='submenu2'><b><a href='?edit=$editu' title='$lang->edit'> $editn</a></b></li>";
+    echo "<li class='submenu2 f$color'><a href='".preg_replace('/ /', '+', $cmsfolder)."?logoff'  title='$lang->logoff'>".icon('log-out.svg')."</a></li>
     </ul></li></ul></div>";
     $hook->include('header.php');
     echo "</div>";
 else:
-	echo "<span id='burger-logo' class='usr2 f$color' onclick='location.href=\"?page=login\";'>".icon("lock.svg")."</span>";
+	echo "<span id='burger-logo' class='usr2 f$color' onclick='location.href=\"?page=login\";'><span id='lock'>".icon("lock.svg")."</span><span id='unlock'>".icon("lock-open.svg")."</span></span>";
 endif;
 echo "</nav><div class='wholy'>";
 if($_SESSION['loggedin'] == true) {
@@ -172,15 +118,11 @@ if (isset($news)) {$news="newson";} else {$news="newsoff";}
 echo "
 <div class='main'>
 <div class='btn-group'>";
-echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','.','')\" ondragover='allowDrop(event)'>$lang->home</span></a>";
+echo "<a href='/'><span class='sites btn $color' ondrop=\"drop(event, '','1','')\" ondragover='allowDrop(event)'>".icon("home.svg")."</span></a>";
 if($cmsfolder != '/'):
-    $tgif = "";
-    foreach($siter as $tsiter):
-	if($tsiter == "") continue;
-        $tgif = $tgif . "/" . $tsiter;
-        if($tsiter[0] == "-") $tsiter = substr($tsiter, 1);
-        $tsiter = htmlentities($tsiter);
-        echo "<a href='$tgif/'><span class='sites btn $color' ondrop=\"drop(event, '','".$tgif."','')\" ondragover='allowDrop(event)'>".$tsiter."</span></a>";
+    foreach($folderids as $folderid):
+	if($folderid === 1) continue;
+        echo "<a href='".folderpath($folderid)."'><span class='sites btn $color' ondrop=\"drop(event, '','$folderid','')\" ondragover='allowDrop(event)'>Test</span></a>";
     endforeach;
     $mlastf = htmlentities($lastf);
 endif;

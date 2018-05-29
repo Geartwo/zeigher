@@ -1,4 +1,8 @@
 <?php
+//Welcome to Zeigher
+$zeigher_version = "0.9.9";
+
+require_once "extendedclass.php";
 if(file_exists("config.php")) include "config.php";
 //Install redirect
 if(!isset($installed) || $installed == false):
@@ -7,14 +11,14 @@ if(!isset($installed) || $installed == false):
 endif;
 
 require_once 'all.php';
-$cmsfolder = workpath($_GET['f']);
+
+$cmsfolder = workpath(explode('?', $_SERVER['REQUEST_URI'])[0]);
 $realfolder = "..$cmsfolder";
 if(isset($_GET['x'])):
 	include "ajax.php";
 	exit;
-elseif(isset($_GET['watchfile']) | is_file("$realfolder")):
+elseif(isset($_GET['watchfile']) || is_file($realfolder)):
 	include "stream.php";
-	exit;
 elseif(isset($_GET['upload'])):
         include "upload.php";
         exit;
@@ -28,7 +32,6 @@ elseif(isset($_GET['logoff'])):
 elseif(isset($_GET['api'])):
 	include "api.php";
 endif;
-
 require_once 'header.php';
 
 
@@ -36,11 +39,6 @@ require_once 'header.php';
 if(!file_exists("$realfolder.pic_.bintro.jpg.jpg") && file_exists("$realfolder.bintro.jpg")):
 	pic_thumb("$realfolder.bintro.jpg", "$realfolder.pic_.bintro.jpg.jpg", '238', '150');
 endif;
-$ufolder = implode('/', explode('%2F', rawurlencode($folder)));
-if(file_exists("$folder/.intro.jpg")):
-	echo "<img class='tbild' onmousedown='return false;' src='$ufolder/.intro.jpg' alt='mainpic'>";
-endif;
-
 
 echo "<div style='clear: right;'></div>";
 
@@ -50,25 +48,13 @@ if($_SESSION['loggedin'] == false && $settings->use == 'none' && !isset($_GET['p
 	echo "<script>self.location.href='?page=login'</script>";
 endif;
 
-//Get IDs of all Folders
+// Add  root folderid if not existing
 if($cmsfolder == "/"):
 	if(!$db->query("SELECT id FROM folder WHERE id = '1'")->num_rows):
 		$db->query("INSERT INTO folder (id, name, parentfolderid) VALUES (1, 'root', 0)")
 		or die("SQL Folder Initialisation ERROR");
 	endif;
 endif;
-$cmsfolder_array = explode("/", $cmsfolder);
-array_pop($cmsfolder_array);
-foreach($cmsfolder_array as $folder):
-        if($folder == ""):
-                $lastfolderid = 1;
-        else:
-                $dbFolder = $db->real_escape_string($folder);
-                $lastfolderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id
-                or die ("cmsfolderid ERROR");
-        endif;
-        $cmsFolderId[] = $lastfolderid;
-endforeach;
 
 //Static page
 if(isset($_GET['page'])):
@@ -82,19 +68,42 @@ if(isset($_GET['page'])):
 endif;
 
 //404 Error
-if (isset($fourzerofour)):
-	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>".$lang->dontexists."<br>";
-	if($isad('edit') && $edit==1 && $mode=='fmyma'):
-		$newfolder = end(explode("/", $_GET['f']));
-        	echo "<span class='$color btn' onclick=\"NF('.".$_GET['f']."/..', '$newfolder')\">$lang->newfolder</span>";
+if (isset($fourzerofour) | !file_exists($realfolder)):
+	echo "<div class=\"\" style='max-height: none;'><h1>".$lang->fourzerofour."</h1>";
+	if(isset($_GET['page'])):
+		echo "$lang->sitedontexists<br>";
+	else:
+		echo "$lang->dontexists<br>";
+		if($isad('edit') && $edit==1):
+			$newfolder = end(explode("/", $cmsfolder));
+        		echo "<span class='$color btn' onclick=\"NF('$cmsfolder/..', '$newfolder')\">$lang->newfolder</span>";
+		endif;
 	endif;
-	echo "<a class='$color btn' href=\"?f=".$tgif."\">".$lang->back."</a></div>";
+	echo "<a class='$color btn' href='$cmsfolder..'>$lang->back</a></div>";
 
 elseif(isset($noitems)):
 elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == 1 || $settings->use == 1):
 
 //Folder listing
+
+	//Get Folder ID
+	$cmsfolder_array = explode("/", $cmsfolder);
+	array_pop($cmsfolder_array);
+	foreach($cmsfolder_array as $folder):
+	        if($folder == ""):
+	                $lastfolderid = 1;
+	        else:
+	                $dbFolder = $db->real_escape_string($folder);
+	                $lastfolderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$lastfolderid'")->fetch_object()->id
+	                or die ("cmsfolderid ERROR");
+	        endif;
+	        $cmsFolderId[] = $lastfolderid;
+	endforeach;
+
+	//Get plugin Intros
 	$hook->include('intro.php');
+
+
 	if(file_exists($folder ."/.intro.txt")):
 		echo "</a><div id='mainintro' class=\"intro\" style='cursor: s-resize;' onclick='mainmore();'>";
         	$docfile=fopen($folder . "/.intro.txt","r+");
@@ -140,8 +149,7 @@ elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] =
 				endwhile;
 				fclose($docfile);
 			endif;
-			echo "</textarea>
-<a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
+			echo "</textarea><a id='descedit' class='ico-edit' onclick=\"SetDesc('".$folder."');\"></a>
 			<a id='bintroup' class='ico-up' onclick=\"SetDescUploadBack('$cmsfolder');\"></a><div/>";
 		endif;
 		if(!isset($ord_array)) $ord_array[0] = "xpvkleer";
@@ -153,14 +161,11 @@ elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] =
 
 			#Thumbnail Generate
 			$endthumb = "";
-			$zgif = urldecode($cgif);
 			if(!file_exists("$realfolder$folder/.pic_.bintro.jpg.jpg") && file_exists("$realfolder$folder/.bintro.jpg")):
 				pic_thumb("$realfolder$folder/.bintro.jpg", "$realfolder$folder/.pic_.bintro.jpg.jpg", '238', '150');
 				$endthumb = "$realfolder$folder";
 			elseif(file_exists("$realfolder$folder/.pic_.bintro.jpg.jpg")):
 				$endthumb = rawurlencode("$realfolder$folder");
-			elseif(file_exists(urldecode("$cgif/.pic_.bintro.jpg.jpg"))):
-				$endthumb = $cgif;
 			endif;
 				$foldername = $folder;
 				$mpf = htmlentities($foldername);
@@ -175,15 +180,13 @@ elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] =
 				echo "<div class='bigfolder $color-2' id='".$folder."k' draggable='true' style=\"background: url('?watchfile=/$endthumb/.pic_.bintro.jpg.jpg') no-repeat; background-size: 100% 100%;\" ondrop=\"drop(event, '$folder','$cmsfolder','')\" ondragover='allowDrop(event)' ondragstart=\"drag(event, '$folder','$cmsfolder','')\">";
                 if($isad('edit') && $edit == 1):
                     $fourpack = 1;
-					echo "</a>
-<form style='display: inline-block;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\">
-<input type='hidden' id='".$folder."r' value='$folder'>
-<input  style='display: none' type='submit'></form>
-<a id='".$folder."o' class='btn $color' onclick=\"SN('$folder','$cmsfolder','');\">";
+					echo "</a><a id='".$folder."o' class='btn $color' onclick=\"SN('$folder','$cmsfolder','');\">";
 					echo icon("pencil.svg");
 					echo "</a><a id='".$file."n' class='btn $color' onclick=\"deletefolder('$folderId');\">";
                                         echo icon("trash.svg");
                                         echo "</a>";
+					echo "<form style='display: none;' id='$folder-changenameform' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\">";
+					echo "<input id='".$folder."r' value='$folder'><input  style='display: none' type='submit'></form>";
 				endif;
 				echo "<form style='display: inline;' onsubmit=\"SND('$folder','$cmsfolder','$cmsfolder',''); event.preventDefault();\"><input type='hidden' id='".$folder."r' value='$folder'></form>";
 				echo "<a draggable='false' id='".$folder."v' class='buo ord' value='$mpf'  href='$cmsfolder$folder/'>
@@ -208,6 +211,7 @@ $folder = "$realfolder";
 	endif;
 	//File listing
 	$thereAreFiles = false;
+	$hook->include("extension.php");
         if(isset($file_array)):
             	natsort($file_array);
 		foreach($file_array as $file):
@@ -238,9 +242,7 @@ $folder = "$realfolder";
 			if(file_exists("./.pic_.bintro.jpg.jpg") && $mode=='dmyma') $endthumb = ".";
 			
 			if(!file_exists($folder."/.pic_".$file.".jpg")):
-				if(preg_match('/\.mp4\z/i', $file) || preg_match('/\.webm\z/i', $file) || preg_match('/\.mkv\z/i', $file)):
-					exec('ffmpeg -i "'.$folder.'/'.$file.'" -y -vcodec mjpeg -vframes 1 -an -f rawvideo -s 238x150 -ss 00:00:05 "'.$folder.'/.pic_'.$file.'.jpg" > /dev/null &');
-				elseif(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)):
+				if(preg_match('/\.jpg\z/i', $file) || preg_match('/\.png\z/i', $file) || preg_match('/\.gif\z/i', $file)):
 					pic_thumb($folder.'/'.$file, $folder.'/.pic_'.$file.'.jpg', '238', '150');
 				elseif(preg_match('/\.mp3\z/i', $file) || preg_match('/\.aac\z/i', $file) || preg_match('/\.rdio\z/i', $file)):
 					if(file_exists($folder."/.art_".$file.".jpg")) pic_thumb($folder.'/.art_'.$file.'.jpg', $folder.'/.pic_'.$file.'.jpg', '238', '150');
@@ -276,11 +278,11 @@ $folder = "$realfolder";
 	    echo "<font id='".$rawfile."z' class='bigback bigfileback'>";
 	    echo icon($icon->$pext);
 			echo "$filename</font></a></div>";
-			$four = $four + 1;
-			$idnum = $idnum + 1;
+			$four++;
+			$idnum++;
 	endforeach;
     endif;
-if(isset($idnum)) echo "<div id='num$idnum' style='clear: both;'></div><script>window.lastnum = $idnum;</script><a id='num$idnum-a'  onclick='self.location=\"$cmsfolder../$nextfolder#num1\"'></a>";
+if(isset($idnum)) echo "<div id='num$idnum' style='clear: both;'></div><script>window.lastnum = $idnum;</script><a id='num$idnum-a'></a>";
 echo "
 <script>
 function controlblock(){

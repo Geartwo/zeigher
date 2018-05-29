@@ -11,7 +11,7 @@ if($_POST['mode'] == "bintro") {
 }elseif($_POST['mode'] == "fb") {
         $fb = true;
 }
-$folder = ".".workpath($_GET['f']);
+$folder = $realfolder;
 @$text = $db->real_escape_string($_POST['impeditor']);
 if(!empty($_FILES['fileselect'])){
 	foreach ($_FILES['fileselect']['name'] as $f => $name) {

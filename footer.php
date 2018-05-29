@@ -1,31 +1,19 @@
 </div> <!-- class=list -->
 
 <div class="footer clear line">
-<a href="?page=imprint"><?php echo $lang->imprint; ?></a>
+<?php $hook->include('footer.php'); ?>
 </div>
 <div class="footer">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
 <script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-<script src="?x=main&file=functions.js&v1.0"></script>
-<?php
-if(isset($functionsjsextension)):
-    foreach($functionsjsextension as $fjex):
-        include($fjex);
-    endforeach;
-endif;
-echo $bfooter;
-if(isset($footerextension)){
-	foreach($footerextension as $foex){
-        include($foex);
-	}
-}
-?>
+<script src="?watchfile=/zeigher/functions.js"></script>
 </div>
 </div> <!-- class=main -->
 </div> <!-- class=wholy -->
 </div> <!-- class=whole -->
+<?php $hook->include('function.js'); ?>
 <script>
 window.winfild = 0;
 var res = Math.floor(window.innerWidth / 250);
@@ -53,16 +41,6 @@ var real = (Math.ceil(window.winfild/window.winres))*window.winres;
 if(real != 0){
     kind(real);
 }
-}
-</script>
-<script>
-var elements = document.getElementsByTagName('a');
-for(var i = 0, len = elements.length; i < len; i++) {
-    elements[i].addEventListener("click", function () {
-	console.log("Click");
-        //event.preventDefault();
-	//console.log(elements[i]);
-    }, false);
 }
 </script>
 <!-- 
