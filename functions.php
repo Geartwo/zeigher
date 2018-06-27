@@ -25,7 +25,7 @@ function workpath($a, $pre = false){
   $e = implode("/", $c);
   if(empty($e)) $e = "/";
   if($e[0] != "/") $e = "/".$e;
-  if(!is_file("..".$e)) if(substr($e, -1) != "/") $e = "$e/";
+  if(is_dir("..".$e)) if(substr($e, -1) != "/") $e = "$e/";
   if($pre) $e = $pre.$e;
   return $e;
 }

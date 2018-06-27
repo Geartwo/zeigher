@@ -3,7 +3,7 @@
 <head>
 	<meta name=viewport content="width=device-width, initial-scale=1">
 	<meta charset="utf-8" />
-	<link rel='stylesheet' type='text/css' href='?watchfile=/zeigher/themes/<?php echo $settings->theme ?>/format.css'>
+	<link rel='stylesheet' type='text/css' href='/zeigher/themes/<?php echo $settings->theme ?>/format.css'>
 </head>
 <body>
 <script>
@@ -38,27 +38,38 @@ endif;
 //Background
 $folderids = allfolderids($cmsfolder);
 $bgfolderids = $folderids;
-$bg = 0;
+$bgpath = 0;
 $i = 0;
-while(!$bg && $i < 50):
+while(!$bgpath && $i < 50):
 	$bgfolderid = array_pop($bgfolderids);
 	if(file_exists("data/backgrounds/$bgfolderid.jpg")): 
-		$bg = "/zeigher/data/backgrounds/$bgfolderid.jpg";
+		$bgpath = "/zeigher/data/backgrounds/$bgfolderid.jpg";
+		$bgname = "$bgfolderid.jpg";
 	endif;
 	$i++;
 endwhile;
-if(isset($_SESSION['lastpic'])) echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
-if($bg && $bg != $_SESSION['lastpic']):
-	$_SESSION['lastpic'] = $bg;
+
+//Background picture thumbnail greator
+if($bgpath && !file_exists("data/smalbackground/$bgname")):
+        pic_thumb("data/backgrounds/$bgname", "data/smalbackground/$bgname", '238', '150');
+endif;
+
+if(isset($_SESSION['lastpic'])):
+	echo "<div id='pic-old' style='display: inline-block;  z-index: -2; position: fixed; height:100%;width:100%; background: url(".$_SESSION['lastpic'].") no-repeat center center fixed; background-size: cover;'></div>";
+else:
+	$_SESSION['lastpic'] = 0;
+endif;
+if($bgpath && $bgpath != $_SESSION['lastpic']):
+	$_SESSION['lastpic'] = $bgpath;
 	echo "<img src='$bg' id='dummy' style='display:none;' alt='' />
 	<div id='pic' style='display: inline-block;  z-index: -1; display: none; position: fixed; height:100%;width:100%; background: no-repeat center center fixed; background-size: cover;'></div>
 	<script>
 	document.getElementById('dummy').onload = function(){
-	$('#pic').css('background-image','url($bg)');
+	$('#pic').css('background-image','url($bgpath)');
         $('#pic').fadeIn(1000);
 	};
 	$('#dummy').load(function() {
-		$('#pic').css('background-image','url($bg)');
+		$('#pic').css('background-image','url($bgpath)');
 		$('#pic').fadeIn(1000);
 	});
 	</script>";
@@ -124,7 +135,6 @@ if($cmsfolder != '/'):
 	if($folderid === 1) continue;
         echo "<a href='".folderpath($folderid)."'><span class='sites btn $color' ondrop=\"drop(event, '','$folderid','')\" ondragover='allowDrop(event)'>Test</span></a>";
     endforeach;
-    $mlastf = htmlentities($lastf);
 endif;
 echo "<title>$settings->stitel</title>";
 if(isset($_GET['page'])) echo "<a href='?page=".$_GET['page']."'><span class='sites btn $color'>".$lang->$_GET['page']."</span></a>";

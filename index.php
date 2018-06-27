@@ -24,6 +24,7 @@ elseif(isset($_GET['upload'])):
         exit;
 elseif(isset($_GET['logoff'])):
 	$_SESSION['loggedin'] = false;
+	setcookie("PHPSESSID", "", time() - 3600);
         session_destroy();
 	setcookie("Zeigher-ID", "", time() - 3600, "/");
 	setcookie("Zeigher-Token", "", time() - 3600, "/");
@@ -33,12 +34,6 @@ elseif(isset($_GET['api'])):
 	include "api.php";
 endif;
 require_once 'header.php';
-
-
-//Background picture thumbnail greator
-if(!file_exists("$realfolder.pic_.bintro.jpg.jpg") && file_exists("$realfolder.bintro.jpg")):
-	pic_thumb("$realfolder.bintro.jpg", "$realfolder.pic_.bintro.jpg.jpg", '238', '150');
-endif;
 
 echo "<div style='clear: right;'></div>";
 
@@ -55,7 +50,6 @@ if($cmsfolder == "/"):
 		or die("SQL Folder Initialisation ERROR");
 	endif;
 endif;
-
 //Static page
 if(isset($_GET['page'])):
 	$pageget = $_GET['page'];
@@ -81,8 +75,7 @@ if (isset($fourzerofour) | !file_exists($realfolder)):
 	endif;
 	echo "<a class='$color btn' href='$cmsfolder..'>$lang->back</a></div>";
 
-elseif(isset($noitems)):
-elseif(!isset($_GET['page']) && !isset($specialindex) && $_SESSION['loggedin'] == 1 || $settings->use == 1):
+elseif(!isset($_GET['page']) && !isset($noitems) && $_SESSION['loggedin'] == 1 || $settings->use == 1):
 
 //Folder listing
 

@@ -4,7 +4,11 @@ $max_upload = (int)(ini_get('upload_max_filesize'));
 $max_post = (int)(ini_get('post_max_size'));
 $memory_limit = (int)(ini_get('memory_limit'));
 $upload_mb = min($max_upload, $max_post, $memory_limit);
+if(!isset($_COOKIE['Zeigher-ID']) | !isset($_COOKIE['Zeigher-Token'])):
+	ini_set("session.use_cookies", 0);
+endif;
 session_start();
+
 require 'sql.php';
 //Get Settings
 $dbquery = $db->query("SELECT * FROM settings WHERE userid = '0'");

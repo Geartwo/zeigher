@@ -23,14 +23,8 @@ if(is_file("..$file")):
 		header("X-Accel-Redirect:$file");
 		header('Access-Control-Allow-Origin: *'); 
 		exit;
-	else:
-		$fourzerofour = 1;
 	endif;
-		
-else:
-	$fourzerofour = 1;
 endif;
-
-echo $mimetype->$filenametype.mime_content_type("..$file");
-exit;
+http_response_code (404);
+$fourzerofour = 1;
 ?>
