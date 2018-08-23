@@ -49,6 +49,7 @@ else:
 	$colorid = 0;
 endif;
 $color = $db->query("SELECT value FROM settings WHERE name = 'color' AND userid = '$colorid'")->fetch_object()->value;
+$mainfolder = $db->query("SELECT value FROM settings WHERE name = 'mainfolder'")->fetch_object()->value;
 $dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
 
 
@@ -62,7 +63,19 @@ $dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
         endwhile;
 // TODO END
 require "functions.php";
-$hook->include("function.php");
+foreach (glob("classes/*.php") as $filename){
+	include $filename;
+}
+include 'lang/' . getLanguage();
+
+//Set mimetypes
+$mimetype = new ExtendStdClass();
+
+//Set Icon
+$icon = new ExtendStdClass();
+$icon->standard = "bug.svg";
+
+$hook->include("function.php", ['icon', 'fileextension', 'mimetype']);
 
 if(!isset($_SESSION['loggedin'])) $_SESSION['loggedin'] = false;
 if(!$_SESSION['loggedin'] && isset($_COOKIE['Zeigher-ID']) && isset($_COOKIE['Zeigher-Token'])):

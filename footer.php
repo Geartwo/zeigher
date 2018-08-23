@@ -6,9 +6,8 @@
 <div class="footer">
 <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.lazyload/1.9.1/jquery.lazyload.js"></script>
-<script src="https://cdn.jsdelivr.net/simplemde/1.8.0/simplemde.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui-touch-punch/0.2.3/jquery.ui.touch-punch.min.js"></script>
-<script src="?watchfile=/zeigher/functions.js"></script>
+<script src="/zeigher/js/functions.js"></script>
 </div>
 </div> <!-- class=main -->
 </div> <!-- class=wholy -->

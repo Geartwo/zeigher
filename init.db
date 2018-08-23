@@ -37,12 +37,12 @@ ALTER TABLE `plugins`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;
 
 -- File
-CREATE TABLE `files` (
+CREATE TABLE `file` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `folderid` int(11) NOT NULL
+  `parentfolderid` int(11) NOT NULL
 );
-ALTER TABLE `files`
+ALTER TABLE `file`
   ADD PRIMARY KEY (`id`);
 ALTER TABLE `files`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT;

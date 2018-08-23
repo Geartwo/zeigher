@@ -11,6 +11,7 @@ function workpath($a, $pre = false){
     $b = array_slice($b, 1);
   endif;
   foreach($b as $d):
+    $d = rawurldecode($d);
     switch($d):
     case ".":
       continue;
@@ -49,44 +50,27 @@ function sendit($usmail) {
     mail($usmail, $subject, $message, $headers);
 }
 
-function getLanguage() {
-
-    if(isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
-    $langs = " ".$_SERVER['HTTP_ACCEPT_LANGUAGE'];
-    } else {
-    $langs = 'en';
-    }
-
-    //verfuegbare Sprachen in Array
-    $languages = array('en',
-                       'de',
-                       'es',
-                       'fr');
-
-    //ermitteln der positionen
-    foreach($languages as $code) {
-        $pos = strpos($langs, $code);
-        if(intval($pos) != 0) {
-            $position[$code] = intval($pos);
-        }
-    }
-
-    //standardsprache festlegen = englisch
-    $bestLanguage = 'en';
-
-    //pruefen ob uebereinstimmungen vorhanden
-    if(!empty($position)) {
-        foreach($languages as $code) {
-            if(isset($position[$code]) &&
-               $position[$code] == min($position)) {
-                    $bestLanguage = $code;
-            }
-        }
-    }
-
-    return $bestLanguage;
+function background($size, $id) {
+    global $mainfolder;
+    switch($size):
+    case "normal":
+	$size = "backgrounds";
+	break;
+    case "small":
+	$size = "smalbackground";
+    	break;
+    case "filethumb":
+        $size = "filethumb";
+        break;
+    endswitch;
+    if(file_exists("data/$size/$id.jpg")) $bgname = "$id.jpg";
+    if(file_exists("data/$size/$id.png")) $bgname = "$id.png";
+    if(isset($bgname)):
+        return $mainfolder."zeigher/data/$size/$bgname";
+    else:
+	return false;
+    endif;
 }
-
 //Thumbnail Creator
 function pic_thumb($image, $target, $max_width, $max_height) {
     $picsize     = getimagesize($image);
@@ -144,14 +128,18 @@ function icon($svg, $path = false){
 
 //Get Folderpath by ID
 function folderpath($id){
+	if(!$id):
+		trigger_error("ERROR: No ID set");
+		return;
+	endif;
 	global $db;
 	$dbquerry = $db->query("SELECT name, parentfolderid FROM folder WHERE id='$id'")->fetch_object()
-	or die("Unknown folderId");
+	or die("Unknown folderId $id");
         $foldersearch[] = $dbquerry->name;
 	$i = 0;
         while($dbquerry->parentfolderid != 1 && $i <= 50):
         	$dbquerry = $db->query("SELECT name, parentfolderid FROM folder WHERE id='$dbquerry->parentfolderid'")->fetch_object()
-		or die("Path fail");
+		or trigger_error("ERROR: Path fail");
                 $foldersearch[] = $dbquerry->name;
 		$i++;
        endwhile;
@@ -162,20 +150,62 @@ function folderpath($id){
 function allfolderids($path){
 	global $db;
 	$path_array = explode("/", $path);
-        array_pop($path_array);
+        if($path[-1] == "/") array_pop($path_array);
         foreach($path_array as $folder):
                 if($folder == ""):
                         $folderid = 1;
                 else:
-                        $dbFolder = $db->real_escape_string($folder);
-                        $folderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$folderid'")->fetch_object()->id;
+                        $dbFolder = $db->real_escape_string(rawurldecode($folder));
+                        $folderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$folderid'")->fetch_object()->id
+			or trigger_error("ERROR: Path noth found $path");
                 endif;
 		$folderids[] = $folderid;
         endforeach;
 	return $folderids;
 }
 function folderid($path){
-	return array_pop(allfolderids($path));
+	$all = allfolderids($path);
+	return array_pop($all);
+}
+function childid($parentid, $name, $type, $create=false){
+	global $db;
+	$dbName = $db->real_escape_string(rawurldecode($name));
+	if($type !== "file" && $type !== "folder"):
+		trigger_error("ERROR: Not supported filetype: $type");
+		return false;
+	endif;
+	$id = $db->query("SELECT id FROM $type WHERE name = '$dbName' AND parentfolderid = '$parentid'");
+	if($id->num_rows === 0 && $create === true):
+		$db->query("INSERT INTO $type (name, parentfolderid) VALUES ('$dbName', '$parentid')")
+        	or trigger_error("ERROR: SQL Initialisation $dbName/$parentid");
+		$id = $db->query("SELECT id FROM $type WHERE name = '$dbName' AND parentfolderid = '$parentid'");
+	endif;
+	if($id->num_rows === 1):
+		return $id->fetch_object()->id;
+	else:
+		trigger_error("ERROR: SQL ID $dbName/$parentid");
+		return false;
+	endif;
+}
+
+function foldername($id){
+	global $db;
+	return $db->query("SELECT name FROM folder WHERE id = '$id'")->fetch_object()->name;
+}
+function fileid($parentid, $file, $create=false){
+        global $db;
+        $dbFolder = $db->real_escape_string(rawurldecode($folder));
+        $folderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$parentid'");
+        if($folderid->num_rows === 0 && $create === true):
+                $db->query("INSERT INTO folder (name, parentfolderid) VALUES ('$dbFolder', '$parentid')")
+                or trigger_error("ERROR: SQL Folder Initialisation $dbFolder/$parentid");
+                $folderid = $db->query("SELECT id FROM folder WHERE name = '$dbFolder' AND parentfolderid = '$parentid'");
+        endif;
+        if($folderid->num_rows === 1):
+                return $folderid->fetch_object()->id;
+        else:
+                return false;
+        endif;
 }
 //Define all classes
 $hook = new ExtendClass();
@@ -231,8 +261,13 @@ $hook->uninstall = function($a){
         include $hook->get_folder($a)."uninstall.php";
 	echo "OK";
 };
-$hook->include = function($a){
+$hook->include = function($a, $b = false){
 	global $db, $hook;
+	if(is_array($b)):
+		foreach($b as $b_var):
+			global $$b_var;
+		endforeach;
+	endif;
 	$dbquery = $db->query("SELECT name FROM plugins WHERE active = 1");
 	while($i = $dbquery->fetch_object()):
 		if(file_exists($hook->get_folder($i->name).$a)):
@@ -276,19 +311,10 @@ $icon->standard = "bug.svg";
 
 //Set mimetypes
 $mimetype = new ExtendStdClass();
-$mimetype->standard = "text/plain";
-$mimetype->css = "text/css";
 
 $uploadcheck = new ExtendStdClass();
 $api = new ExtendClass();
 //Set Language
 if(!isset($theme)) $theme = "default";
-$langcode = getLanguage();
-include 'lang/' . $langcode;
-if(isset($langextension)){
-    foreach($langextension as $laex){
-        include($laex);
-    }
-}
 include "themes/".$theme."/variable.php";
 ?>
