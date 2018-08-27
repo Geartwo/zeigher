@@ -64,6 +64,10 @@ echo "<div class='container'>
 <div id='tbild' style='transition: max-width 0.5s linear 0s, margin 0.5s linear 0s; float: right; position: absolute; top: 5; right: 5; overflow: hidden; margin: 5px;'></div>
 <div class='navbar-header'>";
 if(!empty($settings->logo) && $settings->logo!=='false'){
+#	echo "<a href='/' class='navbar-brand f$color'>";
+#	echo icon($settings->logo, "data/");
+#	echo "</a>";
+#	echo "<a href='/' class='navbar-brand $color'><img class='navbar-brand' src='/zeigher/data/".$settings->logo."'></a>";
 	echo "<a href='/' class='navbar-brand'><img class='navbar-brand' src='/zeigher/data/".$settings->logo."'></a>";
 }elseif(!empty($settings->stitel)){
 	echo "<a class='navbar-brand f$color' href='/'>".$settings->stitel."</a>";

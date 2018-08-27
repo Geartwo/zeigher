@@ -128,9 +128,9 @@ function icon($svg, $path = false){
 
 //Get Folderpath by ID
 function folderpath($id){
-	if(!$id):
+	if(empty($id)):
 		trigger_error("ERROR: No ID set");
-		return;
+		return false;
 	endif;
 	global $db;
 	$dbquerry = $db->query("SELECT name, parentfolderid FROM folder WHERE id='$id'")->fetch_object()
@@ -190,7 +190,12 @@ function childid($parentid, $name, $type, $create=false){
 
 function foldername($id){
 	global $db;
-	return $db->query("SELECT name FROM folder WHERE id = '$id'")->fetch_object()->name;
+	if(empty($id)):
+		return false;
+	endif;
+	$folder = $db->query("SELECT name FROM folder WHERE id = '$id'")
+	or trigger_error("ERROR: $id not found");
+	return $folder->fetch_object()->name;
 }
 function fileid($parentid, $file, $create=false){
         global $db;
@@ -275,6 +280,10 @@ $hook->include = function($a, $b = false){
         	endif;
 	endwhile;
 };
+
+function fileright($file){
+	return true;
+}
 
 //Page register
 $page = new ExtendClass();

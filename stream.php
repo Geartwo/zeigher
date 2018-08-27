@@ -9,7 +9,7 @@ if(isset($_GET['watchfile'])):
 else:
 	$file = $cmsfolder;
 endif;
-if(is_file("..$file") && preg_match("/\/zeigher\/(data|themes|js)\//", $file) | $_SESSION['loggedin']):
+if(is_file("..$file") && preg_match("/\/zeigher\/(data|themes|js)\//", $file) | $_SESSION['loggedin'] | fileright($file)):
 	$filenametype = array_pop(explode(".", $file));
 	if($mimetype->$filenametype === mime_content_type("..$file") || $mimetype->standard === mime_content_type("..$file")):
 		header("Cache-Control: max-age=2592000");

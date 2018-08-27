@@ -1,3 +1,3 @@
 <?php
-$themecolors = array('green', 'yellow', 'blue', 'orange', 'red', 'black', 'brown','heart', 'pink');
+$themecolors = array('green', 'yellow', 'blue', 'orange', 'red', 'black', 'brown','heart', 'pink', 'polar');
 ?>
